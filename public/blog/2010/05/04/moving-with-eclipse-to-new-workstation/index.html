@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Moving with Eclipse to a new workstation - Bart Lantz</title>
+  <meta name="author" content="Bart Lantz">
+
+  
+  <meta name="description" content="The hard drive on my laptop started clicking quite ominously, so I figured it was time to order a new hard drive. I backed up my photos to the cloud &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bartlantz.com/blog/2010/05/04/moving-with-eclipse-to-new-workstation">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Bart Lantz" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Bart Lantz</a></h1>
+  
+    <h2>Math, Code and Science Fiction</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bartlantz.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Moving With Eclipse to a New Workstation</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-04T00:00:00-04:00" pubdate data-updated="true">May 4<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content">The hard drive on my laptop started clicking quite ominously, so I figured it was time to order a new hard drive.  I backed up my photos to the cloud (Flickr and Picasa) and backed up all my music and docs to Dropbox and Google Docs and waited for the new hard drive to arrive.  Files are files: you just need to keep a regular backup; and email already lives in the cloud.  That leaves my development environment.  <br /><br />Here are the steps I&#8217;ve followed to move my development set up to a new computer.<br /><br />1. open up Synaptic and download Eclipse.  There are several Eclipse packages available.  I selected the big Eclipse package which includes the JDT (Java Developer Tools) and PDE (plug-in development tools).  I&#8217;ve had trouble before when I selected one of the smaller eclipse packages and tried to add the plug-ins I needed separately.<br /><br />2. Download or copy over the <a href=http://developer.android.com/sdk/index.html>Android SDK</a>.  <br /><br />3. Put the Android SDK tools directory in my PATH in .bashrc<br />  b. then type &#8216;bash&#8217;, so the new .bashrc takes effect.<br />  c. type &#8216;adb&#8217;, to make sure the android SDK tools are in my PATH.<br /><br />4. open up Eclipse and go to Help->Install New Software&#8230; click &#8220;add&#8221; to add a new tools depository, and add the android  developer tools repository: https://dl-ssl.google.com/android/eclipse/.  <br />  b. once the new depository is loaded, select the Android Developer Tools and Android DDMS and wait for Eclipse to download and install them.<br /><br />5. moved my private signing key over.<br /><br />6. moved over my projects and imported them through File->Import&#8230; ->Existing Projects into Workspace.<br />  b. if you get any errors, try right clicking on the project and select Android Tools->Fix Project Properties<br /><br />7. Export an app and sign it with the key you moved over.  (this is the scary part, if you lose the signing key you used to originally sign your app, you will not be able to provide any more updates to your app in the Android Market!)<br />  a. File->Export &#8230; Android->Export Android Application &#8211;> select the project you want to Export &#8211;> Use existing keystore, (click location to locate it.) type in your password&#8230;.<br /><br />8. Plug your dev phone into your workstation and install the app.<br />  a. adb install -r /path/to/YourApp.apk<br /><br />Whoo Hoo!  The development environment (for android at least) is all moved over.<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-665138841129548859?l=denverdroid.blogspot.com' alt='' /></div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bart Lantz</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-04T00:00:00-04:00" pubdate data-updated="true">May 4<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java/'>Java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bartlantz.com/blog/2010/05/04/moving-with-eclipse-to-new-workstation/" data-via="bartofdenver" data-counturl="http://bartlantz.com/blog/2010/05/04/moving-with-eclipse-to-new-workstation/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/04/29/phone-update-update-wow-that-was-fast/" title="Previous Post: Phone update update: Wow, that was fast">&laquo; Phone update update: Wow, that was fast</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/05/08/how-to-build-nook-emulator/" title="Next Post: How to Build a Nook emulator">How to Build a Nook emulator &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>About</h1>
+<p>Major Ursa is a development blog written by Bart Lantz.</p>
+
+<p>It focuses on Drupal, Ruby, Javascript, Vim, Git and Math, here and there.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xquery-notes/">XQuery Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xpath-notes/">XPath Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/fun-with-grep-and/">Fun with Grep and Bash Aliases</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/29/using-jquery-in-drupal/">Using jQuery in Drupal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/22/drush-delete-comment/">Using Drush and SQL to Delete Spam Comments</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/underhilllabs">@underhilllabs</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'underhilllabs',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll...</ul>
+  <p><a href="http://pinboard.in/u:seamusmcgraw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "seamusmcgraw"; //id target for pinboard list
+  var pinboard_count = 7; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/115249870106368908575?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bart Lantz -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

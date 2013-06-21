@@ -1,0 +1,415 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Using Jekyll on NearlyFreeSpeech.net - Bart Lantz</title>
+  <meta name="author" content="Bart Lantz">
+
+  
+  <meta name="description" content="How to set up a jekyll static-site on NearlyFreeSpeech.net, deploying with git push and the git post-receive hook.">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bartlantz.com/blog/2012/05/11/jekyll-on-nfsn">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Bart Lantz" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Bart Lantz</a></h1>
+  
+    <h2>Math, Code and Science Fiction</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bartlantz.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Using Jekyll on NearlyFreeSpeech.net</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-11T00:00:00-04:00" pubdate data-updated="true">May 11<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>NearlyFreeSpeech.net is a good simple, bare-bones fit for a Jekyll
+site once everything is set up. The price can&#8217;t be beat, you can put
+down a $10 payment and just try it out. With a Jekyll site, that $10
+investment should last a while!</p>
+
+<h2>Set Up SSH Alias</h2>
+
+<p>The first thing to do is set up an ssh alias in your .bashrc file.
+The hostname and username that are assigned at nfsn are generally
+pretty easy to forget, so I always create an alias for them, like:</p>
+
+<div>
+  <pre><code class='bash'>alias sshnfsn='username_sitename@ssh.yourhostname.nearlyfreespeech.net';</code></pre>
+</div>
+
+
+<p>Once you save the .bashrc file, you can source it with:</p>
+
+<div>
+  <pre><code class='bash'>. ~/.bashrc</code></pre>
+</div>
+
+
+<p>and then test that it works with by running it.</p>
+
+<div>
+  <pre><code class='bash'>sshnfsn</code></pre>
+</div>
+
+
+<h2>Aside: Public, Private, Protected Directories</h2>
+
+<p>On a nfsn site, there are 3 directories in your /home folder.</p>
+
+<ul>
+<li><p>The <strong>/home/public</strong> folder is your public facing directory. This is
+your website&#8217;s public Document Root.</p></li>
+<li><p>The <strong>/home/private</strong> folder is your private folder where you can store
+git repos, your ruby gems, anything private you need to use or back
+up.</p></li>
+<li><p>The <strong>/home/protected</strong>: let me know if find a use for this.</p></li>
+</ul>
+
+
+<h2>Set Up Git on NFSN</h2>
+
+<p>Once you are ssh&#8217;d into nfsn, cd into /home/private and create a
+directory for your git repositories and create a bare git repository
+for your site.</p>
+
+<div>
+  <pre><code class='bash'>cd /home/private
+mkdir git
+cd git
+mkdir mysite.git
+cd mysite.git
+git init --bare</code></pre>
+</div>
+
+
+<p>Now you have a bare git repository for your jekyll site. The following
+script will create a git post-receive hook, that will run every time
+you push to your git repository.</p>
+
+<div>
+  <pre><code class='bash'>#!/bin/sh
+
+REPONAME=mysite.git
+GIT_REPO=$HOME/git/$REPONAME
+TMP_GIT_CLONE=$HOME/git/tmp_deploy/$REPONAME
+PUBLIC_WWW=/home/public
+
+# clone the git repo into the tmp_deploy directory.
+git clone $GIT_REPO $TMP_GIT_CLONE
+# jekyll-ify the site and place html files in /home/public
+jekyll --no-auto $TMP_GIT_CLONE $PUBLIC_WWW
+
+rm -Rf $HOME/git/tmp_deploy/$REPONAME/.git/objects
+rm -Rf $HOME/git/tmp_deploy/$REPONAME/.git
+rm -Rf $HOME/git/tmp_deploy/$REPONAME
+
+exit</code></pre>
+</div>
+
+
+<p>Be sure to chmod +x the file:</p>
+
+<div>
+  <pre><code class='bash'>chmod ug+x /home/private/git/mysite.git/post-receive</code></pre>
+</div>
+
+
+<p>Now, every time you &#8220;git push&#8221; into nfsn this post-receive hook will
+auto-regenerate your jekyll site.</p>
+
+<h2>Set Up a Git Remote to NFSN</h2>
+
+<p>Back on your home computer or wherever you are building your jekyll
+site, you need to create a git remote for your nsfn git
+repository.</p>
+
+<div>
+  <pre><code class='bash'>cd ~/projects/mysite.git
+# substitute in your username, sitename and nfsn hostname
+git remote add nfsn ssh://&amp;lt;nsfnusername&amp;gt;-&amp;lt;sitename&amp;gt;@ssh.&amp;lt;hostname&amp;gt;.nearlyfreespeech.net/home/private/git/mysite.git</code></pre>
+</div>
+
+
+<p>Now that you have a git remote set up for your jekyll site, you can
+Create a page in your jekyll &#8220;_post&#8221; directory. <br/>
+Run &#8220;jekyll &#8211;server&#8221; to test it locally at http://localhost:4000.</p>
+
+<div>
+  <pre><code class='bash'>jekyll --server</code></pre>
+</div>
+
+
+<p>If it looks good, add it to your git repository.</p>
+
+<div>
+  <pre><code class='bash'>git commit -am &quot;new brilliant post!&quot;</code></pre>
+</div>
+
+
+<p>Next, push it to your website on nfsn.</p>
+
+<div>
+  <pre><code class='bash'>git push nfsn master</code></pre>
+</div>
+
+
+<p>The post-receive script you created earlier will generate your new public jekyll website automatically.</p>
+
+<p>Test it and enjoy!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bart Lantz</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-11T00:00:00-04:00" pubdate data-updated="true">May 11<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/web-development/'>Web Development</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bartlantz.com/blog/2012/05/11/jekyll-on-nfsn/" data-via="bartofdenver" data-counturl="http://bartlantz.com/blog/2012/05/11/jekyll-on-nfsn/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/14/sas-to-r/" title="Previous Post: SAS to R Notes">&laquo; SAS to R Notes</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/05/14/creating-a-better-print-screen/" title="Next Post: Creating a Better Print Screen, part I">Creating a Better Print Screen, part I &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>About</h1>
+<p>Major Ursa is a development blog written by Bart Lantz.</p>
+
+<p>It focuses on Drupal, Ruby, Javascript, Vim, Git and Math, here and there.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xquery-notes/">XQuery Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xpath-notes/">XPath Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/fun-with-grep-and/">Fun with Grep and Bash Aliases</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/29/using-jquery-in-drupal/">Using jQuery in Drupal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/22/drush-delete-comment/">Using Drush and SQL to Delete Spam Comments</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/underhilllabs">@underhilllabs</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'underhilllabs',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll...</ul>
+  <p><a href="http://pinboard.in/u:seamusmcgraw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "seamusmcgraw"; //id target for pinboard list
+  var pinboard_count = 7; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/115249870106368908575?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bart Lantz -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

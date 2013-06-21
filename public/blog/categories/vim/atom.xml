@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Vim | Bart Lantz]]></title>
+  <link href="http://bartlantz.com/blog/categories/vim/atom.xml" rel="self"/>
+  <link href="http://bartlantz.com/"/>
+  <updated>2013-06-21T18:19:33-04:00</updated>
+  <id>http://bartlantz.com/</id>
+  <author>
+    <name><![CDATA[Bart Lantz]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Vim Emacs Regex Smackdown]]></title>
+    <link href="http://bartlantz.com/blog/2012/04/12/vim-emacs-regex/"/>
+    <updated>2012-04-12T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/04/12/vim-emacs-regex</id>
+    <content type="html"><![CDATA[<p>So, I was trying to convert an orgmode file to html. There is an orgmode-export-as-html function, but it was choking on something, so I needed to do the conversion by hand. I tried many, many times to convert the file with emacs regular expressions, but was unsuccessful.  The difficulty was the orgmode headlines, which look like this:</p>
+
+<p><div>
+  <pre><code class='bash'>*** Use the sort function</code></pre>
+</div>
+</p>
+
+<p>I wanted to simply transform this into
+<div>
+  <pre><code class='bash'>&amp;lt;h3&amp;gt;Use the sort function&amp;lt;/h3&amp;gt;</code></pre>
+</div>
+</p>
+
+<h2>Vim Regexp</h2>
+
+
+<p>I was finally able to match the headline in vim with the following regular expression:
+<div>
+  <pre><code class='bash'>*** ((w&lt;em&gt;).&lt;/em&gt;)</code></pre>
+</div>
+</p>
+
+<p><li> The literal asterisks had to be matched with *.<br/>
+<li> Next, to match to the end of the line I used: ((w<em>).</em>)
+<li> ( ) creates a matching group, which can be used later in the replacement string with \1 or \2 etc.
+<li> Also (w<em>).</em> matches 1 or more words</p>
+
+<h2>Vim Substitution Expression</h2>
+
+
+<p><div>
+  <pre><code class='bash'>%s/*** ((w&lt;em&gt;).&lt;/em&gt;)/&amp;lt;h3&amp;gt;\1&amp;lt;\/h3&amp;gt;/</code></pre>
+</div>
+
+<li> The % matches the entire file
+<li>The \1 matches the first matching group in the search string
+That is, \1 will match everything on the line after the 3 literal asterisks.</p>
+
+<h2>Testing Matching String</h2>
+
+
+<p>Its easy to test a regular expression in vim.  While in command mode (hit Esc if you are in input mode), type a / and then type your regular expression and then press "return", like so:
+<div>
+  <pre><code class='bash'>/*** [RETURN]</code></pre>
+</div>
+</p>
+
+<p>Your matches will be highlighted.  Click 'n' to jump to the next match.</p>
+
+<h2>Getting back to previous substitution</h2>
+
+
+<p>Vim has a cool, intuitive way to explore your command history. In command mode, type ":" as for typing an ex command, and then press the up arrow to scroll up to through your command history. This is really handy for using previous, complex regular expressions.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Vim Notes]]></title>
+    <link href="http://bartlantz.com/blog/2012/02/23/vim-notes/"/>
+    <updated>2012-02-23T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/02/23/vim-notes</id>
+    <content type="html"><![CDATA[<p><img src="http://majorursa.net/sites/default/files/hide_vi.jpg"  alt="http://majorursa.net/hide_vi.jpg" width="80%" />
+</p>
+
+
+
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Vi Commands</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">vi key combo</th><th scope="col" class="left">command</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">:q!</td><td class="left">quit without saving</td></tr>
+<tr><td class="left">:wq</td><td class="left">write and quit</td></tr>
+<tr><td class="left">:q</td><td class="left">quit</td></tr>
+<tr><td class="left">:%s/oldword/newword/g</td><td class="left">substitute all oldword occurences with newword in entire file</td></tr>
+<tr><td class="left">:ls</td><td class="left">list buffers</td></tr>
+<tr><td class="left">:b1</td><td class="left">switch to buffer 1</td></tr>
+<tr><td class="left">:bn</td><td class="left">switch to buffer n</td></tr>
+<tr><td class="left">:vs</td><td class="left">vertically split window (create side by side windows)</td></tr>
+</tbody>
+<tbody>
+<tr><td class="left">dw</td><td class="left">delete word</td></tr>
+<tr><td class="left">d$</td><td class="left">delete to end of line</td></tr>
+<tr><td class="left">dd</td><td class="left">delete current line</td></tr>
+<tr><td class="left">.</td><td class="left">repeat last change</td></tr>
+<tr><td class="left">yy</td><td class="left">copy, yank line into buffer</td></tr>
+<tr><td class="left">p</td><td class="left">paste the line in buffer after cursor position</td></tr>
+<tr><td class="left">cw</td><td class="left">change word</td></tr>
+<tr><td class="left">u</td><td class="left">undo!</td></tr>
+<tr><td class="left">i</td><td class="left">insert mode</td></tr>
+<tr><td class="left"><Esc&gt;</td><td class="left">escape, exit insert mode</td></tr>
+<tr><td class="left">/VirtualHost</td><td class="left">search file for phrase "VirtualHost"</td></tr>
+<tr><td class="left">n</td><td class="left">move to next occurence of search phrase</td></tr>
+<tr><td class="left">100G</td><td class="left">move to 100th line</td></tr>
+<tr><td class="left">1G</td><td class="left">move to first line</td></tr>
+<tr><td class="left">G</td><td class="left">move to last line</td></tr>
+</tbody>
+</table>
+
+
+
+</div>
+
+</div>
+
+
+
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">more vi cheatsheets</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p>
+<a href="http://www.washington.edu/computing/unix/viqr.html">http://www.washington.edu/computing/unix/viqr.html</a>
+</p>
+<p>
+<a href="http://www.lagmonster.org/docs/vi.html">http://www.lagmonster.org/docs/vi.html</a>
+</p>
+</div>
+
+</div>
+
+
+
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">add to .screenrc to get Color Schemes working</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+
+
+<div>
+  <pre><code class='bash'>attrcolor b &quot;.I&quot;
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+defbce &quot;on&quot;
+term screen-256color-bce</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+
+
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">.vimrc</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+
+
+<div>
+  <pre><code class='bash'>&quot; Colors!!
+set t_Co=256
+
+&quot; color theme
+&quot; colors zenburn
+colors calmar256-dark
+
+set showmode &quot;show current mode down the bottom
+
+&quot;Setting the status line...
+
+set statusline=%f       &quot;tail of the filename
+
+&quot;display a warning if the file format isn't Unix
+set statusline+=%#warningmsg#
+set statusline+=%{&amp;amp;ff!='unix'?'['.&amp;amp;ff.']':''}
+set statusline+=%*
+
+&quot;display a warning if file encoding isn't UTf-8
+set statusline+=%#warningmsg#
+set statusline+=%{(&amp;amp;fenc!='utf-8'&amp;amp;&amp;amp;&amp;amp;fenc!='')?'['.&amp;amp;fenc.']':''}
+set statusline+=%*
+
+set statusline+=%h      &quot;help file flag
+set statusline+=%y      &quot;filetype
+set statusline+=%r      &quot;read only flag
+set statusline+=%m      &quot;modified flag
+syntax on</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+
+
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">Window Commands</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<tbody>
+<tr><td class="left">C-w s</td><td class="left">Split window horizontally</td></tr>
+<tr><td class="left">C-w v</td><td class="left">Split window vertically</td></tr>
+<tr><td class="left">C-w x</td><td class="left">Exchange windows</td></tr>
+<tr><td class="left">C-w w</td><td class="left">jump to next window</td></tr>
+<tr><td class="left">:only</td><td class="left">kill all windows but current</td></tr>
+<tr><td class="left">C-w =</td><td class="left">equalize all window sizes</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+
+
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">Edit Keys: used with argument</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+</div>
+
+<div id="outline-container-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1">c change</h4>
+<div class="outline-text-4" id="text-1-6-1">
+
+<ul>
+<li>cw = change word
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-6-2" class="outline-4">
+<h4 id="sec-1-6-2">d delete</h4>
+<div class="outline-text-4" id="text-1-6-2">
+
+<ul>
+<li>d$ delete til end of line
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-6-3" class="outline-4">
+<h4 id="sec-1-6-3">r replace</h4>
+<div class="outline-text-4" id="text-1-6-3">
+
+<ul>
+<li>r5 replace 5 chars
+</li>
+</ul>
+
+
+<div id="outline-container-1-6-4" class="outline-4">
+<h4 id="sec-1-6-4">y yank</h4>
+<div class="outline-text-4" id="text-1-6-4">
+
+<ul>
+<li>yy yank entire line
+</li>
+</ul>
+
+</div>
+
+</div>
+
+
+
+</div>
+
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Vim Tip Yanking or Deleting a Big Chunk of Text]]></title>
+    <link href="http://bartlantz.com/blog/2012/01/27/vim-tip-yanking-text/"/>
+    <updated>2012-01-27T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/01/27/vim-tip-yanking-text</id>
+    <content type="html"><![CDATA[<p>I have a large mysqldump backup file of all databases on a server but I need a sql backup for a single database. So I wanted to break up the dump file into smaller pieces.  This is one solution I came up with using vim.</p>
+
+<ol>
+<li>I opened the dump file and a newly created file for the single database:</li>
+</ol>
+
+
+<p><div>
+  <pre><code class='bash'>vim db-dump.sql newdumpfile.sql</code></pre>
+</div>
+</p>
+
+<ol>
+<li>I searched for the start of the database section by searching for:</li>
+</ol>
+
+
+<p><div>
+  <pre><code class='bash'>/USE &lt;code&gt;databasename&lt;/code&gt;</code></pre>
+</div>
+</p>
+
+<p>where "databasename" is the specific database I want to grab.</p>
+
+<ol>
+<li>Once I was at the correct spot in the database dump I noticed that each individual database section starts with a comment:</li>
+</ol>
+
+
+<h2><div>
+  <pre><code class='bash'>&lt;/h2&gt;
+
+&lt;h2&gt;--- Current Database: &lt;code&gt;databasename&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>Once again, "databasename" is a specific database name.</p>
+
+<ol>
+<li>So I yanked all lines until the next database section with the following vim command:</li>
+</ol>
+
+
+<p><div>
+  <pre><code class='bash'>y/Current Database/</code></pre>
+</div>
+</p>
+
+<p>This tells vim to yank all lines until it reaches the next match for the regular expression "Current Database".  Vim will report how many lines have been yanked.</p>
+
+<ol>
+<li>Next, switch to the new file and paste the lines that were yanked.</li>
+</ol>
+
+
+<p><div>
+  <pre><code class='bash'>:bn
+p</code></pre>
+</div>
+</p>
+
+<p>The vim command :bn, means switch to the next buffer.  You could also
+run the command ":e newdumpfile.sql" to create and edit a new sql file</p>
+
+<p>The next vim command "p" is the paste command, it pastes into the
+current buffer the last yanked hunk of text. In this case it would be
+the lines you just yanked, the single database dump.</p>
+
+<ol>
+<li><p>Finally save the changes to the new file with :wq</p></li>
+<li><p>If you'd like to reload the database into mysql use the following:</p></li>
+</ol>
+
+
+<p><div>
+  <pre><code class='bash'>mysql -p &amp;lt; newdumpfile.sql</code></pre>
+</div>
+</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Updating my android g1 phone to cyanogen 4.2.15.1 with Danger SPL - Bart Lantz</title>
+  <meta name="author" content="Bart Lantz">
+
+  
+  <meta name="description" content="Tonight cyanogen is releasing 5.0.7 of the cyanogenmod. This is a modified ROM for android phones, that will finally allow g1 phone users like myself &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bartlantz.com/blog/2010/04/29/phone-to">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Bart Lantz" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Bart Lantz</a></h1>
+  
+    <h2>Math, Code and Science Fiction</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bartlantz.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Updating My Android G1 Phone to Cyanogen 4.2.15.1 With Danger SPL</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-29T00:00:00-04:00" pubdate data-updated="true">Apr 29<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content">Tonight <a href=http://twitter.com/cyanogen>cyanogen</a> is releasing 5.0.7 of the cyanogenmod.  This is a modified ROM for android phones, that will finally allow g1 phone users like myself to run most of the latest android apps on our phones.  It will add most of the Android Eclair functionality to older android phones, except for Live Wallpapers, but I didn&#8217;t really see myself using any live wallpapers anyway.<br /><br />The one catch is that the new ROM is too big to fit inside the G1&#8217;s tiny internal memory.  The G1 has 64 MB of room for ROMs, and according to Cyanogen no matter how he tried to squeeze the ROM 64 MB was still 4 MB too small.  So in order to load the new ROM with the eclair goodies, you need to use an SPL (second program loader), to load the ROM.   <a href=http://forum.cyanogenmod.com/index.php?/topic/2646-how-to-danger-spl/>More info on the Danger SPL</a>. <br /><br />So in anticipation of tonight&#8217;s release, I am installing the Danger SPL on my phone.   The <a href=http://forum.cyanogenmod.com/index.php?/topic/2646-how-to-danger-spl/>danger spl how to at cyanogenmod.com</a> says that the pre-requisites are a rooted G1/Dream phone (check) and a compatible radio, with links to the radio images.  So I downloaded the radios, but nowhere in the rest of the article did it mention what to do with the radio images.  I was worried, but then I realized you just need to have one of the radios currently on your phone or you need to install one of the images I downloaded.  After searching the interweb for how to check which radio is installed on your phone, I found <a href=http://androidandme.com/2009/05/beginners/guides/beginners-guide-for-rooting-your-android-g1-to-install-cupcake/>this article</a>, which says look in your phone under: Settings->About Phone->Baseband version, the last part of the number is your radio version.  In my case its 2.22.19.26I, which is compatible!<br /><br />So on to updating the ROM!<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-2782852645779220755?l=denverdroid.blogspot.com' alt='' /></div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bart Lantz</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-29T00:00:00-04:00" pubdate data-updated="true">Apr 29<span>th</span>, 2010</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bartlantz.com/blog/2010/04/29/phone-to/" data-via="bartofdenver" data-counturl="http://bartlantz.com/blog/2010/04/29/phone-to/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/04/26/what-you-need-to-know/" title="Previous Post: Drupal 7: What you need to know">&laquo; Drupal 7: What you need to know</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/04/29/phone-update-update-wow-that-was-fast/" title="Next Post: Phone update update: Wow, that was fast">Phone update update: Wow, that was fast &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>About</h1>
+<p>Major Ursa is a development blog written by Bart Lantz.</p>
+
+<p>It focuses on Drupal, Ruby, Javascript, Vim, Git and Math, here and there.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xquery-notes/">XQuery Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xpath-notes/">XPath Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/fun-with-grep-and/">Fun with Grep and Bash Aliases</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/29/using-jquery-in-drupal/">Using jQuery in Drupal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/22/drush-delete-comment/">Using Drush and SQL to Delete Spam Comments</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/underhilllabs">@underhilllabs</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'underhilllabs',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll...</ul>
+  <p><a href="http://pinboard.in/u:seamusmcgraw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "seamusmcgraw"; //id target for pinboard list
+  var pinboard_count = 7; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/115249870106368908575?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bart Lantz -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

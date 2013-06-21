@@ -1,0 +1,499 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Vim Notes - Bart Lantz</title>
+  <meta name="author" content="Bart Lantz">
+
+  
+  <meta name="description" content="Vi Commands vi key combocommand :q!quit without saving
+:wqwrite and quit
+:qquit
+:%s/oldword/newword/gsubstitute all oldword occurences with newword &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bartlantz.com/blog/2012/02/23/vim-notes">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Bart Lantz" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Bart Lantz</a></h1>
+  
+    <h2>Math, Code and Science Fiction</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bartlantz.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Vim Notes</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-23T00:00:00-05:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="http://majorursa.net/sites/default/files/hide_vi.jpg"  alt="http://majorursa.net/hide_vi.jpg" width="80%" />
+</p>
+
+
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Vi Commands</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">vi key combo</th><th scope="col" class="left">command</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">:q!</td><td class="left">quit without saving</td></tr>
+<tr><td class="left">:wq</td><td class="left">write and quit</td></tr>
+<tr><td class="left">:q</td><td class="left">quit</td></tr>
+<tr><td class="left">:%s/oldword/newword/g</td><td class="left">substitute all oldword occurences with newword in entire file</td></tr>
+<tr><td class="left">:ls</td><td class="left">list buffers</td></tr>
+<tr><td class="left">:b1</td><td class="left">switch to buffer 1</td></tr>
+<tr><td class="left">:bn</td><td class="left">switch to buffer n</td></tr>
+<tr><td class="left">:vs</td><td class="left">vertically split window (create side by side windows)</td></tr>
+</tbody>
+<tbody>
+<tr><td class="left">dw</td><td class="left">delete word</td></tr>
+<tr><td class="left">d$</td><td class="left">delete to end of line</td></tr>
+<tr><td class="left">dd</td><td class="left">delete current line</td></tr>
+<tr><td class="left">.</td><td class="left">repeat last change</td></tr>
+<tr><td class="left">yy</td><td class="left">copy, yank line into buffer</td></tr>
+<tr><td class="left">p</td><td class="left">paste the line in buffer after cursor position</td></tr>
+<tr><td class="left">cw</td><td class="left">change word</td></tr>
+<tr><td class="left">u</td><td class="left">undo!</td></tr>
+<tr><td class="left">i</td><td class="left">insert mode</td></tr>
+<tr><td class="left"><Esc&gt;</td><td class="left">escape, exit insert mode</td></tr>
+<tr><td class="left">/VirtualHost</td><td class="left">search file for phrase &#8220;VirtualHost&#8221;</td></tr>
+<tr><td class="left">n</td><td class="left">move to next occurence of search phrase</td></tr>
+<tr><td class="left">100G</td><td class="left">move to 100th line</td></tr>
+<tr><td class="left">1G</td><td class="left">move to first line</td></tr>
+<tr><td class="left">G</td><td class="left">move to last line</td></tr>
+</tbody>
+</table>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">more vi cheatsheets</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p>
+<a href="http://www.washington.edu/computing/unix/viqr.html">http://www.washington.edu/computing/unix/viqr.html</a>
+</p>
+<p>
+<a href="http://www.lagmonster.org/docs/vi.html">http://www.lagmonster.org/docs/vi.html</a>
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">add to .screenrc to get Color Schemes working</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+
+
+<div>
+  <pre><code class='bash'>attrcolor b &quot;.I&quot;
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+defbce &quot;on&quot;
+term screen-256color-bce</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">.vimrc</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+
+
+<div>
+  <pre><code class='bash'>&quot; Colors!!
+set t_Co=256
+
+&quot; color theme
+&quot; colors zenburn
+colors calmar256-dark
+
+set showmode &quot;show current mode down the bottom
+
+&quot;Setting the status line...
+
+set statusline=%f       &quot;tail of the filename
+
+&quot;display a warning if the file format isn't Unix
+set statusline+=%#warningmsg#
+set statusline+=%{&amp;amp;ff!='unix'?'['.&amp;amp;ff.']':''}
+set statusline+=%*
+
+&quot;display a warning if file encoding isn't UTf-8
+set statusline+=%#warningmsg#
+set statusline+=%{(&amp;amp;fenc!='utf-8'&amp;amp;&amp;amp;&amp;amp;fenc!='')?'['.&amp;amp;fenc.']':''}
+set statusline+=%*
+
+set statusline+=%h      &quot;help file flag
+set statusline+=%y      &quot;filetype
+set statusline+=%r      &quot;read only flag
+set statusline+=%m      &quot;modified flag
+syntax on</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">Window Commands</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<tbody>
+<tr><td class="left">C-w s</td><td class="left">Split window horizontally</td></tr>
+<tr><td class="left">C-w v</td><td class="left">Split window vertically</td></tr>
+<tr><td class="left">C-w x</td><td class="left">Exchange windows</td></tr>
+<tr><td class="left">C-w w</td><td class="left">jump to next window</td></tr>
+<tr><td class="left">:only</td><td class="left">kill all windows but current</td></tr>
+<tr><td class="left">C-w =</td><td class="left">equalize all window sizes</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">Edit Keys: used with argument</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+</div>
+
+<div id="outline-container-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1">c change</h4>
+<div class="outline-text-4" id="text-1-6-1">
+
+<ul>
+<li>cw = change word
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-6-2" class="outline-4">
+<h4 id="sec-1-6-2">d delete</h4>
+<div class="outline-text-4" id="text-1-6-2">
+
+<ul>
+<li>d$ delete til end of line
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-6-3" class="outline-4">
+<h4 id="sec-1-6-3">r replace</h4>
+<div class="outline-text-4" id="text-1-6-3">
+
+<ul>
+<li>r5 replace 5 chars
+</li>
+</ul>
+
+
+<div id="outline-container-1-6-4" class="outline-4">
+<h4 id="sec-1-6-4">y yank</h4>
+<div class="outline-text-4" id="text-1-6-4">
+
+<ul>
+<li>yy yank entire line
+</li>
+</ul>
+
+</div>
+
+</div>
+
+
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bart Lantz</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-23T00:00:00-05:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/vim/'>Vim</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bartlantz.com/blog/2012/02/23/vim-notes/" data-via="bartofdenver" data-counturl="http://bartlantz.com/blog/2012/02/23/vim-notes/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/02/03/work-on-issue-drupal-issue-queue/" title="Previous Post: Working on an Issue from the Drupal Issue Queue">&laquo; Working on an Issue from the Drupal Issue Queue</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/03/18/notes-on-drupal-features/" title="Next Post: Notes on Drupal Features">Notes on Drupal Features &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>About</h1>
+<p>Major Ursa is a development blog written by Bart Lantz.</p>
+
+<p>It focuses on Drupal, Ruby, Javascript, Vim, Git and Math, here and there.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xquery-notes/">XQuery Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xpath-notes/">XPath Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/fun-with-grep-and/">Fun with Grep and Bash Aliases</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/29/using-jquery-in-drupal/">Using jQuery in Drupal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/22/drush-delete-comment/">Using Drush and SQL to Delete Spam Comments</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/underhilllabs">@underhilllabs</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'underhilllabs',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll...</ul>
+  <p><a href="http://pinboard.in/u:seamusmcgraw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "seamusmcgraw"; //id target for pinboard list
+  var pinboard_count = 7; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/115249870106368908575?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bart Lantz -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

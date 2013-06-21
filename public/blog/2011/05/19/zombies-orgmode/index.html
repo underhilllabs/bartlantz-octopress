@@ -1,0 +1,46 @@
+layout: post
+<div>
+  <pre><code class='dot'>#+begin_src dot :file digraph2.png :cmdline -Kdot -Tpng  
+digraph D {
+  size=&quot;8,6&quot;
+ node [ shape = polygon,
+  sides = 4,
+  distortion = &quot;0.0&quot;,
+  orientation = &quot;0.0&quot;,
+  skew = &quot;0.0&quot;,
+  color = &quot;#aaaaaa&quot;,
+  style = filled,
+  fontname = &quot;Helvetica-Outline&quot; ];
+  apocalypse [sides=9 skew=&quot;.32&quot; color=&quot;purple&quot;]
+  apocalypse -&gt; zombie
+  apocalypse -&gt; zombies
+  shovel [skew=&quot;.56&quot; color=&quot;#aa2222&quot;]
+  subgraph singular {
+    label=&quot;one&quot;
+    color=purple
+    zombie -&gt; shovel [color=&quot;#440000&quot;]
+    shovel -&gt; run
+  }
+  run [sides=9, color=salmon2];
+  subgraph plural {
+    label=&quot;many&quot;
+    color=red
+    zombies -&gt; run [color=&quot;#00a4d4&quot;]
+  }
+}
+#+end_src</code></pre>
+</div>
+
+
+Then inside the buffer you can evaluate the code with &#8220;C-c C-c&#8221;, and you can see the results of evaluating the code with &#8220;C-c C-o&#8221;.
+
+This is made possible by Org-babel, a cool tool that allows you to run scripts from different languages in a single Org-mode buffer.  Not only that but you can pipe output from one code block to another code block written in a different language.  I will have more blog posts about this in the future.  Org-babel is a part of Org-mode since Org-mode 7.x or so.  Exciting stuff!
+<p />
+<h3>Further Reading</h3>
+<br />
+<a href="http://j.mp/l6chaqorgmode.org/worg/org-contrib/babel/">Org-babel Documentation</a><br>
+<a href="http://www.graphviz.org/">Graphviz</a>
+
+<hr />
+
+Edited with the emacs-chrome plugin

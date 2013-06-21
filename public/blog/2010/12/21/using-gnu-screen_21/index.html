@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Using Gnu Screen - Bart Lantz</title>
+  <meta name="author" content="Bart Lantz">
+
+  
+  <meta name="description" content="I&#8217;ve been a long time user of Linux and the command line, but not until recently have I used the amazing program: screen. Screen is a terminal &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bartlantz.com/blog/2010/12/21/using-gnu-screen_21">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Bart Lantz" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Bart Lantz</a></h1>
+  
+    <h2>Math, Code and Science Fiction</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bartlantz.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Using Gnu Screen</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-21T00:00:00-05:00" pubdate data-updated="true">Dec 21<span>st</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content">I&#8217;ve been a long time user of Linux and the command line, but not until recently have I used the amazing program: <b>screen</b>.  Screen is a terminal multiplexor.  This means you can have multiple sessions open at the same time (even over a single ssh connection) and flip back and forth between them.  <br />Prior to discovering screen I&#8217;d often be ssh&#8217;d into a remote server editing a file when the ssh session would time out or drop and I&#8217;d have to quickly open up a new terminal and start editing the file again.  Now while using screen, the screen session itself is independent of the ssh session.  So if my ssh connection flakes out, I start up a new terminal, ssh into the server, &#8220;reattach&#8221; the previous screen session to this new terminal and all of my work: my emacs window, my bash jobs, etc are still running in the screen session!  <br /><h2>How to start screen</h2><code>bart@home: $ <b>ssh boris@remote-server-in-distant-vladivostok </b><br />boris@distant-vlad: $ <b>screen</b></code><p />If you already have a screen session running on the remote server you can reattach with:<br /><code>boris@distant-vlad: $ <b>screen -r</b></code><p />I like to use the options: -raAd, mostly because it looks raad.<br /><code>boris@distant-vlad: $ <b>screen -raAd</b></code><p /><b>r</b>: means reattach previous session<br /><b>a</b>: include all capabilities (with some minor exceptions) in each window&#8217;s termcap<br /><b>A</b>: Adapt the sizes of all windows to the size of the current terminal<br /><b>d</b>: Forceably detach any sessions that are still holding on to this (your workstation at work for instance).<br /><p /><h2>Create new sessions</h2>Once inside screen to start a new session use the keyboard combination: <b>C-a c</b>. That is, &#8220;Ctrl-a c&#8221;.  (the mnemonic is <b>c</b> for &#8220;create window&#8221;)  This will create a new window move you to it.  To move back to the previous window, do a <b>C-a C-a</b>.    You can also use the keyboard combos <b>C-a n</b> and <b>C-a p</b> to move to the Next and Previous windows.  Or you can move to a window directly using its number with <b>C-a 3</b> (or whatever number it is.)<p /><h2>customizing screen with .screenrc</h2>If you are an emacs user or if you use the emacs shortcuts on the command line, than you know that C-a is already used as the command to bring the cursor to the beginning of the line.  So what to do?  You can change the default keyboard bindings in the .screenrc configuration file in your home directory.  If it doesn&#8217;t already exist, create it and add the following line:<br /><code>escape ^Bb</code><p />or whatever you want to use as the control sequence.  This will change the control sequence from <b>C-a</b> to <b>C-b</b>, other people use other keys, some use the backslash &#8220;&#34; instead.  So now if you have changed to C-b, then to toggle between windows use:<br /><b>C-b C-b</b> and so on&#8230;<p />Another good thing to add to the screenrc is code for a modeline, so you can see the available windows:<br /><code>caption string "%?%F%{= Bk}%? %C%A %D %d-%m-%Y %{= kB} %t%= %?%F%{= Bk}%:%{= wk}%? %n "    <br />                                                                   hardstatus alwayslastline <br />                                                                                                                                    hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %d/%m %{W}%c %{g}]' <code><br /><p />This code will add a modeline to the bottom of the terminal that tells you which window you are in and also the numbers or names of the sessions.<br /><h2>Irssi is Screen's BFF</h2>Best of all you can keep a session of Irssi (an irc client) running at all times in a screen session and always be up to date with your favorite IRC channels.<p /><h2>Additional Screen resources</h2> <a href="http://aperiodic.net/screen/quick_reference">Screen Quick Reference</a><br /> <a href="http://www.ibm.com/developerworks/aix/library/au-gnu_screen/index.html?ca=dgr-lnxw07GNU-Screen&S_TACT=105AGX59&S_CMP=grsitelnxw07">Stayin' Alive with Screen</a><br /> <a href="http://www.linuxjournal.com/article/6340">Power Sessions with Screen</a><br /> <a href="http://quadpoint.org/articles/irssi">Guide to Using Irssi with Screen</a><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-3111640889030134069?l=denverdroid.blogspot.com' alt='' /></div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bart Lantz</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-21T00:00:00-05:00" pubdate data-updated="true">Dec 21<span>st</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/systems-administration/'>Systems Administration</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bartlantz.com/blog/2010/12/21/using-gnu-screen_21/" data-via="bartofdenver" data-counturl="http://bartlantz.com/blog/2010/12/21/using-gnu-screen_21/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/07/29/up-home-setting-up-lending-library-with/" title="Previous Post: Setting Up a Web Enabled Lending Library">&laquo; Setting Up a Web Enabled Lending Library</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/12/28/this-weeks-emacs-commands/" title="Next Post: This Week's Emacs Commands">This Week's Emacs Commands &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>About</h1>
+<p>Major Ursa is a development blog written by Bart Lantz.</p>
+
+<p>It focuses on Drupal, Ruby, Javascript, Vim, Git and Math, here and there.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xquery-notes/">XQuery Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xpath-notes/">XPath Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/fun-with-grep-and/">Fun with Grep and Bash Aliases</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/29/using-jquery-in-drupal/">Using jQuery in Drupal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/22/drush-delete-comment/">Using Drush and SQL to Delete Spam Comments</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/underhilllabs">@underhilllabs</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'underhilllabs',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll...</ul>
+  <p><a href="http://pinboard.in/u:seamusmcgraw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "seamusmcgraw"; //id target for pinboard list
+  var pinboard_count = 7; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/115249870106368908575?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bart Lantz -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

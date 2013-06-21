@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Bart Lantz</title>
+  <meta name="author" content="Bart Lantz">
+
+  
+  <meta name="description" content="So your android app is out in the wild with thousands of Happy Users and the Happy Users are begging and pleading for a new feature that requires a &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bartlantz.com/blog/page/5">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Bart Lantz" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Bart Lantz</a></h1>
+  
+    <h2>Math, Code and Science Fiction</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bartlantz.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/21/how-to-non-destructibly-upgrade-your/">Non-destructibly Upgrade Your Android App&#8217;s Database</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-21T00:00:00-04:00" pubdate data-updated="true">Apr 21<span>st</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">So your android app is out in the wild with thousands of Happy Users and the Happy Users are begging and pleading for a new feature that requires a new field in your database.   However, the aforementioned Happy Users, would quickly turn to Unhappy Users if your next upgrade wiped their data when it restructured the app&#8217;s database.
+
+What to do?
+
+Here&#8217;s how I upgraded my app&#8217;s Database schema, while preserving all of the user&#8217;s data.
+
+First of all, I use a DatabaseHelper class (that extends <a href="http://developer.android.com/intl/zh-TW/reference/android/database/sqlite/SQLiteOpenHelper.html">SQLiteOpenHelper</a>) that performs some of the basic database needs (create, upgrade).
+
+The function we will concentrate on in this post is onUpgrade().  This function is called when the database version, represent with the constant DATABASE_VERSION is changed.  Most barebones implementation of this function call will simply drop the app&#8217;s tables  and recreate them with a call to onCreate():
+
+<blockquote>
+<span style="font-weight: bold;">
+<div>
+  <pre><code class='bash'>public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    ...
+    db.execSQL(&quot;DROP TABLE IF EXISTS albums&quot;);
+    onCreate(db);
+}</code></pre>
+</div>
+
+</span>
+</blockquote>
+
+However, this approach will destroy all of your user&#8217;s data, (ie the entire 2500+ CD collection they painstakingly entered with the soft keybard&#8211;if this were the case perhaps you should add a barcode scanner intent, alas, back to the story.) Which results in a Very Unhappy User (hereafter VUU).
+
+The solution, is to check for the app&#8217;s Database Version and make a call to our friend ALTER TABLE, like so.
+
+<blockquote>
+<span style="font-weight: bold;">
+<div>
+  <pre><code class='bash'>public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+   if(oldVersion == 2) {
+          db.execSQL(&quot;ALTER TABLE albums ADD COLUMN hip_again integer&quot;);
+   } else {
+         ...
+        db.execSQL(&quot;DROP TABLE IF EXISTS albums&quot;);
+        onCreate(db);
+  }</code></pre>
+</div>
+
+</span><span style="font-weight: bold;">}</span>
+</blockquote>
+
+There! Now your user&#8217;s can flag their old CD&#8217;s with the shifting tides of what&#8217;s hip.  Also note that should add the column in the onCreate method.  So that Happy Users of the Future (hereafter HUF), will also have the field available to them:
+
+<blockquote>
+<span style="font-weight: bold;">
+<div>
+  <pre><code class='bash'>private static final String DATABASE_CREATE =
+          &quot;create table albums (_id integer primary key autoincrement, &quot;
+          ...
+          + &quot;hip_again integer);&quot;;
+
+@Override
+public void onCreate(SQLiteDatabase db) {
+                 db.execSQL(DATABASE_CREATE);
+}</code></pre>
+</div>
+
+</span>
+</blockquote>
+
+One final thing is to increment the constant DATABASE_VERSION, so that android will call onUpgrade() the next time the app is started:
+<blockquote>
+<span style="font-weight: bold;">
+private static final int DATABASE_VERSION = 3;
+</span>
+</blockquote>
+
+
+That&#8217;s it.<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-5494733453019207090?l=denverdroid.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/11/knitting-stash-0-5/">Knitting Stash Version 0.5 Released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-11T00:00:00-04:00" pubdate data-updated="true">Apr 11<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><a href="http://www.flickr.com/photos/redbike/4508578496/"   title="Knitting Stash tabs view by denverfiddler, on Flickr">
+<img src="http://farm5.static.flickr.com/4016/4508578496_af29306e8e_m.jpg" width="160" height="240" alt="Knitting Stash tabs view" /></a>
+
+<p>
+
+
+
+
+<h3>Version 0.5 changelog:</h3>
+<ul>
+<li>added new tabbed interface to the home screen. (see the screen shot.)</li>
+<li>added visual cue to counter to show whether count is increasing or decreasing.</li>
+</ul>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/05/knitting-stash/">Knitting Stash, an Android App</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-05T00:00:00-04:00" pubdate data-updated="true">Apr 5<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">Knitting Stash is a knitting app for android devices. It is a suite of tools that helps you keep track of your knitting needles, crochet hooks, projects and all of your counters.
+
+<h3>Screenshots</h3>
+<br>
+<p>
+<a href="http://www.flickr.com/photos/redbike/4491319543/" title="knittingstash project view by denverfiddler, on Flickr"><img src="http://farm5.static.flickr.com/4025/4491319543_85479e57db_m.jpg" width="250" xxheight="240" alt="knittingstash project view" /></a>
+
+<br>
+<p>
+<a href="http://www.flickr.com/photos/redbike/4491958248/"   
+   title="knittingstash knitting needle list  by denverfiddler, on Flickr">
+<img src="http://farm5.static.flickr.com/4068/4491958248_d864269490_m.jpg"
+     width="250" xxheight="240" alt="knittingstash knitting needle list " />
+</a>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/4/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+<h1>About</h1>
+<p>Major Ursa is a development blog written by Bart Lantz.</p>
+
+<p>It focuses on Drupal, Ruby, Javascript, Vim, Git and Math, here and there.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xquery-notes/">XQuery Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xpath-notes/">XPath Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/fun-with-grep-and/">Fun with Grep and Bash Aliases</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/29/using-jquery-in-drupal/">Using jQuery in Drupal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/22/drush-delete-comment/">Using Drush and SQL to Delete Spam Comments</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/underhilllabs">@underhilllabs</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'underhilllabs',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll&#8230;</ul>
+  <p><a href="http://pinboard.in/u:seamusmcgraw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "seamusmcgraw"; //id target for pinboard list
+  var pinboard_count = 7; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/115249870106368908575?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bart Lantz -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

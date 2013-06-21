@@ -1,0 +1,1882 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Bart Lantz</title>
+  <meta name="author" content="Bart Lantz">
+
+  
+  <meta name="description" content="One of the difficulties of keeping a Drupal website completely in version control, is that a lot of the configuration is stored in the database. Each &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bartlantz.com/blog/page/2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Bart Lantz" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Bart Lantz</a></h1>
+  
+    <h2>Math, Code and Science Fiction</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bartlantz.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/18/notes-on-drupal-features/">Notes on Drupal Features</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-18T00:00:00-04:00" pubdate data-updated="true">Mar 18<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">One of the difficulties of keeping a Drupal website completely in version control, is that a lot of the configuration is stored in the database. Each change you make to a site via clicking and saving on a site administration page is saved in the database. It is difficult to keep a history of these changes without writing the entire database to a file and then checking that into version control. But you don&#8217;t want to commit an entire database into git. This is where the Features module comes into play. It helps separate the site&#8217;s configuration in the database from the site&#8217;s content.
+
+The Features module allows you to export configuration options from the database into a new module.  Then you can check this new module into version control and keep track of the history of changes, and keep backups of a site&#8217;s configuration that is separated from the site&#8217;s content and database.
+
+<h1>Features Concepts</h1>
+<h2>Exporting Features</h2>
+Exporting a feature is the processing of exporting a configuration option (or a series of options) from the database and saving them as a features module. Let&#8217;s say you are using Bartik (or another theme that utilizes the color module to allow you to customize a site&#8217;s colorscheme.)  and you change the background color of the site. When you make this change via the web interface, the configuration change is saved in the database. To export this change as a feature, you click on admin/structure/features/create.  
+
+Create a name and description for your new feature, such as &#8220;Major Ursa Bartik Colors&#8221; and &#8220;Color scheme for Bartik theme used on Major Ursa&#8221;. Next under <b>Edit Components</b>, select <em>Strongarm: variable</em>.  Then select &#8220;color_bartik_palette&#8221; and perhaps &#8220;color_bartik_stylesheets&#8221;.  Then click on the <b>Download Feature</b> button.
+
+This will download a new module to your desktop with the configuration options saved as a features module.  This is only step one.  Next you will need to upload this new module back up to your website and enable. Once the module is enabled, the configuration is being run from code from the module, not from a configuration option in the database.  This is known, confusingly enough, as <b>reverting a feature</b>.
+
+<h2>Revert a Feature</h2>
+To revert a feature is to take the configuration options that are written in a custom feature module and override the database configuration.
+
+Revert a feature with drush
+
+<div>
+  <pre><code class='bash'>drush features-revert  mu_bartik_theme</code></pre>
+</div>
+
+
+The above code would read the configuration options from the code in the mu_bartik_theme and overwrite the current configuration in the database.
+
+<h2>Override a Feature</h2>
+To override a feature, means to take the configuration that is currently in the database and use those options to override the previous custom feature module you created. This basically updates the old feature module with what is currently live on the site and in the database. Then you will be able to download an updated feature module and can commit this new change to your git repository so you have a history of site changes, upload the changed feature module <b>mu_bartik_theme</b> to your site and (ahem revert the change again).
+
+Here&#8217;s the drush command to override a feature
+
+<div>
+  <pre><code class='bash'>drush features-override mu_bartik_theme</code></pre>
+</div>
+
+
+
+
+<h2>Drush Commands</h2>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/23/vim-notes/">Vim Notes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-23T00:00:00-05:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://majorursa.net/sites/default/files/hide_vi.jpg"  alt="http://majorursa.net/hide_vi.jpg" width="80%" />
+</p>
+
+
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Vi Commands</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">vi key combo</th><th scope="col" class="left">command</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">:q!</td><td class="left">quit without saving</td></tr>
+<tr><td class="left">:wq</td><td class="left">write and quit</td></tr>
+<tr><td class="left">:q</td><td class="left">quit</td></tr>
+<tr><td class="left">:%s/oldword/newword/g</td><td class="left">substitute all oldword occurences with newword in entire file</td></tr>
+<tr><td class="left">:ls</td><td class="left">list buffers</td></tr>
+<tr><td class="left">:b1</td><td class="left">switch to buffer 1</td></tr>
+<tr><td class="left">:bn</td><td class="left">switch to buffer n</td></tr>
+<tr><td class="left">:vs</td><td class="left">vertically split window (create side by side windows)</td></tr>
+</tbody>
+<tbody>
+<tr><td class="left">dw</td><td class="left">delete word</td></tr>
+<tr><td class="left">d$</td><td class="left">delete to end of line</td></tr>
+<tr><td class="left">dd</td><td class="left">delete current line</td></tr>
+<tr><td class="left">.</td><td class="left">repeat last change</td></tr>
+<tr><td class="left">yy</td><td class="left">copy, yank line into buffer</td></tr>
+<tr><td class="left">p</td><td class="left">paste the line in buffer after cursor position</td></tr>
+<tr><td class="left">cw</td><td class="left">change word</td></tr>
+<tr><td class="left">u</td><td class="left">undo!</td></tr>
+<tr><td class="left">i</td><td class="left">insert mode</td></tr>
+<tr><td class="left"><Esc&gt;</td><td class="left">escape, exit insert mode</td></tr>
+<tr><td class="left">/VirtualHost</td><td class="left">search file for phrase &#8220;VirtualHost&#8221;</td></tr>
+<tr><td class="left">n</td><td class="left">move to next occurence of search phrase</td></tr>
+<tr><td class="left">100G</td><td class="left">move to 100th line</td></tr>
+<tr><td class="left">1G</td><td class="left">move to first line</td></tr>
+<tr><td class="left">G</td><td class="left">move to last line</td></tr>
+</tbody>
+</table>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">more vi cheatsheets</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p>
+<a href="http://www.washington.edu/computing/unix/viqr.html">http://www.washington.edu/computing/unix/viqr.html</a>
+</p>
+<p>
+<a href="http://www.lagmonster.org/docs/vi.html">http://www.lagmonster.org/docs/vi.html</a>
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">add to .screenrc to get Color Schemes working</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+
+
+<div>
+  <pre><code class='bash'>attrcolor b &quot;.I&quot;
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+defbce &quot;on&quot;
+term screen-256color-bce</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">.vimrc</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+
+
+<div>
+  <pre><code class='bash'>&quot; Colors!!
+set t_Co=256
+
+&quot; color theme
+&quot; colors zenburn
+colors calmar256-dark
+
+set showmode &quot;show current mode down the bottom
+
+&quot;Setting the status line...
+
+set statusline=%f       &quot;tail of the filename
+
+&quot;display a warning if the file format isn't Unix
+set statusline+=%#warningmsg#
+set statusline+=%{&amp;amp;ff!='unix'?'['.&amp;amp;ff.']':''}
+set statusline+=%*
+
+&quot;display a warning if file encoding isn't UTf-8
+set statusline+=%#warningmsg#
+set statusline+=%{(&amp;amp;fenc!='utf-8'&amp;amp;&amp;amp;&amp;amp;fenc!='')?'['.&amp;amp;fenc.']':''}
+set statusline+=%*
+
+set statusline+=%h      &quot;help file flag
+set statusline+=%y      &quot;filetype
+set statusline+=%r      &quot;read only flag
+set statusline+=%m      &quot;modified flag
+syntax on</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">Window Commands</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<tbody>
+<tr><td class="left">C-w s</td><td class="left">Split window horizontally</td></tr>
+<tr><td class="left">C-w v</td><td class="left">Split window vertically</td></tr>
+<tr><td class="left">C-w x</td><td class="left">Exchange windows</td></tr>
+<tr><td class="left">C-w w</td><td class="left">jump to next window</td></tr>
+<tr><td class="left">:only</td><td class="left">kill all windows but current</td></tr>
+<tr><td class="left">C-w =</td><td class="left">equalize all window sizes</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">Edit Keys: used with argument</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+</div>
+
+<div id="outline-container-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1">c change</h4>
+<div class="outline-text-4" id="text-1-6-1">
+
+<ul>
+<li>cw = change word
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-6-2" class="outline-4">
+<h4 id="sec-1-6-2">d delete</h4>
+<div class="outline-text-4" id="text-1-6-2">
+
+<ul>
+<li>d$ delete til end of line
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-6-3" class="outline-4">
+<h4 id="sec-1-6-3">r replace</h4>
+<div class="outline-text-4" id="text-1-6-3">
+
+<ul>
+<li>r5 replace 5 chars
+</li>
+</ul>
+
+
+<div id="outline-container-1-6-4" class="outline-4">
+<h4 id="sec-1-6-4">y yank</h4>
+<div class="outline-text-4" id="text-1-6-4">
+
+<ul>
+<li>yy yank entire line
+</li>
+</ul>
+
+</div>
+
+</div>
+
+
+
+</div>
+
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/03/work-on-issue-drupal-issue-queue/">Working on an Issue From the Drupal Issue Queue</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-03T00:00:00-05:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">These are the steps, using git mostly, needed to work on an issue from the drupal issue queue.
+
+<h2>First Time: Clone Drupal Core</h2>
+
+cd into your development folder and git clone drupal core, (in this case, I&#8217;m working on a drupal 8 issue).
+<div>
+  <pre><code class='bash'>cd ~/projects/
+git clone --branch 8.x http://git.drupal.org/project/drupal.git drupal-8.x
+cd drupal-8.x</code></pre>
+</div>
+
+
+<h2>Later, Refresh Repository with Git Pull</h2>
+After you&#8217;ve already cloned a copy of drupal for testing and development, all you have to do is run &#8220;git refresh&#8221; to update your copy.
+
+<div>
+  <pre><code class='bash'>cd ~/projects/drupal-8.x/
+git checkout 8.x
+git pull</code></pre>
+</div>
+
+
+This will download the most recent commits to drupal-core from the central git repository and apply them to your 8.x branch.
+
+<h2>Create a topic branch for your issue</h2>
+
+Its a good idea to do development work in a separate development branch.  The following creates a new branch and checks the new branch out, so any subsequent changes will be made to that branch.
+<div>
+  <pre><code class='bash'>git branch fix-typo
+git checkout fix-typo</code></pre>
+</div>
+
+
+To list all of the branches, run:
+<div>
+  <pre><code class='bash'>git branch</code></pre>
+</div>
+
+
+git will show all of your branches, and it will star the current branch
+<div>
+  <pre><code class='bash'>8.x
+  * fix-typo
+    profile-docs</code></pre>
+</div>
+
+
+    Next work in your topic branch, make some changes.  
+
+    <h2>Work without fear</h2>
+
+    With git, you can work without fear! if you foul things up, getting back to a previous state is easy with <em>git reset</em>. 
+
+    The following command will return the state of your code to that of the last commit.
+    <div>
+  <pre><code class='bash'>git reset HEAD --hard</code></pre>
+</div>
+
+
+    Also, if the last good state was a few commits ago, you can reset the current state to a previous commit with
+    <div>
+  <pre><code class='bash'>git reset  00581a73afab6 --hard</code></pre>
+</div>
+
+    where 00581a73afab6 is the SHA1 of the commit you want you working directory reset to.
+
+    to find previous commits and their SHA1&#8217;s, run git log:
+    <div>
+  <pre><code class='bash'>git log</code></pre>
+</div>
+
+    This will give a listing of the entire commit history.  You can travel back in time!  
+
+    To see what files have changed since the last commit, run:
+    <div>
+  <pre><code class='bash'>git status</code></pre>
+</div>
+
+    This will show which files have been modified. 
+
+    To see what the actual changes are, run:
+    <div>
+  <pre><code class='bash'>git diff HEAD</code></pre>
+</div>
+
+
+    <h2>Stage and Commit Changes</h2>
+    Once you have some changes that you&#8217;d like to preserve, you first stage them to the index:
+    <div>
+  <pre><code class='bash'>git add thefile.ext</code></pre>
+</div>
+
+
+    Now when you run git status, you will see that the file is now under the header &#8220;Changes to be commited.&#8221;  This intermediary step may seem strange if you are new to git, but it is very handy. It allows you to break up changes into separate logical commits. You can stage and commit one logical set of changes, and then stage and commit another set of changes.  Although, it may be better to separate different issues into different topic branches.
+
+    <h2>Commit changes</h2> 
+    Now that your changes are staged, it is time to commit them:
+    <div>
+  <pre><code class='bash'>git commit</code></pre>
+</div>
+
+    This will open your default editor, so you can write a descriptive commit message.
+
+    <h2>Create a Patch</h2>
+    Now that your changes have been made and committed, its time to create a patch that you attach to the drupal issue queue.
+
+    First switch back to the 8.x branch:
+    <div>
+  <pre><code class='bash'>git checkout 8.x</code></pre>
+</div>
+
+
+    Next, create a patch with git diff. Drupal has a specific naming convention for patches ([module_name]-[short-description]-[issue-number]-[comment-number].patch).  In the case of a patch for drupal core, this can be shortened to [short-description]-[issue-number]-[comment-number].patch
+
+    The following git diff command will print out all of the difference between the current branch (8.x) and the listed branch (fix-typo):
+    <div>
+  <pre><code class='bash'>git diff fix-typo &gt; fix_typo_in_bartik_css-902839-1.patch</code></pre>
+</div>
+
+
+    <h2>Use git format-patch to include committer information</h2>
+    Alternatively, you can use the git format-patch command to include the committer information in the patch:
+    <div>
+  <pre><code class='bash'>git format-patch origin/master fix-typo &gt; fix_typo_in_bartik_css-902839-1.patch</code></pre>
+</div>
+
+
+    Next go to drupal queue, write up a description, attach the patch, and change the status to &#8220;needs review&#8221;.
+
+
+
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/29/new-scuttle-developments/">New Scuttle Developments</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-29T00:00:00-05:00" pubdate data-updated="true">Jan 29<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><img src=http://www.majorursa.net/sites/default/files/styles/large/public/field/image/scuttle-screenshot.png
+     align=left style="padding-right:15px;">
+I am a big fan, user, and tinkerer of <a href=http://sourceforge.net/projects/scuttle/>Scuttle</a>: the Open Source <a href=http://en.wikipedia.org/wiki/Social_bookmarking>Social Bookmarking</a> System. In case you have never heard of it, Scuttle is similar to other social bookmarking web applications like Delicious and <a href="http://pinboard.in">Pinboard</a>. It allows you to save website bookmarks on a public site, so that other people can follow your bookmarks and you can follow other people with similar interests. Although unlike delicious and pinboard, most scuttle instances are decentralized with only a few users. So there is less of the social aspect. (That is until someone figures out how to federate all of the decentrailized installations.)
+
+You can see some of my work on different Scuttle projects on <a href=https://github.com/underhilllabs>my github profile</a>.  And here&#8217;s my <a href=http://bookmarks.denvertech.org>bookmark site</a> which shows scuttle in use.
+
+<h2>Scuttle Web App Additions</h2>
+I have a <a href=https://github.com/underhilllabs/scuttle>fork of the original scuttle web app</a>. I have add a couple of features recently. I was getting frustrated because I would bookmark a website, and scuttle would tell me that that page was already bookmarked a year ago and so would keep the bookmark in the stream a year ago, even if I updated the bookmark. The problem with that approach is that when something is bookmarked a while ago and I&#8217;m researching the topic again, I want the updated bookmark to show up with the most recent bookmarks. So I altered the code to do this.  When I resave a bookmark or update it, Scuttle now saves my updated bookmark in the stream with recent bookmarks.  It shows both the original date and the modified date.  
+
+<h2>Firefox Scuttle Plug-in Keyboard Shortcut</h2>
+There is also a firefox plugin for scuttle to update your scuttle site.  I added a keyboard shortcut to the <a href=https://github.com/underhilllabs/Scuttle-Plugin-Firefox-4>plugin on my fork of it at github</a>, My addition adds a keyboard shortcut at &#8220;Shift-Ctrl-B&#8221;, so if you&#8217;re reading a good article, you can just type &#8220;Shift-Ctrl-B&#8221; and the &#8220;scuttle save bookmark&#8221; window will pop up. If you are interested, you can download the <a href=https://github.com/underhilllabs/Scuttle-Plugin-Firefox-4/downloads>firefox plugin here</a>.
+
+
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/28/tools-for-working-with-data/">Tools for Working With Data</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-28T00:00:00-05:00" pubdate data-updated="true">Jan 28<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="content">
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Web Scraping</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>Web scraping is a technique of extracting information from websites.
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Scraperwiki</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p><a href="http://scraperwiki.com">http://scraperwiki.com</a>
+</p>
+<p>
+Scraperwiki has tutorials on scraping webpages for data, written for
+Python and Ruby.
+</p><ul>
+<li><a href="http://blog.scraperwiki.com/2011/08/15/scraperwiki-tutorial-screencast-for-non-programmers/">ScraperWiki screencast on scraping for non-programmers.</a>
+</li>
+</ul>
+
+
+
+</div>
+
+</div>
+
+<h3>Scraper: a Plug-in for Chrome</h3>
+<a href=http://mnmldave.github.com/scraper/>Scraper</a> is a cool, chrome plug-in I&#8217;ve just discovered that makes scraping web pages easy.  Just 
+<ol>
+<li>Highlight part of a table, at least a row, that you want to scrape.
+<li>Right-click on the selection.  Select &#8220;scrape similar&#8221; from the pop-up menu, and some reasonable scraping defaults will appear. 
+<li>Press the &#8220;Export to Google Docs..&#8221; button to save the scraped data to a google docs spreadsheet.
+</ol>
+
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Google Refine</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p><a href="http://code.google.com/p/google-refine/">http://code.google.com/p/google-refine/</a>
+</p>
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">Use to clean up messy and inconsistent data</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">Chrome Developer Tools</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">use to see the DOM underlying web pages</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>If there is a table of data on a web page that you want to scrape,
+select it with your mouse, right click on the selection and choose
+inspect element in the pop up menu.  This should work in Safari,
+Chrome or Firefox with the Firebug plug-in.
+</p>
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">Data Analysis</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">R</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p><a href="http://www.r-project.org/">http://www.r-project.org/</a>
+</p>
+<ul>
+<li>
+</li>
+</ul>
+
+
+
+
+<hr/>
+</div>
+</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/28/r-stuff/">Notes on R</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-28T00:00:00-05:00" pubdate data-updated="true">Jan 28<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="content">
+<h1 class="title">R Notes</h1>
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Common R Stuff</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Download and Install R Package</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<div>
+  <pre><code class='r'>install.packages(&quot;XML&quot;, dependencies = TRUE)</code></pre>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Load a Module</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<div>
+  <pre><code class='r'>library(XML)</code></pre>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">Scrape an HTML Table</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+<div>
+  <pre><code class='r'>library(XML)
+u = &quot;http://en.wikipedia.org/wiki/World_population&quot;
+# function from XML library, downloads and parses URL for data in HTMLtables
+tables = readHtmlTable(u)
+names(tables)
+tables[[2]]</code></pre>
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">R Tutorial</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">Basic R</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+<div>
+  <pre><code class='r'># x is a vector with values 1 2 3 4 5
+x &lt;- 1:5
+
+# create a function
+square &lt;- function(x) {
+  x^2
+}
+  
+# call fuction with vector x
+square(x)</code></pre>
+</div>
+
+
+
+<div>
+  <pre><code class='r'>: [1]  1  4  9 16 25</code></pre>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2">R help</h3>
+<div class="outline-text-3" id="text-2-2">
+
+
+</div>
+
+<div id="outline-container-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1">getting help with ?<command-name&gt;</h4>
+<div class="outline-text-4" id="text-2-2-1">
+
+<ul>
+<li>type a ?rnorm, to pop open a manual Page on the R command rnorm
+</li>
+<li>or try ?boxplot to get a help page on the R boxplot function
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3">Using Famous Datasets</h3>
+<div class="outline-text-3" id="text-2-3">
+
+
+<div>
+  <pre><code class='r'>library(datasets)
+data(faithful)
+hist(faithful$waiting,breaks=25)</code></pre>
+</div>
+
+
+<p>
+<img src="/assets/files/faithful.png"  alt="faithful.png" />
+</p>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-4" class="outline-3">
+<h3 id="sec-2-4">Reading Data into R from Files</h3>
+<div class="outline-text-3" id="text-2-4">
+
+
+<div>
+  <pre><code class='r'>dat &lt;- read.table(&quot;thedata.txt&quot;, sep=&quot;:&quot;)
+# space delimited, also first line is a header
+dat2 &lt;- read.table(&quot;thedata.txt&quot;, header=TRUE)
+# csv
+dat &lt;- read.csv(&quot;thedata.csv&quot;)
+print(dat)</code></pre>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-5" class="outline-3">
+<h3 id="sec-2-5">Reading Data from STDIN</h3>
+<div class="outline-text-3" id="text-2-5">
+
+<ul>
+<li>To read data from STDIN, call the scan function with the file
+  parameter left blank
+</li>
+<li>Enter a blank line or Ctrl D to end data input
+</li>
+</ul>
+
+
+<div>
+  <pre><code class='r'>&gt; nums &lt;- scan()
+1: 75  48  61  48 150  49  57  39  27  51  46  50  62  51
+15: 
+Read 14 items</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-6" class="outline-3">
+<h3 id="sec-2-6">Reading a Line of Space Separated Data into a vector</h3>
+<div class="outline-text-3" id="text-2-6">
+
+
+<div>
+  <pre><code class='r'>nums &lt;- scan(textConnection(&quot;75 48 61 48 150 49 57 39 27 51 46 50 62 51 50 58 38 34 59 44 24 39 40 33 49 33 34 32 35 30 23 39 36 25 20 32 43 52 42 44 46 51 47 51 44 33 38&quot;), sep=&quot; &quot;)
+  median(nums)
+  mean(nums)
+  deaths &lt;- nums[-5]
+  mean(deaths)
+  median(deaths)
+  sd(deaths)</code></pre>
+</div>
+
+
+<div>
+  <pre><code class='r'>: [1] 44
+: [1] 44.93617
+: [1] 42.65217
+: [1] 43.5
+: [1] 11.48761</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-7" class="outline-3">
+<h3 id="sec-2-7">Generating a Histogram</h3>
+<div class="outline-text-3" id="text-2-7">
+
+
+<div>
+  <pre><code class='r'># Data pasted from another document can be placed in a vector
+  #   via the following composition of functions
+  # textConnection can also be used to read data from stdin
+  nums &lt;- scan(textConnection(&quot;75 48 61 48 150 49 57 39 27 51 46 50 62 51 50 58 38 34 59 44 24 39 40 33 49 33 34 32 35 30 23 39 36 25 20 32 43 52 42 44 46 51 47 51 44 33 38&quot;), sep=&quot; &quot;)
+  hist(nums, main=&quot;US Lightning Death's 1959-2005&quot;)</code></pre>
+</div>
+
+
+<p>
+<img src="/assets/files/lightning.png"  alt="lightning.png" />
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-8" class="outline-3">
+<h3 id="sec-2-8">Trimmed Mean to the Rescue</h3>
+<div class="outline-text-3" id="text-2-8">
+
+
+<div>
+  <pre><code class='r'>library(datasets)
+data(airmiles)
+median(airmiles)
+# holy right skewed!
+mean(airmiles)
+# same as median
+mean(airmiles,trim=10)
+# so its, the top 4% distorting the mean
+mean(airmiles,trim=0.4)
+#same as median
+mean(airmiles,trim=0.5)</code></pre>
+</div>
+
+
+<div>
+  <pre><code class='r'>: [1] 6431
+: [1] 10527.83
+: [1] 6431
+: [1] 7226.667
+: [1] 6431</code></pre>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-9" class="outline-3">
+<h3 id="sec-2-9">Drawing a Scatterplot with a Linear Regression line</h3>
+<div class="outline-text-3" id="text-2-9">
+
+
+<div>
+  <pre><code class='r'>library(Devore7)
+plot(ex12.59)
+my.reg &lt;- lm (ex12.59$y ~ ex12.59$x)
+abline(my.reg)</code></pre>
+</div>
+
+
+<p>
+<img src="/assets/files/regression.png"  alt="regression.png" />
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-10" class="outline-3">
+<h3 id="sec-2-10">Putting 2 plots on 1 image</h3>
+<div class="outline-text-3" id="text-2-10">
+
+
+<div>
+  <pre><code class='r'>&gt; par(mfrow=c(2,2))
+&gt; boxplot(my.p)
+&gt; boxplot(my.h)</code></pre>
+</div>
+
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-11" class="outline-3">
+<h3 id="sec-2-11">Using Reduce and Map</h3>
+<div class="outline-text-3" id="text-2-11">
+
+
+</div>
+
+<div id="outline-container-2-11-1" class="outline-4">
+<h4 id="sec-2-11-1">Reduce(f=function,x=vector)</h4>
+<div class="outline-text-4" id="text-2-11-1">
+
+<p>Reduce takes a vector of values, and a binary function and accumulates
+the values returned over the entire vector of values.
+</p></div>
+
+</div>
+
+<div id="outline-container-2-11-2" class="outline-4">
+<h4 id="sec-2-11-2">Map(f=function(x){..},x=vector)</h4>
+<div class="outline-text-4" id="text-2-11-2">
+
+<p>Map takes a vector of values and a unary function, runs the function
+on each value and returns the vector of return values.
+</p></div>
+
+</div>
+
+<div id="outline-container-2-11-3" class="outline-4">
+<h4 id="sec-2-11-3">here&#8217;s how to combine them</h4>
+<div class="outline-text-4" id="text-2-11-3">
+
+<p>This function returns the cumulative distribution function of
+P(x<4) of X~poisson(5).   
+<div>
+  <pre><code class='r'>Reduce(&quot;+&quot;,Map(function(u){exp(-5)*5^u/factorial(u)},0:3))</code></pre>
+</div>
+
+
+
+<div>
+  <pre><code class='r'>: [1] 0.2650259</code></pre>
+</div>
+
+
+
+
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-2-12" class="outline-3">
+<h3 id="sec-2-12">ANOVA</h3>
+<div class="outline-text-3" id="text-2-12">
+
+
+</div>
+
+<div id="outline-container-2-12-1" class="outline-4">
+<h4 id="sec-2-12-1">SSTr - Sum of Square between Treatments</h4>
+<div class="outline-text-4" id="text-2-12-1">
+
+
+
+
+<div>
+  <pre><code class='r'>### my.100,m.125,m.150,m.175 are vectors we are analysing
+length(m.100)*sum((m.100-mean(m.100))^2)+length(m.125)*sum((m.125-mean(m.125))^2) + length(m.150)*sum((m.150-mean(m.150))^2) + length(m.175)*sum((m.175-mean(m.175))^2)</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-12-2" class="outline-4">
+<h4 id="sec-2-12-2">SSE - Sum of Squares within Treatments</h4>
+<div class="outline-text-4" id="text-2-12-2">
+
+
+
+
+<div>
+  <pre><code class='r'>### b.1,b.2, b.3, b.4 are rows of values
+### \Sigma (X_{ij} - X_{bar_dot})^2
+m.SSE &lt;- sum((b.1-mean(b.1))^2) + sum((b.2-mean(b.2))^2) + sum((b.3-mean(b.3))^2) + sum((b.4-mean(b.4))^2)</code></pre>
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2-13" class="outline-3">
+<h3 id="sec-2-13">Further Reading</h3>
+<div class="outline-text-3" id="text-2-13">
+
+<p><a href="http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-R.html">Org-babel R page</a> 
+</p>
+
+<hr/>
+
+
+
+</div>
+</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/28/r-emacs-orgmode/">R, Emacs, and Orgmode</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-28T00:00:00-05:00" pubdate data-updated="true">Jan 28<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="content">
+
+
+<div id="outline-container-1" class="outline-3">
+<h3 id="sec-1">Using R with Org-babel</h3>
+<div class="outline-text-3" id="text-1">
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-4">
+<h4 id="sec-1-1">to export a graph created by R, use the following line to start the R code:</h4>
+<div class="outline-text-4" id="text-1-1">
+
+
+
+
+<div>
+  <pre><code class='bash'>&amp;#35;+begin_src R :results graphics :file lightning.png :exports both</code></pre>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-4">
+<h4 id="sec-1-2">Parameters explained:</h4>
+<div class="outline-text-4" id="text-1-2">
+
+<ul>
+<li><b>:results graphics</b> exports the results as a graphics file.
+</li>
+<li><b>:file</b> lightning.png exports the graph to a file named lightning.png
+</li>
+<li><b>:exports both</b> exports both the code and the results
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-4">
+<h4 id="sec-1-3">to end the R code use the following line</h4>
+<div class="outline-text-4" id="text-1-3">
+
+
+
+<div>
+  <pre><code class='bash'>&amp;#35;+end_src</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-3">
+<h3 id="sec-2">R Emacs Tips</h3>
+<div class="outline-text-3" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-4">
+<h4 id="sec-2-1">M-x R</h4>
+<div class="outline-text-4" id="text-2-1">
+
+<p>type M-x R to start the inferior R process in an emacs buffer
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-4">
+<h4 id="sec-2-2">History</h4>
+<div class="outline-text-4" id="text-2-2">
+
+<p>if you start R-mode in the same directory each time and save the
+session at the end of your session, then your history and session
+variables will be preserved between sessions.
+</p></div>
+</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/28/more-git-goodness/">More Git Goodness</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-28T00:00:00-05:00" pubdate data-updated="true">Jan 28<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Git Show</h2>
+
+<h3>Show a particular commit with git show</h3>
+
+<p>This will show the commit as a diff.</p>
+
+<div>
+  <pre><code class='bash'>git show HEAD^^^</code></pre>
+</div>
+
+
+<p>Also you can use the commit&#8217;s sha1 as an argument</p>
+
+<div>
+  <pre><code class='bash'>git show 62114826e3f</code></pre>
+</div>
+
+
+<h2>Set git to output color</h2>
+
+<div>
+  <pre><code class='bash'>git config --local color.ui auto</code></pre>
+</div>
+
+
+<p>This command adds the following to your .gitconfig file:</p>
+
+<div>
+  <pre><code class='yaml'>[color]
+       ui = auto</code></pre>
+</div>
+
+
+<h2>Git Bisect</h2>
+
+<p>Try to find where in the version history a bug first appeared.</p>
+
+<div>
+  <pre><code class='bash'># start bisect
+git bisect start
+# set good point: there was no bug here, this can be a tag, SHA1, or HEAD~18 ...
+git good v1.2.6
+# set bad endpoint: we know it had shown up by here
+git bad master
+
+# bisect will select a commit half way between good and bad
+# test ... then tell git if its good or bad
+git bisect good
+# it will split the other half in half
+git bisect bad
+# when you've found the bad commit, reset the branch with
+git biset reset</code></pre>
+</div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/28/git-log-to-the-rescue/">Git Log to the Rescue</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-28T00:00:00-05:00" pubdate data-updated="true">Jan 28<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Using Git Log</h2>
+<h3>git log &#8212;stat</h3>
+
+<p>If you&#8217;d like to see the number of changes in each file, add the &#8212;stat option.</p>
+<p><img src="https://lh6.googleusercontent.com/-jaNagkLs3rU/Tu-DuIZKN1I/AAAAAAAACaE/xdNCDuVv6Vw/s800/git-log--stat.jpg" alt="" /></p>
+<h3>git log &#8212;since=&#8220;3 weeks ago&#8221; &#8212;until=&#8220;yesterday&#8221;</h3>
+<p>Git log also provides an intuitive way to provide a date range, with &#8212;since and &#8212;until options.</p>
+<h3>git log -p</h3>
+
+<p>With the -p option, git log will show patches of each of the commits.</p>
+<p><img src="https://lh5.googleusercontent.com/-iULY5TLtYaw/Tu-D5rVPdGI/AAAAAAAACZw/U1Cr0Vh09Ao/s800/git-log-p.jpg" alt="" /></p>
+<h3>git log &#8212;graph</h3>
+<p>Git log with the &#8212;graph option prints a graph along the left edge to show branches of the repository.</p>
+<p><img src="https://lh4.googleusercontent.com/-y3F733L3w9w/Tu-KMcMnp7I/AAAAAAAACac/YtfG0oN5kaU/s640/git-log-stat-graph-pretty-short.jpg" title="The stars in the graph show which branch the commits are on." alt="The stars in the graph show which branch the commits are on." /></p>
+<p>The full command for the graph screenshot above is:</p>
+<div>
+  <pre><code class='bash'>git log --graph --stat --pretty=short</code></pre>
+</div>
+
+<p>The repository used in the graph example is the git repository itself.  You can clone it here:</p>
+<div>
+  <pre><code class='bash'>git clone git://github.com/gitster/git.git</code></pre>
+</div>
+
+
+<p>The repository used for the first two examples are from Drupal.  You can also clone drupal:</p>
+<div>
+  <pre><code class='bash'>git clone --branch 7.x http://git.drupal.org/project/drupal.git</code></pre>
+</div>
+
+			
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/28/getting-started-with-git/">Getting Started With Git</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-28T00:00:00-05:00" pubdate data-updated="true">Jan 28<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="content">
+<div id="outline-container-1" class="outline-2">
+<div id="outline-container-1-1" class="outline-3">
+
+<h4 id="sec-1-1">Start Using Git on a Project</h4>
+<div class="outline-text-3" id="text-1-1">
+
+
+
+
+<div>
+  <pre><code class='bash'># cd into project your working on
+cd &lt;project&gt;
+# initialize a git repository
+git init  
+# add all of the files to the repository
+git add .
+# now commit the files to repository
+git commit -m &quot;My first commit message&quot;</code></pre>
+</div>
+
+
+
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+
+<h4 id="sec-1-1-1">Later, check which files have changed and are out of sync</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+
+
+
+
+<div>
+  <pre><code class='bash'># this will list changed files and new files
+git status
+# this will add the newly updated updated_file.php to the commit
+# staging area
+git add updated_file.php
+# commit changes with a good change message
+git commit -m &quot;Fixed missing name bug in updated_file.php&quot;</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">Create a remote repository</h4>
+
+<div class="outline-text-4" id="text-1-1-2">
+
+
+
+
+<div>
+  <pre><code class='bash'># ssh into server and create repository directory
+ssh boris@vladivostok.net
+mkdir myproject
+cd myproject
+# --bare option means this repository will be pushed to and pulled
+# from but never worked in directly (ie it will be a repository without working
+# files).  This caused me no small amount of confusion when I first
+# started using git.  
+git init --bare
+# exit out of distant vladivostok server
+exit
+# cd into local project
+cd &amp;lt;project&amp;gt;
+# add the remote repository
+git remote add vladivostok ssh:boris@vladivostok.net:myproject
+# now you can push a branch of the repository to the remote
+# repository, &quot;master&quot; is the default main branch in git
+git push vladivostok master</code></pre>
+</div>
+
+
+<p>
+Sweet! Now your code is backed up on a remote server.  In fact your
+code&#8217;s entire history is on the remote server.  Everytime you make a
+commit on the local server, you can push that change to the remote
+server as well.
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Good Git Introductions</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1"><a href="http://www.alistapart.com/articles/get-started-with-git/">Getting Started With Git</a></h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2"><a href="http://schacon.github.com/git/everyday.html">Everyday Git with 20 commands or so</a></h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">Git Next Level</h3>
+<div class="outline-text-3" id="text-1-3">
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1"><a href="http://think-like-a-git.net/epic.html">Think like a Git</a></h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2"><a href="http://www.linuxjournal.com/content/git-revision-control-perfected">Git: Revision Control Perfected</a></h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3"><a href="http://cmurphycode.posterous.com/git-201-slightly-more-advanced">Git 201: Slightly More Advanced</a></h4>
+<div class="outline-text-4" id="text-1-3-3">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4"><a href="http://danielmiessler.com/study/git/">A Git Primer</a></h4>
+<div class="outline-text-4" id="text-1-3-4">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-5" class="outline-4">
+<h4 id="sec-1-3-5"><a href="http://eagain.net/articles/git-for-computer-scientists/">Git for Computer Scientists</a></h4>
+<div class="outline-text-4" id="text-1-3-5">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-6" class="outline-4">
+<h4 id="sec-1-3-6"><a href="http://tomayko.com/writings/the-thing-about-git">The Thing About Git</a></h4>
+
+<div class="outline-text-4" id="text-1-3-6">
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">Git Workflow</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+
+<h4 id="sec-1-4-1"><a href="http://scottchacon.com/2011/08/31/github-flow.html">Github&#8217;s Git Workflow</a></h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2"><a href="http://nvie.com/posts/a-successful-git-branching-model/">Git-flow a more complex workflow</a></h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">Github Stuff</h3>
+<div class="outline-text-3" id="text-1-5">
+
+
+</div>
+
+<div id="outline-container-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1"><a href="http://net.tutsplus.com/tutorials/other/getting-the-hang-of-github/">Getting the Hang of Github</a></h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+<h1>About</h1>
+<p>Major Ursa is a development blog written by Bart Lantz.</p>
+
+<p>It focuses on Drupal, Ruby, Javascript, Vim, Git and Math, here and there.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xquery-notes/">XQuery Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xpath-notes/">XPath Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/fun-with-grep-and/">Fun with Grep and Bash Aliases</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/29/using-jquery-in-drupal/">Using jQuery in Drupal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/22/drush-delete-comment/">Using Drush and SQL to Delete Spam Comments</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/underhilllabs">@underhilllabs</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'underhilllabs',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll&#8230;</ul>
+  <p><a href="http://pinboard.in/u:seamusmcgraw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "seamusmcgraw"; //id target for pinboard list
+  var pinboard_count = 7; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/115249870106368908575?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bart Lantz -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

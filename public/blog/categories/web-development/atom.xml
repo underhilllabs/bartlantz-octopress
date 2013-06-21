@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Web Development | Bart Lantz]]></title>
+  <link href="http://bartlantz.com/blog/categories/web-development/atom.xml" rel="self"/>
+  <link href="http://bartlantz.com/"/>
+  <updated>2013-06-21T18:19:33-04:00</updated>
+  <id>http://bartlantz.com/</id>
+  <author>
+    <name><![CDATA[Bart Lantz]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using Jekyll on NearlyFreeSpeech.net]]></title>
+    <link href="http://bartlantz.com/blog/2012/05/11/jekyll-on-nfsn/"/>
+    <updated>2012-05-11T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/05/11/jekyll-on-nfsn</id>
+    <content type="html"><![CDATA[<p>NearlyFreeSpeech.net is a good simple, bare-bones fit for a Jekyll
+site once everything is set up. The price can't be beat, you can put
+down a $10 payment and just try it out. With a Jekyll site, that $10
+investment should last a while!</p>
+
+<h2>Set Up SSH Alias</h2>
+
+<p>The first thing to do is set up an ssh alias in your .bashrc file.
+The hostname and username that are assigned at nfsn are generally
+pretty easy to forget, so I always create an alias for them, like:</p>
+
+<p><div>
+  <pre><code class='bash'>alias sshnfsn='username_sitename@ssh.yourhostname.nearlyfreespeech.net';</code></pre>
+</div>
+</p>
+
+<p>Once you save the .bashrc file, you can source it with:</p>
+
+<p><div>
+  <pre><code class='bash'>. ~/.bashrc</code></pre>
+</div>
+</p>
+
+<p>and then test that it works with by running it.</p>
+
+<p><div>
+  <pre><code class='bash'>sshnfsn</code></pre>
+</div>
+</p>
+
+<h2>Aside: Public, Private, Protected Directories</h2>
+
+<p>On a nfsn site, there are 3 directories in your /home folder.</p>
+
+<ul>
+<li><p>The <strong>/home/public</strong> folder is your public facing directory. This is
+your website's public Document Root.</p></li>
+<li><p>The <strong>/home/private</strong> folder is your private folder where you can store
+git repos, your ruby gems, anything private you need to use or back
+up.</p></li>
+<li><p>The <strong>/home/protected</strong>: let me know if find a use for this.</p></li>
+</ul>
+
+
+<h2>Set Up Git on NFSN</h2>
+
+<p>Once you are ssh'd into nfsn, cd into /home/private and create a
+directory for your git repositories and create a bare git repository
+for your site.
+<div>
+  <pre><code class='bash'>cd /home/private
+mkdir git
+cd git
+mkdir mysite.git
+cd mysite.git
+git init --bare</code></pre>
+</div>
+</p>
+
+<p>Now you have a bare git repository for your jekyll site. The following
+script will create a git post-receive hook, that will run every time
+you push to your git repository.</p>
+
+<p><div>
+  <pre><code class='bash'>&lt;/p&gt;
+
+&lt;h1&gt;!/bin/sh&lt;/h1&gt;
+
+&lt;p&gt;REPONAME=mysite.git
+GIT_REPO=$HOME/git/$REPONAME
+TMP_GIT_CLONE=$HOME/git/tmp_deploy/$REPONAME
+PUBLIC_WWW=/home/public&lt;/p&gt;
+
+&lt;h1&gt;clone the git repo into the tmp_deploy directory.&lt;/h1&gt;
+
+&lt;p&gt;git clone $GIT_REPO $TMP_GIT_CLONE&lt;/p&gt;
+
+&lt;h1&gt;jekyll-ify the site and place html files in /home/public&lt;/h1&gt;
+
+&lt;p&gt;jekyll --no-auto $TMP_GIT_CLONE $PUBLIC_WWW&lt;/p&gt;
+
+&lt;p&gt;rm -Rf $HOME/git/tmp_deploy/$REPONAME/.git/objects
+rm -Rf $HOME/git/tmp_deploy/$REPONAME/.git
+rm -Rf $HOME/git/tmp_deploy/$REPONAME&lt;/p&gt;
+
+&lt;p&gt;exit</code></pre>
+</div>
+</p>
+
+<p>Be sure to chmod +x the file:</p>
+
+<p><div>
+  <pre><code class='bash'>chmod ug+x /home/private/git/mysite.git/post-receive</code></pre>
+</div>
+</p>
+
+<p>Now, every time you "git push" into nfsn this post-receive hook will
+auto-regenerate your jekyll site.</p>
+
+<h2>Set Up a Git Remote to NFSN</h2>
+
+<p>Back on your home computer or wherever you are building your jekyll
+site, you need to create a git remote for your nsfn git
+repository.</p>
+
+<p><div>
+  <pre><code class='bash'>cd ~/projects/mysite.git&lt;/p&gt;
+
+&lt;h1&gt;substitute in your username, sitename and nfsn hostname&lt;/h1&gt;
+
+&lt;p&gt;git remote add nfsn ssh://&amp;lt;nsfnusername&amp;gt;-&amp;lt;sitename&amp;gt;@ssh.&amp;lt;hostname&amp;gt;.nearlyfreespeech.net/home/private/git/mysite.git</code></pre>
+</div>
+</p>
+
+<p>Now that you have a git remote set up for your jekyll site, you can
+Create a page in your jekyll "_post" directory. <br/>
+Run "jekyll --server" to test it locally at http://localhost:4000.</p>
+
+<p><div>
+  <pre><code class='bash'>jekyll --server</code></pre>
+</div>
+</p>
+
+<p>If it looks good, add it to your git repository.</p>
+
+<p><div>
+  <pre><code class='bash'>git commit -am &quot;new brilliant post!&quot;</code></pre>
+</div>
+</p>
+
+<p>Next, push it to your website on nfsn.</p>
+
+<p><div>
+  <pre><code class='bash'>git push nfsn master</code></pre>
+</div>
+</p>
+
+<p>The post-receive script you created earlier will generate your new public jekyll website automatically.</p>
+
+<p>Test it and enjoy!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Apache Notes]]></title>
+    <link href="http://bartlantz.com/blog/2011/11/23/apache-notes/"/>
+    <updated>2011-11-23T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2011/11/23/apache-notes</id>
+    <content type="html"><![CDATA[<div id="content">
+<div id="outline-container-1" class="outline-2">
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Restart Apache2</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+
+
+<div>
+  <pre><code class='bash'>sudo apache2ctl graceful</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Continuously Monitor Apache Error Log</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+
+
+<div>
+  <pre><code class='bash'>sudo tail -f /var/log/apache2/error.log</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">Apache Configuration</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">Add a new VirtualHost to the Apache Config file</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+
+
+
+<div>
+  <pre><code class='bash'>sudo vi /etc/apache2/sites-available/default</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">A simple VirtualHost entry</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+
+
+
+<div>
+  <pre><code class='bash'>&lt;VirtualHost *:80&gt;
+  ServerName majorursa.net
+  ServerAlias www.majorursa.net
+  DocumentRoot /var/www/majorursalia/
+&lt;/VirtualHost&amp;gt;</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3">A VirtualHost for a Drupal Site</h4>
+<div class="outline-text-4" id="text-1-3-3">
+
+
+
+
+<div>
+  <pre><code class='bash'>&lt;VirtualHost *:80&gt;  
+  ServerName majorursa.net
+  ServerAlias www.majorursa.net
+  DocumentRoot /var/www/majorursalia/drupal-6.22
+  &lt;Directory /var/www/majorursalia/drupal-6.22/&gt;
+    AllowOverride All
+    Options None
+    Order allow,deny
+    Allow from all
+  &lt;/Directory&gt;
+&lt;/VirtualHost&gt;</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">Phusion Passenger</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>Do NOT start phusion passenger on a whim, forget about it and leave it Running!
+</p><ul>
+<li>Memory Hog!
+</li>
+</ul>
+
+
+</div>
+</div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

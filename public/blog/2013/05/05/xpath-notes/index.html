@@ -1,0 +1,375 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>XPath Notes - Bart Lantz</title>
+  <meta name="author" content="Bart Lantz">
+
+  
+  <meta name="description" content="This spring I took Introduction to Databases a MOOC (Massive Open Online Class) from Stanford&#8217;s Jennifer Widom. It was very interesting, I &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bartlantz.com/blog/2013/05/05/xpath-notes">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Bart Lantz" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Bart Lantz</a></h1>
+  
+    <h2>Math, Code and Science Fiction</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bartlantz.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">XPath Notes</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-05T19:21:00-04:00" pubdate data-updated="true">May 5<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This spring I took <a href="https://class2go.stanford.edu/db/Winter2013">Introduction to Databases</a> a MOOC (Massive Open Online Class) from Stanford&#8217;s Jennifer Widom. It was very interesting, I learned a great deal from it. And one of the sections of the class that I really enjoyed, even though it sounded like it was going to be pretty dry, was the section on XML. I took quite a few pages of notes on the different XMl tools, so I figured I might as well post them to my blog.</p>
+
+<h2>XPath Definition</h2>
+
+<blockquote><p>XPath is a query language for selecting nodes from an XML document.</p></blockquote>
+
+<p><a href="http://en.wikipedia.org/wiki/XPath">from Wikipedia</a></p>
+
+<h3>XML for the Examples</h3>
+
+<figure class='code'><figcaption><span>countries.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;countries&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;country</span> <span class="na">name=</span><span class="s">&quot;Afghanistan&quot;</span> <span class="na">population=</span><span class="s">&quot;22664136&quot;</span> <span class="na">area=</span><span class="s">&quot;647500&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;language</span> <span class="na">percentage=</span><span class="s">&quot;11&quot;</span><span class="nt">&gt;</span>Turkic<span class="nt">&lt;/language&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;language</span> <span class="na">percentage=</span><span class="s">&quot;35&quot;</span><span class="nt">&gt;</span>Pashtu<span class="nt">&lt;/language&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;language</span> <span class="na">percentage=</span><span class="s">&quot;50&quot;</span><span class="nt">&gt;</span>Afghan Persian<span class="nt">&lt;/language&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/country&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;country</span> <span class="na">name=</span><span class="s">&quot;Albania&quot;</span> <span class="na">population=</span><span class="s">&quot;3249136&quot;</span> <span class="na">area=</span><span class="s">&quot;28750&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;country</span> <span class="na">name=</span><span class="s">&quot;Algeria&quot;</span> <span class="na">population=</span><span class="s">&quot;29183032&quot;</span> <span class="na">area=</span><span class="s">&quot;2381740&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;city&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;name&gt;</span>Algiers<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;population&gt;</span>1507241<span class="nt">&lt;/population&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/city&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/country&gt;</span>
+</span><span class='line'><span class="nt">&lt;/countries&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Basic Path</h3>
+
+<p>Selects all of countries from the country root node.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xquery'><span class='line'><span class="nf">doc</span><span class="p">(</span><span class="s1">&#39;countries.xml&#39;</span><span class="p">)/</span><span class="nt">countries</span><span class="p">/</span><span class="nt">country</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Path with Alternation</h3>
+
+<p>This will select countries with populations that speak Pashtu or Swedish.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xquery'><span class='line'><span class="nf">doc</span><span class="p">(</span><span class="s1">&#39;countries.xml&#39;</span><span class="p">)/</span><span class="nt">countries</span><span class="p">/</span><span class="nt">country</span><span class="p">[</span><span class="nf">language</span><span class="p">(</span><span class="nt">Pashtu</span><span class="o">|</span><span class="nt">Swedish</span><span class="p">)]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Attributes are prepended with &#8220;@&#8221;</h3>
+
+<p>This will select the names of all countries</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xquery'><span class='line'><span class="nf">doc</span><span class="p">(</span><span class="s1">&#39;countries.xml&#39;</span><span class="p">)/</span><span class="nt">countries</span><span class="p">/</span><span class="nt">country</span><span class="p">/</span><span class="na">@name</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Path with Conditional</h3>
+
+<p>Select the names of all countries that have a population of less than 1,000,000.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xquery'><span class='line'><span class="nf">doc</span><span class="p">(</span><span class="s1">&#39;countries.xml&#39;</span><span class="p">)/</span><span class="nt">countries</span><span class="p">/</span><span class="nt">country</span><span class="p">[</span><span class="na">@population</span> <span class="nt">&lt;</span> <span class="err">1000000]/@</span><span class="nt">name</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Complex Conditional</h3>
+
+<p>Select all countries that have a population of less than 1,000,000.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xquery'><span class='line'><span class="nf">doc</span><span class="p">(</span><span class="s1">&#39;countries.xml&#39;</span><span class="p">)/</span><span class="nt">countries</span><span class="p">/</span><span class="nt">country</span><span class="p">[</span><span class="na">@population</span> <span class="nt">&lt;</span> <span class="err">1000000</span> <span class="nt">and</span> <span class="nt">city</span><span class="err">/</span><span class="nt">population</span> <span class="nt">&gt;</span><span class="l"> 50000]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>data() prints out just the text value.</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xquery'><span class='line'><span class="nf">doc</span><span class="p">(</span><span class="s1">&#39;countries.xml&#39;</span><span class="p">)/</span><span class="nt">countries</span><span class="p">/</span><span class="nt">country</span><span class="p">[</span><span class="na">@population</span> <span class="nt">&lt;</span> <span class="err">1000000]/</span><span class="nt">data</span><span class="err">(@</span><span class="nt">name</span><span class="err">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bart Lantz</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-05T19:21:00-04:00" pubdate data-updated="true">May 5<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/data-analysis/'>Data Analysis</a>, <a class='category' href='/blog/categories/xml/'>XML</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bartlantz.com/blog/2013/05/05/xpath-notes/" data-via="bartofdenver" data-counturl="http://bartlantz.com/blog/2013/05/05/xpath-notes/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/09/11/fun-with-grep-and/" title="Previous Post: Fun with Grep and Bash Aliases">&laquo; Fun with Grep and Bash Aliases</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/05/05/xquery-notes/" title="Next Post: XQuery Notes">XQuery Notes &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>About</h1>
+<p>Major Ursa is a development blog written by Bart Lantz.</p>
+
+<p>It focuses on Drupal, Ruby, Javascript, Vim, Git and Math, here and there.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xquery-notes/">XQuery Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xpath-notes/">XPath Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/fun-with-grep-and/">Fun with Grep and Bash Aliases</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/29/using-jquery-in-drupal/">Using jQuery in Drupal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/22/drush-delete-comment/">Using Drush and SQL to Delete Spam Comments</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/underhilllabs">@underhilllabs</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'underhilllabs',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll...</ul>
+  <p><a href="http://pinboard.in/u:seamusmcgraw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "seamusmcgraw"; //id target for pinboard list
+  var pinboard_count = 7; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/115249870106368908575?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bart Lantz -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

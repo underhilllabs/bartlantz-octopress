@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Emacs | Bart Lantz]]></title>
+  <link href="http://bartlantz.com/blog/categories/emacs/atom.xml" rel="self"/>
+  <link href="http://bartlantz.com/"/>
+  <updated>2013-06-21T18:19:33-04:00</updated>
+  <id>http://bartlantz.com/</id>
+  <author>
+    <name><![CDATA[Bart Lantz]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[R, Emacs, and Orgmode]]></title>
+    <link href="http://bartlantz.com/blog/2012/01/28/r-emacs-orgmode/"/>
+    <updated>2012-01-28T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/01/28/r-emacs-orgmode</id>
+    <content type="html"><![CDATA[<div id="content">
+
+
+<div id="outline-container-1" class="outline-3">
+<h3 id="sec-1">Using R with Org-babel</h3>
+<div class="outline-text-3" id="text-1">
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-4">
+<h4 id="sec-1-1">to export a graph created by R, use the following line to start the R code:</h4>
+<div class="outline-text-4" id="text-1-1">
+
+
+
+
+<div>
+  <pre><code class='bash'>&amp;#35;+begin_src R :results graphics :file lightning.png :exports both</code></pre>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-4">
+<h4 id="sec-1-2">Parameters explained:</h4>
+<div class="outline-text-4" id="text-1-2">
+
+<ul>
+<li><b>:results graphics</b> exports the results as a graphics file.
+</li>
+<li><b>:file</b> lightning.png exports the graph to a file named lightning.png
+</li>
+<li><b>:exports both</b> exports both the code and the results
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-4">
+<h4 id="sec-1-3">to end the R code use the following line</h4>
+<div class="outline-text-4" id="text-1-3">
+
+
+
+<div>
+  <pre><code class='bash'>&amp;#35;+end_src</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-3">
+<h3 id="sec-2">R Emacs Tips</h3>
+<div class="outline-text-3" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-4">
+<h4 id="sec-2-1">M-x R</h4>
+<div class="outline-text-4" id="text-2-1">
+
+<p>type M-x R to start the inferior R process in an emacs buffer
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-4">
+<h4 id="sec-2-2">History</h4>
+<div class="outline-text-4" id="text-2-2">
+
+<p>if you start R-mode in the same directory each time and save the
+session at the end of your session, then your history and session
+variables will be preserved between sessions.
+</p></div>
+</div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Emacs Window Commands]]></title>
+    <link href="http://bartlantz.com/blog/2011/01/03/emacs-window-commands/"/>
+    <updated>2011-01-03T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2011/01/03/emacs-window-commands</id>
+    <content type="html"><![CDATA[<p>I recently bought a new large monitor, which opened the possibility of using Emacs with multiple, side-by-side windows.  Which is brilliant by the way!  Since I plugged it in, I've been "C-x 3"-ing like a madman.  My new favorite way to learn programming is having an info file open in the left window and in the right window having a scheme (or python) prompt open.  That is what I am doing now working on the Structure and Interpretation of Computer Programs.  Luckily there was an <a href="http://www.neilvandyke.org/sicp-texi/">info file available</a>.  I'm trying to think of a simple way to translate my programming epubs or pdfs into info files.<p><a href="http://www.flickr.com/photos/redbike/5324820738/" title="SICP with Emacs by denverfiddler, on Flickr"><img src="http://farm6.static.flickr.com/5043/5324820738_4a77355d01.jpg" width="500" height="267" alt="SICP with Emacs" /></a><p>Anyways on to todays topic.  Emacs window commands!  <p>The first thing to keep in mind, is the difference between windows and  frames in emacs.  To emacs: a window is any portal to a buffer.  if you type in "C-x 2" in emacs and your view splits in half.  These two  portals are known as windows.  What we usually call a new window, is known as a frame to emacs.  So when you type in Ctrl-n in your browser and a new window pops open, in Emacsia, this is known as a new frame.<p><h3>Open another window:</h3><p><b>C-x 2</b>        open another vertical window.<br><b>C-x 3</b>        open another horizontal window.<br><b>C-x 4 b </b>     open a buffer in the other window<br><b>C-x 4 f</b>      open a new file in the other window.<br><b>C-x 1</b>        close all other windows, leave current window open. <br><b>C-x 0</b>        close current window, switch to other window.<br><b>C-x o</b>        move to other window<br><p><h3>Positioning windows:</h3><p><b>C-x +</b>      balance windows. This balances the size of all open windows.<br><b>C-x {</b>     widen current window.<br><b>C-x }</b>     narrow current window.<br><b>C-u C-x {</b>   widen current window by 4 columns.<br><b>C-u C-x }</b>   narrow current window by 4 columns.<br><p><h3>Scroll other window:</h3><p><b>M-C-v</b>     scroll other window<br><p><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-1347604681223856760?l=denverdroid.blogspot.com' alt='' /></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[This Week's Emacs Commands]]></title>
+    <link href="http://bartlantz.com/blog/2010/12/28/this-weeks-emacs-commands/"/>
+    <updated>2010-12-28T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2010/12/28/this-weeks-emacs-commands</id>
+    <content type="html"><![CDATA[<p>If you've ever played keywiz on Emacs: "M-x keywiz", you were probably eating humble-hacker-pie by the end of the game.  (For the uninitiated, keywiz is a game in emacs that's asks 10 random questions about key-bindings for some times obscure emacs commands.)  So far my top score is 4 (out of 10).</p>
+
+<p>So what is a novice to do? I've decided to write commands I want to learn on sticky notes on my monitor until I memorize them.</p>
+
+<p>So, without further ado, here's this weeks list of new commands:</p>
+
+<p>M-g g
+goto line.  This command will ask for a line number and take you there in the current file.</p>
+
+<h3>C-x v=</h3>
+
+
+<p>vc-diff.  This command will show a diff between current file and HEAD in whatever Version Control System you are using.</p>
+
+<h3>C-x vv</h3>
+
+
+<p>vc-next-action.  This command will perform the next appropriate VCS command, such as add current file to staging, or commit.</p>
+
+<h3>C-M-\</h3>
+
+
+<p>indent-region.  If there is a defined region, this command will indent it.</p>
+
+<h3>C-M-;</h3>
+
+
+<p>comment-region.  If there is a defined region, this command will comment the region out.   (or uncomment a commented out region.)</p>
+
+<p>A note: to define a region.  Do a C-[spc] at the beginning of the region and then move to the end of the region however you'd like (arrow keys, C-n, C-f, C-v).  If you can't see the regions add the following to your .emacs file: (transient-mark-mode 1).</p>
+
+<p>Second note, in the above key combination, capital C, means hold the Ctrl key, capital M, means hold the Alt key.  If there are dashes between letters: type them together (or with C or M hold the Ctrl or Alt key while typing the other key.  So with M-g g: Hold Alt while typing g, let go and then type g again.)</p>
+
+<p>Now off to work on a new version of keywiz, perhaps keywiz-jr!</p>
+
+<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-8672382218947955063?l=denverdroid.blogspot.com' alt='' /></div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Cool Things to Do in Emacs Dired Mode]]></title>
+    <link href="http://bartlantz.com/blog/2010/07/09/cool-things-to-do-emacs-dired/"/>
+    <updated>2010-07-09T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2010/07/09/cool-things-to-do-emacs-dired</id>
+    <content type="html"><![CDATA[<h2 id="sec-1_1_1">Delete some files in the <i>Downloads</i> folder </h2>
+
+
+
+
+<p>My Downloads folder is always out of control. There are always a
+ton of pdf files that I opened once in a browser but don't need to
+save. It's a pain to open a GUI file navigator, like Nautilus, and
+double click on each pdf file to view it and see if it should be
+tossed. However with Emacs, trimming my Downloads directory of old
+files is quick and easy.  </p>
+
+
+<p></p>
+
+<h2 id="sec-1_1_2">Viewing Pdfs in Emacs </h2>
+
+
+
+
+<p>If you see a pdf with an uninformative name like 2010-09.pdf just
+hit <<b>enter</b>&gt; when the cursor is on the file name, (when
+the file name is at point). Emacs will open the pdf in a new
+buffer. Once you have viewed the pdf and have decided its face you can
+quickly kill the pdf buffer with '<b>k</b>' and you'll be returned to
+the directory. Now, if the pdf is unimportant, queue it to be deleted
+with '<b>d</b>'. If you want to keep the file, but give it a better
+name, type 'R' to rename it. 
+
+To unqueue a file for deletion, use '<b>u</b>'. And finally to
+delete all the files currently queued for deletion, type 'x'.  </p> 
+<p />
+<a href="http://www.flickr.com/photos/redbike/5919681539/" title="Dired mode emacs by denverfiddler, on Flickr"><img src="http://farm7.static.flickr.com/6144/5919681539_d0ff5a1193.jpg" width="500" height="313" alt="Dired mode emacs"></a>
+<p />
+
+
+<h2 id="sec-1_1_3">Delete old Emacs backup files </h2>
+
+<p>If you have a lot of backup files that emacs created with ~ appended to
+the file name, you can quickly queue them all for deletion by typing '<b>~</b>'.
+</p>
+
+<h2>Here's the List of Directory Organizing Commands</h2>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">key combo</th><th scope="col" class="left">command</th></tr>
+</thead>
+<tbody>
+<tr><td class="left"><enter&gt;</td><td class="left">open file at point</td></tr>
+
+<tr><td class="left">d</td><td class="left">Queue File For Deletion</td></tr>
+<tr><td class="left">u</td><td class="left">Unqueue File</td></tr>
+<tr><td class="left">~</td><td class="left">Queue Backup Files for Del</td></tr>
+<tr><td class="left">x</td><td class="left">eXecute Queued Delete Jobs</td></tr>
+<tr><td class="left">R</td><td class="left">Rename File</td></tr>
+<tr><td class="left">k</td><td class="left">Kill PDF Buffer</td></tr>
+<tr><td class="left">C-x C-q</td><td class="left">Edit Directory as a File</td></tr>
+
+</tbody>
+</table>
+
+
+
+
+<p />
+<h2 id="sec-1_3">Edit Zip'd or Tar-gz'd archives in place </h2>
+
+<p>If you need to edit a file inside a zip or tar archive, simply open
+the archive by hitting <enter&gt; on the name in Dired mode, then
+click on the file. Edit the file and save it with '<b>C-x C-s</b>',
+and then do another <b>C-x C-s</b> inside the zip buffer to save the
+archive with the file changes. The archive will be compressed again
+with your changes.  </p> 
+
+<p />
+<h2 id="sec-1_4">OMG!: Change File Owner, Group, Mode </h2>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">key combo</th><th scope="col" class="left">command</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">O</td><td class="left">change owner</td></tr>
+<tr><td class="left">M</td><td class="left">change mode</td></tr>
+<tr><td class="left">G</td><td class="left">change group</td></tr>
+<tr><td class="left">Z</td><td class="left">compress file</td></tr>
+</tbody>
+</table>
+
+
+
+<p />
+<p />
+<h1 id="sec-1_5">Encrypt, Decrypt Files </h1>
+
+<p>Use '<b>:e</b>' to encrypt the file at point. Emacs will ask who you want to
+encrypt the file for (ie whose public key to use to encrypt the file.)
+You can also encrypt the file symmetrically with a password. Once the
+file is encrypted, there will be two files in the directory: the
+original file and the encrypted file with '.gpg' added to the file
+name. 
+</p>
+
+<p />
+<h2 id="sec-1_5_1">Decrypt </h2>
+
+<p>To open the symmetrically encrypted file, click on its name and you
+will be prompted for a password. You can also type '<b>:d</b>' when
+the filename is at point.
+</p>
+
+
+<h2 id="sec-1_5_2">EasyPG Assistant Docs </h2>
+
+<p>The program that is used to encrypt the file's is EasyPG Assistant.
+<a href="http://www.gnu.org/software/emacs/manual/html_mono/epa.html">EasyPG Assistant Manual</a>
+</p>
+
+<p />
+<h2 id="sec-1_7">Get More Help </h2>
+
+<p>Type 'C-hm' (describe mode) while in dired-mode, to pop open a help
+buffer, with a description of dired mode and a list of commands.
+</p>
+
+<p />
+<h2 id="sec-1_8">All Key Combinations named in post </h2>
+
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">key combo</th><th scope="col" class="left">command</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">d</td><td class="left">mark file for deletion</td></tr>
+<tr><td class="left">u</td><td class="left">unmark file</td></tr>
+<tr><td class="left">x</td><td class="left">eXecute queued deletions</td></tr>
+<tr><td class="left">R</td><td class="left">rename/move file</td></tr>
+<tr><td class="left">O</td><td class="left">change owner</td></tr>
+<tr><td class="left">M</td><td class="left">change mode</td></tr>
+<tr><td class="left">G</td><td class="left">change group</td></tr>
+<tr><td class="left">Z</td><td class="left">compress file</td></tr>
+<tr><td class="left">y</td><td class="left">show only certain file type</td></tr>
+<tr><td class="left">w</td><td class="left">copy file name</td></tr>
+<tr><td class="left">RET</td><td class="left">open file at point</td></tr>
+<tr><td class="left">k</td><td class="left">if in pdf buffer, kill</td></tr>
+<tr><td class="left">C-x C-s</td><td class="left">Save file or  archive</td></tr>
+<tr><td class="left">i</td><td class="left">insert sub-directory</td></tr>
+<tr><td class="left">~</td><td class="left">mark all backup files for deletion</td></tr>
+<tr><td class="left">C-x C-q</td><td class="left">edit directory listing as a file</td></tr>
+
+</tbody>
+</table>
+<a href=http://denverdroid.blogspot.com/2011/07/cool-things-to-do-in-emacs-dired-mode.html>Cool Things to do in Emacs' Dired Mode</a>
+
+]]></content>
+  </entry>
+  
+</feed>

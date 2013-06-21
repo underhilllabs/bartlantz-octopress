@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Open Source Projects | Bart Lantz]]></title>
+  <link href="http://bartlantz.com/blog/categories/open-source-projects/atom.xml" rel="self"/>
+  <link href="http://bartlantz.com/"/>
+  <updated>2013-06-21T18:19:33-04:00</updated>
+  <id>http://bartlantz.com/</id>
+  <author>
+    <name><![CDATA[Bart Lantz]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[New Scuttle Developments]]></title>
+    <link href="http://bartlantz.com/blog/2012/01/29/new-scuttle-developments/"/>
+    <updated>2012-01-29T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/01/29/new-scuttle-developments</id>
+    <content type="html"><![CDATA[<p>&lt;img src=http://www.majorursa.net/sites/default/files/styles/large/public/field/image/scuttle-screenshot.png</p>
+
+<pre><code> align=left style="padding-right:15px;"&gt;
+</code></pre>
+
+<p>I am a big fan, user, and tinkerer of <a href=http://sourceforge.net/projects/scuttle/>Scuttle</a>: the Open Source <a href=http://en.wikipedia.org/wiki/Social_bookmarking>Social Bookmarking</a> System. In case you have never heard of it, Scuttle is similar to other social bookmarking web applications like Delicious and <a href="http://pinboard.in">Pinboard</a>. It allows you to save website bookmarks on a public site, so that other people can follow your bookmarks and you can follow other people with similar interests. Although unlike delicious and pinboard, most scuttle instances are decentralized with only a few users. So there is less of the social aspect. (That is until someone figures out how to federate all of the decentrailized installations.)</p>
+
+<p>You can see some of my work on different Scuttle projects on <a href=https://github.com/underhilllabs>my github profile</a>.  And here's my <a href=http://bookmarks.denvertech.org>bookmark site</a> which shows scuttle in use.</p>
+
+<h2>Scuttle Web App Additions</h2>
+
+
+<p>I have a <a href=https://github.com/underhilllabs/scuttle>fork of the original scuttle web app</a>. I have add a couple of features recently. I was getting frustrated because I would bookmark a website, and scuttle would tell me that that page was already bookmarked a year ago and so would keep the bookmark in the stream a year ago, even if I updated the bookmark. The problem with that approach is that when something is bookmarked a while ago and I'm researching the topic again, I want the updated bookmark to show up with the most recent bookmarks. So I altered the code to do this.  When I resave a bookmark or update it, Scuttle now saves my updated bookmark in the stream with recent bookmarks.  It shows both the original date and the modified date.</p>
+
+<h2>Firefox Scuttle Plug-in Keyboard Shortcut</h2>
+
+
+<p>There is also a firefox plugin for scuttle to update your scuttle site.  I added a keyboard shortcut to the <a href=https://github.com/underhilllabs/Scuttle-Plugin-Firefox-4>plugin on my fork of it at github</a>, My addition adds a keyboard shortcut at "Shift-Ctrl-B", so if you're reading a good article, you can just type "Shift-Ctrl-B" and the "scuttle save bookmark" window will pop up. If you are interested, you can download the <a href=https://github.com/underhilllabs/Scuttle-Plugin-Firefox-4/downloads>firefox plugin here</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Updated the Scuttle Plugin for Firefox to FF 4]]></title>
+    <link href="http://bartlantz.com/blog/2011/04/30/updated-the-scuttle-plugin-for-firefox-to-ff-4/"/>
+    <updated>2011-04-30T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2011/04/30/updated-the-scuttle-plugin-for-firefox-to-ff-4</id>
+    <content type="html"><![CDATA[<p>I updated the Scuttle firefox plugin to work with Firefox 4.  This was the one utility that was holding me back from upgrading to Firefox 4.  I created a "github repository.":https://github.com/underhilllabs/Scuttle-Plugin-Firefox-4 for the project.  Feel free to fork the project.  Its a good simple plugin if you'd like to learn how to write one.</p>
+
+<p>The original scuttle firefox plugin hasn't been upgraded since 2007. The version in   This updated version is compatible with Firefox 4.  You can view the source or fork the project at "my github repository.":https://github.com/underhilllabs/Scuttle-Plugin-Firefox-4 or you can download the plugin directly: "scuttle-0.4.2-firefox+fl.xpi":https://github.com/downloads/underhilllabs/Scuttle-Plugin-Firefox-4/scuttle-0.4.2-firefox+fl.xpi</p>
+
+<p>Scuttle is an open source "Website Bookmarking System":http://scuttle.org. I switched to it for my bookmarking needs after Yahoo! announced they were shutting down delicious.com.  The cool thing about Scuttle is that its open source, (its written in PHP.) so you can download the source and run it on your own web server and if there's a new feature you want for your social bookmarking you can write it, also since it runs on your own server, you can be sure that the service will never end (just make regular backups.) The bad news is that you need to have a web server to run it.  If you are just interested in an alternative to delicious you can try "pinboard.in":http://pinboard.in.</p>
+
+<p>Credit for the original code goes to Marcus Campbell, developer of scuttle and the scuttle plugin and also to "Andreas Keller":http://akeller.eu/en/firefox-3-und-das-scuttle-add-on/ for originally updating the scuttle plugin for Firefox 3.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Drupal | Bart Lantz]]></title>
+  <link href="http://bartlantz.com/blog/categories/drupal/atom.xml" rel="self"/>
+  <link href="http://bartlantz.com/"/>
+  <updated>2013-06-21T18:19:33-04:00</updated>
+  <id>http://bartlantz.com/</id>
+  <author>
+    <name><![CDATA[Bart Lantz]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using jQuery in Drupal]]></title>
+    <link href="http://bartlantz.com/blog/2012/06/29/using-jquery-in-drupal/"/>
+    <updated>2012-06-29T18:52:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/06/29/using-jquery-in-drupal</id>
+    <content type="html"><![CDATA[<p>Drupal 7 includes jQuery 1.4.4 by default.  So getting started using jQuery in your module or theme is really simple.  The easiest way to include a javascript file is to include it in a .info file with a line like "scripts[]= myfile.js".</p>
+
+<h2>How to include your js file in a module or theme</h2>
+
+<h3>Add this to the .info file</h3>
+
+<p><code>yaml
+scripts[] = js/myjavascript.js
+</code></p>
+
+<p>this will include the javascript file on every page that includes your module or theme.</p>
+
+<h3>Include it in your Theme's template.php</h3>
+
+<p>Themes have more granular control of where javascript file is included in template.php</p>
+
+<p><code>php
+drupal_add_js(drupal_get_path('theme','kepler6_omega') . 'js/myjavascript.js');
+</code></p>
+
+<h3>Use drupal_add_js in your module</h3>
+
+<p>Include js in yarr.module
+<code>php
+function yarr_form_alter(&amp;amp;$form, &amp;amp;$form_state, $form_id) {
+  drupal_add_js(drupal_get_path('module,'yarr') . 'js/myjavascript.js');
+  ...
+}
+</code></p>
+
+<h3>Use drupal_add_library to add libraries included in Drupal</h3>
+
+<p>example add jQueryUI Accordion library
+<code>php
+drupal_add_library('system','ui.accordion');
+</code></p>
+
+<p>While jQuery core is included by default, jQuery UI is not, so you need to include that with drupal_add_library if you need it, as above.)</p>
+
+<h2>Drupal Behaviors</h2>
+
+<h3>Drupal behaviors are used instead of $(document).ready();</h3>
+
+<p>$(document).ready() is used to wait until the entire DOM is loaded before adding
+your javascript functionality to the DOM.</p>
+
+<p>Drupal adds its own way to add your javascript to the DOM</p>
+
+<h3>Drupal attach behaviors</h3>
+
+<p>attach your functionality to the Drupal objects behavior array</p>
+
+<p>```javascript
+(function($) {</p>
+
+<p>Drupal.behaviors.yarr = {
+  attach: function(context, settings) {</p>
+
+<pre><code>$('h1 &amp;gt; a').each(function(i) {
+  var h1text = $(this).text();
+  $(this).text("Yarrr, matey! " + h1text);
+});
+$('h1:not(:has(a))').each(function(i) {
+  var h1text = $(this).text();
+  $(this).text("Yarr, " + h1text);
+});
+</code></pre>
+
+<p>  }
+};</p>
+
+<p>})(jQuery)
+```</p>
+
+<h2>Notes on the code example</h2>
+
+<ul>
+<li>The outside wrapper is required if you wish to use the short jquery "$" syntax.</li>
+<li>$('h1 &gt; a') selects all of the H1 headers (and the inner anchor) that have immediate anchor children</li>
+<li>$('h1:not(:has(a))') selects all H1 headers that do not have anchors embedded
+in them.</li>
+<li>.each, iterates over each element in the selector.</li>
+</ul>
+
+
+<p>Inside the function the "this" object refers to the current DOM element. If you want
+the jQuery object use the $(this) syntax.</p>
+
+<h2>Further Reading</h2>
+
+<p> <a href="http://drupal.org/node/171213">Drupal Documentation on Javascript and jQuery</a></p>
+
+<p> <a href="http://jquery.org">jQuery Documentation</a></p>
+
+<p> <a href="http://api.jquery.org">jQuery API Documentation</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using Drush and SQL to Delete Spam Comments]]></title>
+    <link href="http://bartlantz.com/blog/2012/05/22/drush-delete-comment/"/>
+    <updated>2012-05-22T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/05/22/drush-delete-comment</id>
+    <content type="html"><![CDATA[<blockquote><p>spam filters fall apart; the centre cannot hold.</p></blockquote>
+
+<h3>Spam Gets By ...</h3>
+
+<p>From time to time, despite precautions, spammers get by the Drupal filters and
+captchas.  Or perhaps, the problem gets put in your lap and you have
+the pleasure of deleting thousands of spam comments.</p>
+
+<p>The Drupal Administrative interface doesn't provide many resources unless you enjoy clicking
+"select all" and "delete selected comments", page after page, 50 comments at a time.</p>
+
+<h3>Drush to the Rescue</h3>
+
+<p>But, if you are comfortable with sql, one easy solution is to use <strong>drush sql-query</strong>  to delete the comments.</p>
+
+<h3>Before you start Deleting anything...</h3>
+
+<p>If you are unfamiliar at all with sql, first back up your drupal database.</p>
+
+<p><code>bash
+drush sql-dump --result-file=/path/to/dump-file.sql
+</code></p>
+
+<p>You could also dump just the comment table. (The '~' says to save it
+in your home directory.)</p>
+
+<p><code>bash
+drush sql-dump --result-file=~/comment-table.sql --tables-list=comment
+</code></p>
+
+<h3>Now let's get busy!</h3>
+
+<h4>First take a look at the comment table:</h4>
+
+<p><code>bash
+drush sqlq "desc comment"
+</code></p>
+
+<p>( <strong>drush sqlq</strong> is the short form of <strong>drush sql-query</strong>)</p>
+
+<p>You could also use drush sql-cli to view the comment table:</p>
+
+<p><code>bash
+$ drush sql-cli
+....
+mysql&gt; desc comment;
++----------+---------------------+------+-----+---------+----------------+
+| Field    | Type                | Null | Key | Default | Extra          |
++----------+---------------------+------+-----+---------+----------------+
+| cid      | int(11)             | NO   | PRI | NULL    | auto_increment |
+| pid      | int(11)             | NO   | MUL | 0       |                |
+| nid      | int(11)             | NO   | MUL | 0       |                |
+| uid      | int(11)             | NO   | MUL | 0       |                |
+| subject  | varchar(64)         | NO   |     |         |                |
+| hostname | varchar(128)        | NO   |     |         |                |
+| created  | int(11)             | NO   | MUL | 0       |                |
+| changed  | int(11)             | NO   |     | 0       |                |
+| status   | tinyint(3) unsigned | NO   |     | 1       |                |
+| thread   | varchar(255)        | NO   |     | NULL    |                |
+| name     | varchar(60)         | YES  |     | NULL    |                |
+| mail     | varchar(64)         | YES  |     | NULL    |                |
+| homepage | varchar(255)        | YES  |     | NULL    |                |
+| language | varchar(12)         | NO   |     |         |                |
++----------+---------------------+------+-----+---------+----------------+
+14 rows in set (0.00 sec)
+</code></p>
+
+<h4>Next take a look at the comments:</h4>
+
+<p><code>bash
+drush sqlq "select subject,cid from comment "
+</code></p>
+
+<h4>You can show comments from the last 30 days with the following.</h4>
+
+<p>The created field is stored as a unix timestamp (seconds since the
+Unix Epoch), so to get last month timestamp:</p>
+
+<p><code>
+Seconds to subtract = (seconds in an hour)*(24 hours in a day)*(30 days) = 3600*24*30
+</code></p>
+
+<p><code>bash
+drush sqlq "select subject,cid from comment where created &gt; unix_timestamp(now())-3600*24*30"
+</code></p>
+
+<h3>Delete comments within a range of comment ids.</h3>
+
+<p>If you know the range of spam comment ids, you can give sql a range of comment ids:</p>
+
+<p>Show the range of comments:</p>
+
+<p><code>bash
+drush sqlq "select subject,cid from comment where cid &gt; 3013 and cid &lt; 3134 "
+</code></p>
+
+<p>Delete the range of comments:</p>
+
+<p><code>
+drush sqlq "delete from comment where cid &gt; 3013 and cid &lt; 3134 "
+</code></p>
+
+<h3>Show comments, group by name of commenter</h3>
+
+<p><code>bash
+drush sqlq "select subject,name,cid from comment where cid &gt; 300 group by name"
+</code></p>
+
+<h3>But, honestly, there's probably a drush delete-comments module that needs to be written!</h3>
+
+<p>I'll keep you posted of my progress on that. In the meantime, you can try using the previous commands.  Just remember to backup your database first, its only a single drush command after all!</p>
+
+<p><code>bash
+drush dump --result-file=~/drupal-backup.sql
+</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Notes on Drupal Features]]></title>
+    <link href="http://bartlantz.com/blog/2012/03/18/notes-on-drupal-features/"/>
+    <updated>2012-03-18T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/03/18/notes-on-drupal-features</id>
+    <content type="html"><![CDATA[<p>One of the difficulties of keeping a Drupal website completely in version control, is that a lot of the configuration is stored in the database. Each change you make to a site via clicking and saving on a site administration page is saved in the database. It is difficult to keep a history of these changes without writing the entire database to a file and then checking that into version control. But you don't want to commit an entire database into git. This is where the Features module comes into play. It helps separate the site's configuration in the database from the site's content.</p>
+
+<p>The Features module allows you to export configuration options from the database into a new module.  Then you can check this new module into version control and keep track of the history of changes, and keep backups of a site's configuration that is separated from the site's content and database.</p>
+
+<h1>Features Concepts</h1>
+
+
+<h2>Exporting Features</h2>
+
+
+<p>Exporting a feature is the processing of exporting a configuration option (or a series of options) from the database and saving them as a features module. Let's say you are using Bartik (or another theme that utilizes the color module to allow you to customize a site's colorscheme.)  and you change the background color of the site. When you make this change via the web interface, the configuration change is saved in the database. To export this change as a feature, you click on admin/structure/features/create.</p>
+
+<p>Create a name and description for your new feature, such as "Major Ursa Bartik Colors" and "Color scheme for Bartik theme used on Major Ursa". Next under <b>Edit Components</b>, select <em>Strongarm: variable</em>.  Then select "color_bartik_palette" and perhaps "color_bartik_stylesheets".  Then click on the <b>Download Feature</b> button.</p>
+
+<p>This will download a new module to your desktop with the configuration options saved as a features module.  This is only step one.  Next you will need to upload this new module back up to your website and enable. Once the module is enabled, the configuration is being run from code from the module, not from a configuration option in the database.  This is known, confusingly enough, as <b>reverting a feature</b>.</p>
+
+<h2>Revert a Feature</h2>
+
+
+<p>To revert a feature is to take the configuration options that are written in a custom feature module and override the database configuration.</p>
+
+<p>Revert a feature with drush</p>
+
+<p><div>
+  <pre><code class='bash'>drush features-revert  mu_bartik_theme</code></pre>
+</div>
+</p>
+
+<p>The above code would read the configuration options from the code in the mu_bartik_theme and overwrite the current configuration in the database.</p>
+
+<h2>Override a Feature</h2>
+
+
+<p>To override a feature, means to take the configuration that is currently in the database and use those options to override the previous custom feature module you created. This basically updates the old feature module with what is currently live on the site and in the database. Then you will be able to download an updated feature module and can commit this new change to your git repository so you have a history of site changes, upload the changed feature module <b>mu_bartik_theme</b> to your site and (ahem revert the change again).</p>
+
+<p>Here's the drush command to override a feature</p>
+
+<p><div>
+  <pre><code class='bash'>drush features-override mu_bartik_theme</code></pre>
+</div>
+</p>
+
+<h2>Drush Commands</h2>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Working on an Issue from the Drupal Issue Queue]]></title>
+    <link href="http://bartlantz.com/blog/2012/02/03/work-on-issue-drupal-issue-queue/"/>
+    <updated>2012-02-03T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/02/03/work-on-issue-drupal-issue-queue</id>
+    <content type="html"><![CDATA[<p>These are the steps, using git mostly, needed to work on an issue from the drupal issue queue.</p>
+
+<h2>First Time: Clone Drupal Core</h2>
+
+
+<p>cd into your development folder and git clone drupal core, (in this case, I'm working on a drupal 8 issue).
+<div>
+  <pre><code class='bash'>cd ~/projects/
+git clone --branch 8.x http://git.drupal.org/project/drupal.git drupal-8.x
+cd drupal-8.x</code></pre>
+</div>
+</p>
+
+<h2>Later, Refresh Repository with Git Pull</h2>
+
+
+<p>After you've already cloned a copy of drupal for testing and development, all you have to do is run "git refresh" to update your copy.</p>
+
+<p><div>
+  <pre><code class='bash'>cd ~/projects/drupal-8.x/
+git checkout 8.x
+git pull</code></pre>
+</div>
+</p>
+
+<p>This will download the most recent commits to drupal-core from the central git repository and apply them to your 8.x branch.</p>
+
+<h2>Create a topic branch for your issue</h2>
+
+
+<p>Its a good idea to do development work in a separate development branch.  The following creates a new branch and checks the new branch out, so any subsequent changes will be made to that branch.
+<div>
+  <pre><code class='bash'>git branch fix-typo
+git checkout fix-typo</code></pre>
+</div>
+</p>
+
+<p>To list all of the branches, run:
+<div>
+  <pre><code class='bash'>git branch</code></pre>
+</div>
+</p>
+
+<p>git will show all of your branches, and it will star the current branch
+<div>
+  <pre><code class='bash'>8.x
+  * fix-typo&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;profile-docs</code></pre>
+</div>
+
+
+Next work in your topic branch, make some changes.  
+
+&lt;h2&gt;Work without fear&lt;/h2&gt;
+
+With git, you can work without fear! if you foul things up, getting back to a previous state is easy with &lt;em&gt;git reset&lt;/em&gt;. 
+
+The following command will return the state of your code to that of the last commit.
+<div>
+  <pre><code class='bash'>git reset HEAD --hard</code></pre>
+</div>
+
+
+Also, if the last good state was a few commits ago, you can reset the current state to a previous commit with
+<div>
+  <pre><code class='bash'>git reset  00581a73afab6 --hard</code></pre>
+</div>
+
+where 00581a73afab6 is the SHA1 of the commit you want you working directory reset to.
+
+to find previous commits and their SHA1's, run git log:
+<div>
+  <pre><code class='bash'>git log</code></pre>
+</div>
+
+This will give a listing of the entire commit history.  You can travel back in time!  
+
+To see what files have changed since the last commit, run:
+<div>
+  <pre><code class='bash'>git status</code></pre>
+</div>
+
+This will show which files have been modified. 
+
+To see what the actual changes are, run:
+<div>
+  <pre><code class='bash'>git diff HEAD</code></pre>
+</div>
+
+
+&lt;h2&gt;Stage and Commit Changes&lt;/h2&gt;
+Once you have some changes that you'd like to preserve, you first stage them to the index:
+<div>
+  <pre><code class='bash'>git add thefile.ext</code></pre>
+</div>
+
+
+Now when you run git status, you will see that the file is now under the header "Changes to be commited."  This intermediary step may seem strange if you are new to git, but it is very handy. It allows you to break up changes into separate logical commits. You can stage and commit one logical set of changes, and then stage and commit another set of changes.  Although, it may be better to separate different issues into different topic branches.
+
+&lt;h2&gt;Commit changes&lt;/h2&gt; 
+Now that your changes are staged, it is time to commit them:
+<div>
+  <pre><code class='bash'>git commit</code></pre>
+</div>
+
+This will open your default editor, so you can write a descriptive commit message.
+
+&lt;h2&gt;Create a Patch&lt;/h2&gt;
+Now that your changes have been made and committed, its time to create a patch that you attach to the drupal issue queue.
+
+First switch back to the 8.x branch:
+<div>
+  <pre><code class='bash'>git checkout 8.x</code></pre>
+</div>
+
+
+Next, create a patch with git diff. Drupal has a specific naming convention for patches ([module_name]-[short-description]-[issue-number]-[comment-number].patch).  In the case of a patch for drupal core, this can be shortened to [short-description]-[issue-number]-[comment-number].patch
+
+The following git diff command will print out all of the difference between the current branch (8.x) and the listed branch (fix-typo):
+<div>
+  <pre><code class='bash'>git diff fix-typo &amp;gt; fix_typo_in_bartik_css-902839-1.patch</code></pre>
+</div>
+
+
+&lt;h2&gt;Use git format-patch to include committer information&lt;/h2&gt;
+Alternatively, you can use the git format-patch command to include the committer information in the patch:
+<div>
+  <pre><code class='bash'>git format-patch origin/master fix-typo &amp;gt; fix_typo_in_bartik_css-902839-1.patch</code></pre>
+</div>
+
+
+Next go to drupal queue, write up a description, attach the patch, and change the status to "needs review".
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Drush Commands]]></title>
+    <link href="http://bartlantz.com/blog/2011/11/28/drush-commands/"/>
+    <updated>2011-11-28T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2011/11/28/drush-commands</id>
+    <content type="html"><![CDATA[<h3 id="sec-2">Basic Drush </h3>
+
+
+<p><div>
+  <pre><code class='bash'>// Download a module or theme
+drush dl cck&lt;/p&gt;
+
+&lt;p&gt;// Enable module or theme
+drush en cck&lt;/p&gt;
+
+&lt;p&gt;// clear cache all, don't need sudo
+drush cc all&lt;/p&gt;
+
+&lt;p&gt;// Get help message on command
+drush help pm-update&lt;/p&gt;
+
+&lt;p&gt;// List site aliases
+drush sa&lt;/p&gt;
+
+&lt;p&gt;// Get status on particular site, via site-alias
+drush @math status</code></pre>
+</div>
+</p>
+
+<h2 id="sec-3">Advanced Drush </h2>
+
+
+
+
+<h3 id="sec-3.1">Using Drush to sync a remote server </h3>
+
+
+
+
+<h4 id="sec-3.1.1">Sync Dev Server with Staging Server </h4>
+
+
+<p><div>
+  <pre><code class='bash'>// drush core-rsync &amp;lt;source&amp;gt; &amp;lt;destination&amp;gt;
+drush core-rsync @dev @stage</code></pre>
+</div>
+</p>
+
+<ul>
+<li id="sec-3.1.1.1">see for full documentation: <br/>
+<a href="http://drush.ws/#core-rsync">http://drush.ws/#core-rsync</a>
+
+
+</li>
+</ul>
+
+
+<h4 id="sec-3.1.2">Download drush<sub>extras</sub> </h4>
+
+
+<p><div>
+  <pre><code class='bash'>drush dl drush_extras</code></pre>
+</div>
+</p>
+
+<h4 id="sec-3.1.3">Drush pushkey </h4>
+
+
+
+
+<p>This command creates a ssl public/private key in your home directory
+and copies the public key to a remote server.  Subsequent drush
+commands will use this public/private key for authentication.
+</p>
+
+
+<p><div>
+  <pre><code class='bash'>// okay substitute your username for &quot;boris&quot; and your server for &quot;badinoff.com&quot;
+drush pushkey boris@badinoff.com</code></pre>
+</div>
+</p>
+
+<h2 id="sec-4">Drush Git Backup </h2>
+
+
+
+
+<ul>
+<li>
+<a href="https://github.com/scor/dgb">DGB at Github</a>
+</li>
+</ul>
+
+
+
+
+<h3 id="sec-4.1">Install DGB </h3>
+
+
+<p><div>
+  <pre><code class='bash'>cd &amp;lt;drush directory&amp;gt;/commands/
+git clone https://github.com/scor/dgb.git</code></pre>
+</div>
+</p>
+
+<h3 id="sec-4.2">Setup DGB for a site </h3>
+
+
+<p><div>
+  <pre><code class='bash'># from DRUPAL_ROOT&lt;/p&gt;
+
+&lt;h1&gt;cd up one directory&lt;/h1&gt;
+
+&lt;p&gt;cd ..&lt;/p&gt;
+
+&lt;h1&gt;create directory for backed up database&lt;/h1&gt;
+
+&lt;p&gt;mkdir databases&lt;/p&gt;
+
+&lt;h1&gt;initialize a git repository&lt;/h1&gt;
+
+&lt;p&gt;git init</code></pre>
+</div>
+</p>
+
+<h3 id="sec-4.3">Back up Site </h3>
+
+
+<p><div>
+  <pre><code class='bash'>cd &amp;lt;DRUPAL_ROOT&amp;gt;
+drush dgb-backup</code></pre>
+</div>
+</p>
+
+<h3 id="sec-4.4">What is in DGB Archive </h3>
+
+
+<p>The DGB instance directory is the directory up from your DRUPAL<sub>ROOT</sub>. 
+</p>
+
+
+
+
+<h4 id="sec-4.4.1">each site's db dump is in databases/<site-name&gt;.sql </h4>
+
+
+
+
+<p>Database dump for default is in databases/default.sql
+</p>
+
+
+<h4 id="sec-4.4.2">There is a Git repository of your site's files </h4>
+
+
+<p><div>
+  <pre><code class='bash'># from DRUPAL_ROOT cd into the DGB instance directory
+cd ..&lt;/p&gt;
+
+&lt;h1&gt;see list of git commits&lt;/h1&gt;
+
+&lt;p&gt;git log&lt;/p&gt;
+
+&lt;h1&gt;see what files have changed since last call to drush dgb-backup&lt;/h1&gt;
+
+&lt;p&gt;git status</code></pre>
+</div>
+</p>
+
+<h3 id="sec-4.5">Clone the Site for development </h3>
+
+
+<p><div>
+  <pre><code class='bash'># from DRUPAL_ROOT
+cd ../..&lt;/p&gt;
+
+&lt;h1&gt;create a dev directory parallel to other site&lt;/h1&gt;
+
+&lt;p&gt;mkdir dev
+cd dev
+git clone &amp;lt;path to dgb instance&amp;gt;&lt;/p&gt;
+
+&lt;h1&gt;create a new branch called &quot;my-dev-branch&quot;&lt;/h1&gt;
+
+&lt;p&gt;git branch my-dev-branch&lt;/p&gt;
+
+&lt;h1&gt;checkout the new dev branch&lt;/h1&gt;
+
+&lt;p&gt;git checkout my-dev-branch&lt;/p&gt;
+
+&lt;h1&gt;now create a new database with the database dump&lt;/h1&gt;
+
+&lt;h1&gt;change &amp;lt;dbuser&amp;gt;, &amp;lt;dbpasswd&amp;gt;, &amp;lt;devdbname&amp;gt; and &amp;lt;path-to-dgb-instance&amp;gt;&lt;/h1&gt;
+
+&lt;h1&gt;and also the substitute default.sql for the name of your databasedump&lt;/h1&gt;
+
+&lt;p&gt;mysql -u &amp;lt;dbuser&amp;gt; -p &amp;lt;dbpasswd&amp;gt; &amp;lt;devdbname&amp;gt; &amp;lt; &amp;lt;path-to-dgb-instance&amp;gt;/databases/default.sql&lt;/p&gt;
+
+&lt;h1&gt;now finally update settings.php to point to your dev database&lt;/h1&gt;
+
+&lt;p&gt;vim sites/default/settings.php&lt;/p&gt;
+
+&lt;h1&gt;finally check that there is an .htaccess file in your new dev&lt;/h1&gt;
+
+&lt;h1&gt;&amp;lt;DRUPAL_ROOT&amp;gt; if not, copy it over from the cloned siteF&lt;/h1&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<h3 id="sec-4.6">Another Way to Copy @live to @dev </h3>
+
+
+<p><div>
+  <pre><code class='bash'>&lt;/p&gt;
+
+&lt;h1&gt;Core-rsync copies all of the files from one site instance to another.&lt;/h1&gt;
+
+&lt;h1&gt;The first time you sync you can use --include-conf option to copy settings.php.&lt;/h1&gt;
+
+&lt;p&gt;drush core-rsync @live @dev --include-conf&lt;/p&gt;
+
+&lt;h1&gt;Next change database settings to use @dev database.&lt;/h1&gt;
+
+&lt;p&gt;vi &amp;lt;document-root&amp;gt;/sites/default/settings.php&lt;/p&gt;
+
+&lt;h1&gt;After first sync use w/out --include-conf and it will preserve the existing settings.php.&lt;/h1&gt;
+
+&lt;p&gt;drush core-rsync @live @dev&lt;/p&gt;
+
+&lt;h1&gt;Sync databases.&lt;/h1&gt;
+
+&lt;p&gt;drush sql-sync @live @dev&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+]]></content>
+  </entry>
+  
+</feed>

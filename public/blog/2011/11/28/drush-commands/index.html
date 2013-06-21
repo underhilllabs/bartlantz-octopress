@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Drush Commands - Bart Lantz</title>
+  <meta name="author" content="Bart Lantz">
+
+  
+  <meta name="description" content="Basic Drush // Download a module or theme
+drush dl cck // Enable module or theme
+drush en cck // clear cache all, don't need sudo
+drush cc all // Get &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bartlantz.com/blog/2011/11/28/drush-commands">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Bart Lantz" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Bart Lantz</a></h1>
+  
+    <h2>Math, Code and Science Fiction</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bartlantz.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Drush Commands</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-28T00:00:00-05:00" pubdate data-updated="true">Nov 28<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3 id="sec-2">Basic Drush </h3>
+
+<div>
+  <pre><code class='bash'>// Download a module or theme
+drush dl cck
+
+// Enable module or theme
+drush en cck
+
+// clear cache all, don't need sudo
+drush cc all
+
+// Get help message on command
+drush help pm-update
+
+// List site aliases
+drush sa
+
+// Get status on particular site, via site-alias
+drush @math status</code></pre>
+</div>
+
+
+
+
+
+<h2 id="sec-3">Advanced Drush </h2>
+
+<h3 id="sec-3.1">Using Drush to sync a remote server </h3>
+
+<h4 id="sec-3.1.1">Sync Dev Server with Staging Server </h4>
+
+<div>
+  <pre><code class='bash'>// drush core-rsync &lt;source&amp;gt; &lt;destination&amp;gt;
+drush core-rsync @dev @stage</code></pre>
+</div>
+
+
+
+
+<ul>
+<li id="sec-3.1.1.1">see for full documentation: <br/>
+<a href="http://drush.ws/#core-rsync">http://drush.ws/#core-rsync</a>
+
+
+</li>
+</ul>
+<h4 id="sec-3.1.2">Download drush<sub>extras</sub> </h4>
+
+
+<div>
+  <pre><code class='bash'>drush dl drush_extras</code></pre>
+</div>
+
+
+
+<h4 id="sec-3.1.3">Drush pushkey </h4>
+
+<p>This command creates a ssl public/private key in your home directory
+and copies the public key to a remote server.  Subsequent drush
+commands will use this public/private key for authentication.
+</p>
+
+
+<div>
+  <pre><code class='bash'>// okay substitute your username for &quot;boris&quot; and your server for &quot;badinoff.com&quot;
+drush pushkey boris@badinoff.com</code></pre>
+</div>
+
+
+<h2 id="sec-4">Drush Git Backup </h2>
+
+<ul>
+<li>
+<a href="https://github.com/scor/dgb">DGB at Github</a>
+</li>
+</ul>
+
+<h3 id="sec-4.1">Install DGB </h3>
+
+
+
+
+<div>
+  <pre><code class='bash'>cd &lt;drush directory&amp;gt;/commands/
+git clone https://github.com/scor/dgb.git</code></pre>
+</div>
+
+
+
+
+<h3 id="sec-4.2">Setup DGB for a site </h3>
+<div>
+  <pre><code class='bash'># from DRUPAL_ROOT 
+# cd up one directory
+cd ..
+# create directory for backed up database
+mkdir databases
+# initialize a git repository
+git init</code></pre>
+</div>
+
+
+<h3 id="sec-4.3">Back up Site </h3>
+
+
+
+
+<div>
+  <pre><code class='bash'>cd &lt;DRUPAL_ROOT&amp;gt;
+drush dgb-backup</code></pre>
+</div>
+
+
+
+
+<h3 id="sec-4.4">What is in DGB Archive </h3>
+<p>The DGB instance directory is the directory up from your DRUPAL<sub>ROOT</sub>. 
+</p>
+
+<h4 id="sec-4.4.1">each site&#8217;s db dump is in databases/<site-name&gt;.sql </h4>
+
+<p>Database dump for default is in databases/default.sql
+</p>
+<h4 id="sec-4.4.2">There is a Git repository of your site&#8217;s files </h4>
+
+
+
+
+<div>
+  <pre><code class='bash'># from DRUPAL_ROOT cd into the DGB instance directory
+cd ..
+# see list of git commits
+git log
+# see what files have changed since last call to drush dgb-backup
+git status</code></pre>
+</div>
+
+
+
+<h3 id="sec-4.5">Clone the Site for development </h3>
+
+<div>
+  <pre><code class='bash'># from DRUPAL_ROOT
+cd ../..
+# create a dev directory parallel to other site
+mkdir dev
+cd dev
+git clone &lt;path to dgb instance&amp;gt;
+# create a new branch called &quot;my-dev-branch&quot;
+git branch my-dev-branch
+# checkout the new dev branch
+git checkout my-dev-branch
+# now create a new database with the database dump
+# change &lt;dbuser&amp;gt;, &lt;dbpasswd&amp;gt;, &lt;devdbname&amp;gt; and &lt;path-to-dgb-instance&amp;gt;
+# and also the substitute default.sql for the name of your databasedump
+mysql -u &lt;dbuser&amp;gt; -p &lt;dbpasswd&amp;gt; &lt;devdbname&amp;gt; &lt; &lt;path-to-dgb-instance&amp;gt;/databases/default.sql
+# now finally update settings.php to point to your dev database
+vim sites/default/settings.php
+# finally check that there is an .htaccess file in your new dev
+# &lt;DRUPAL_ROOT&amp;gt; if not, copy it over from the cloned siteF</code></pre>
+</div>
+
+
+
+
+
+<h3 id="sec-4.6">Another Way to Copy @live to @dev </h3>
+
+<div>
+  <pre><code class='bash'># Core-rsync copies all of the files from one site instance to another.
+# The first time you sync you can use --include-conf option to copy settings.php.
+drush core-rsync @live @dev --include-conf
+# Next change database settings to use @dev database.
+vi &lt;document-root&amp;gt;/sites/default/settings.php
+
+# After first sync use w/out --include-conf and it will preserve the existing settings.php.
+drush core-rsync @live @dev
+
+# Sync databases.
+drush sql-sync @live @dev</code></pre>
+</div>
+
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bart Lantz</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-28T00:00:00-05:00" pubdate data-updated="true">Nov 28<span>th</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/drupal/'>Drupal</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bartlantz.com/blog/2011/11/28/drush-commands/" data-via="bartofdenver" data-counturl="http://bartlantz.com/blog/2011/11/28/drush-commands/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/11/28/awk-one-liners/" title="Previous Post: AWK One-liners">&laquo; AWK One-liners</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/01/27/vim-tip-yanking-text/" title="Next Post: Vim Tip Yanking or Deleting a Big Chunk of Text">Vim Tip Yanking or Deleting a Big Chunk of Text &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>About</h1>
+<p>Major Ursa is a development blog written by Bart Lantz.</p>
+
+<p>It focuses on Drupal, Ruby, Javascript, Vim, Git and Math, here and there.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xquery-notes/">XQuery Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xpath-notes/">XPath Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/fun-with-grep-and/">Fun with Grep and Bash Aliases</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/29/using-jquery-in-drupal/">Using jQuery in Drupal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/22/drush-delete-comment/">Using Drush and SQL to Delete Spam Comments</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/underhilllabs">@underhilllabs</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'underhilllabs',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll...</ul>
+  <p><a href="http://pinboard.in/u:seamusmcgraw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "seamusmcgraw"; //id target for pinboard list
+  var pinboard_count = 7; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/115249870106368908575?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bart Lantz -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

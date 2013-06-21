@@ -1,0 +1,449 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Creating a Better Print Screen, part I - Bart Lantz</title>
+  <meta name="author" content="Bart Lantz">
+
+  
+  <meta name="description" content="I created a better print screen. It takes a screenshot with scrot and then uploads the screenshot to my Picasaweb account.">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bartlantz.com/blog/2012/05/14/creating-a-better-print-screen">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Bart Lantz" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Bart Lantz</a></h1>
+  
+    <h2>Math, Code and Science Fiction</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bartlantz.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Creating a Better Print Screen, Part I</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-14T00:00:00-04:00" pubdate data-updated="true">May 14<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>After reading Randall Degges excellent post <a href="http://rdegges.com/how-i-learned-to-program">How I learned to
+Program</a>, I decided to
+give creating a screenshot program a try. It&#8217;s always a bit of work to
+take a screenshot, upload it to the web and then grab its permanent
+link. So being a geek, I thought it high time this process was
+automated!</p>
+
+<p> I tried writing the program in python only, so that there were fewer
+dependencies, but using the commandline program
+<a href="https://en.wikipedia.org/wiki/Scrot">scrot</a> as the screenshot
+snapping program added a lot of flexibility to the options for the
+screenshot.</p>
+
+<p>Without further ado, here are the parts of the program.</p>
+
+<h2>Take Screenshot with scrot</h2>
+
+<p>I start with a bash script that calls <a href="https://github.com/dreamer/scrot">scrot</a>, and passes in my program
+as a parameter to scrot.</p>
+
+<p>screen-upload.bash</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/bash
+</span><span class='line'>/usr/local/bin/scrot '%m-%d-%Y-screenshot.png' -d 5 -u -e '/home/bart/projects/screen-upload/screen-upload.py $f' </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next, chmod +x the bash script:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>chmod +x screen-upload.bash</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Scrot Options explained</h3>
+
+<ul>
+<li><strong>-d 5</strong>: Delays the snap for 5 seconds.</li>
+<li><strong>-u</strong>: Use the currently focused window.</li>
+<li><strong>-e &#8216;script&#8217;</strong>: Execute the following script after the screenshot
+is snapped.</li>
+<li><strong>$f</strong>: passes in filename to script.</li>
+</ul>
+
+
+<h2>On to the Python Picture Uploading Program</h2>
+
+<p>Scrot takes a screenshot after a delay of 5 seconds of the currently
+active window, it names the file with the current
+date-screenshot.png, it then passes the filename into my program,
+&#8220;screen-upload.py&#8221;.</p>
+
+<h2>Upload Image to Picasaweb</h2>
+
+<p>For uploading the image to Picasaweb, I used the <a href="https://code.google.com/p/gdata-python-client/downloads/list">gdata
+module</a>. Installing
+it involved the standard: Download the module, extract it and cd into the
+directory and  run &#8220;sudo python setup.py install&#8221;.</p>
+
+<p>In version 2 of screen-upload, I will rewrite the authentication to use Oauth2, so that
+the authentication is more secure, for the alpha version, I am just
+passing in the users email and password into the <strong>gd_client</strong> object.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">gdata.photos.service</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">gdata.media</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">gdata.geo</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">filename</span> <span class="o">=</span> <span class="n">fname</span>
+</span><span class='line'><span class="n">gd_client</span> <span class="o">=</span> <span class="n">gdata</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">PhotosService</span><span class="p">()</span>
+</span><span class='line'><span class="n">gd_client</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">username</span>
+</span><span class='line'><span class="n">gd_client</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">passwd</span>
+</span><span class='line'><span class="n">gd_client</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s">&#39;screen-upload-1&#39;</span>
+</span><span class='line'><span class="n">gd_client</span><span class="o">.</span><span class="n">ProgrammaticLogin</span><span class="p">()</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&#39;uploading&#39;</span><span class="p">,</span>  <span class="n">filename</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">album_url</span> <span class="o">=</span> <span class="s">&#39;/data/feed/api/user/</span><span class="si">%s</span><span class="s">/albumid/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">album_id</span><span class="p">)</span>
+</span><span class='line'><span class="n">photo</span> <span class="o">=</span> <span class="n">gd_client</span><span class="o">.</span><span class="n">InsertPhotoSimple</span><span class="p">(</span><span class="n">album_url</span><span class="p">,</span> <span class="s">&#39;New Photo&#39;</span><span class="p">,</span>
+</span><span class='line'>               <span class="s">&#39;Uploaded using the API&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&#39;image/png&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<h2>Copy URL into the Clipboard</h2>
+
+<p>Copying the URL to the clipboard is easy as long as you are not too
+concerned with cross-platform compatibility. I used the gtk module to
+gain access to the clipboard on Linux systems.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">gtk</span> <span class="kn">import</span> <span class="n">Clipboard</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">clip_store</span><span class="p">(</span><span class="n">pic_url</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">cb</span> <span class="o">=</span> <span class="n">Clipboard</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">cb</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="n">pic_url</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">cb</span><span class="o">.</span><span class="n">store</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This can be made more cross-platform with a series of try statements
+that load platform specific libraries.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">try</span><span class="p">:</span>
+</span><span class='line'>  <span class="kn">import</span> <span class="nn">win32</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="k">try</span><span class="p">:</span>
+</span><span class='line'>  <span class="kn">from</span> <span class="nn">gtk</span> <span class="kn">import</span> <span class="n">Clipboard</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Setting up the Keyboard Shortcut in Gnome 3.</h2>
+
+<p>I had a bit of a bother creating a keyboard shortcut in Gnome.  I
+created a new shortcut in the keyboard settings configuration, but
+nothing happened.</p>
+
+<p>Long story short: I created a shortcut under &#8220;Custom Shortcuts&#8221;.  I
+called it &#8220;Take Screenshot&#8221; and I named the script &#8220;screen-upload&#8221;.
+Then I created a symbolic link to the script in /usr/local/bin.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ln -s ~/projects/screen-upload/screen-upload.bash /usr/local/bin/screen-upload.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This did the trick, now when I press the PrtSc button, a screenshot is
+taken of the current window, and its uploaded to Picasa and the URL of
+the image is copied in to my clipboard!</p>
+
+<p><img src="https://lh4.googleusercontent.com/-UNPsuNmMnTI/T7RlkQmmoyI/AAAAAAAACo8/O-vIjTeCtCE/s800/New%252520Photo.png" alt="&quot;Screenshot of screen-upload.py in Emacs&quot;" /></p>
+
+<h2>References</h2>
+
+<ul>
+<li><a href="https://developers.google.com/picasa-web/docs/1.0/developers_guide_python">Picasa-web Python Developer&#8217;s Guide for API v1</a></li>
+<li><a href="https://developers.google.com/gdata/docs/auth/overview">Google Data API Authentication Guide</a></li>
+<li><a href="http://stackoverflow.com/questions/69645/take-a-screenshot-via-a-python-script-linux">Stackoverflow Answer for Taking Screenshot with python only</a></li>
+<li><a href="http://rdegges.com/how-i-learned-to-program">Randall Degges: How I Learned to Program</a></li>
+<li><a href="https://github.com/dreamer/scrot">Scrot&#8217;s Github Repository</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bart Lantz</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-14T00:00:00-04:00" pubdate data-updated="true">May 14<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/python/'>Python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bartlantz.com/blog/2012/05/14/creating-a-better-print-screen/" data-via="bartofdenver" data-counturl="http://bartlantz.com/blog/2012/05/14/creating-a-better-print-screen/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/05/11/jekyll-on-nfsn/" title="Previous Post: Using Jekyll on NearlyFreeSpeech.net">&laquo; Using Jekyll on NearlyFreeSpeech.net</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/05/22/drush-delete-comment/" title="Next Post: Using Drush and SQL to Delete Spam Comments">Using Drush and SQL to Delete Spam Comments &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>About</h1>
+<p>Major Ursa is a development blog written by Bart Lantz.</p>
+
+<p>It focuses on Drupal, Ruby, Javascript, Vim, Git and Math, here and there.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xquery-notes/">XQuery Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xpath-notes/">XPath Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/fun-with-grep-and/">Fun with Grep and Bash Aliases</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/29/using-jquery-in-drupal/">Using jQuery in Drupal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/22/drush-delete-comment/">Using Drush and SQL to Delete Spam Comments</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/underhilllabs">@underhilllabs</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'underhilllabs',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll...</ul>
+  <p><a href="http://pinboard.in/u:seamusmcgraw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "seamusmcgraw"; //id target for pinboard list
+  var pinboard_count = 7; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/115249870106368908575?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bart Lantz -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,1182 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Bart Lantz</title>
+  <meta name="author" content="Bart Lantz">
+
+  
+  <meta name="description" content="I&#8217;ve been a long time user of Linux and the command line, but not until recently have I used the amazing program: screen. Screen is a terminal &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bartlantz.com/blog/page/4">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Bart Lantz" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Bart Lantz</a></h1>
+  
+    <h2>Math, Code and Science Fiction</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bartlantz.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/21/using-gnu-screen_21/">Using Gnu Screen</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-21T00:00:00-05:00" pubdate data-updated="true">Dec 21<span>st</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">I&#8217;ve been a long time user of Linux and the command line, but not until recently have I used the amazing program: <b>screen</b>.  Screen is a terminal multiplexor.  This means you can have multiple sessions open at the same time (even over a single ssh connection) and flip back and forth between them.  <br />Prior to discovering screen I&#8217;d often be ssh&#8217;d into a remote server editing a file when the ssh session would time out or drop and I&#8217;d have to quickly open up a new terminal and start editing the file again.  Now while using screen, the screen session itself is independent of the ssh session.  So if my ssh connection flakes out, I start up a new terminal, ssh into the server, &#8220;reattach&#8221; the previous screen session to this new terminal and all of my work: my emacs window, my bash jobs, etc are still running in the screen session!  <br /><h2>How to start screen</h2><code>bart@home: $ <b>ssh boris@remote-server-in-distant-vladivostok </b><br />boris@distant-vlad: $ <b>screen</b></code><p />If you already have a screen session running on the remote server you can reattach with:<br /><code>boris@distant-vlad: $ <b>screen -r</b></code><p />I like to use the options: -raAd, mostly because it looks raad.<br /><code>boris@distant-vlad: $ <b>screen -raAd</b></code><p /><b>r</b>: means reattach previous session<br /><b>a</b>: include all capabilities (with some minor exceptions) in each window&#8217;s termcap<br /><b>A</b>: Adapt the sizes of all windows to the size of the current terminal<br /><b>d</b>: Forceably detach any sessions that are still holding on to this (your workstation at work for instance).<br /><p /><h2>Create new sessions</h2>Once inside screen to start a new session use the keyboard combination: <b>C-a c</b>. That is, &#8220;Ctrl-a c&#8221;.  (the mnemonic is <b>c</b> for &#8220;create window&#8221;)  This will create a new window move you to it.  To move back to the previous window, do a <b>C-a C-a</b>.    You can also use the keyboard combos <b>C-a n</b> and <b>C-a p</b> to move to the Next and Previous windows.  Or you can move to a window directly using its number with <b>C-a 3</b> (or whatever number it is.)<p /><h2>customizing screen with .screenrc</h2>If you are an emacs user or if you use the emacs shortcuts on the command line, than you know that C-a is already used as the command to bring the cursor to the beginning of the line.  So what to do?  You can change the default keyboard bindings in the .screenrc configuration file in your home directory.  If it doesn&#8217;t already exist, create it and add the following line:<br /><code>escape ^Bb</code><p />or whatever you want to use as the control sequence.  This will change the control sequence from <b>C-a</b> to <b>C-b</b>, other people use other keys, some use the backslash &#8220;&#34; instead.  So now if you have changed to C-b, then to toggle between windows use:<br /><b>C-b C-b</b> and so on&#8230;<p />Another good thing to add to the screenrc is code for a modeline, so you can see the available windows:<br /><code>caption string "%?%F%{= Bk}%? %C%A %D %d-%m-%Y %{= kB} %t%= %?%F%{= Bk}%:%{= wk}%? %n "    <br />                                                                   hardstatus alwayslastline <br />                                                                                                                                    hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %d/%m %{W}%c %{g}]' <code><br /><p />This code will add a modeline to the bottom of the terminal that tells you which window you are in and also the numbers or names of the sessions.<br /><h2>Irssi is Screen's BFF</h2>Best of all you can keep a session of Irssi (an irc client) running at all times in a screen session and always be up to date with your favorite IRC channels.<p /><h2>Additional Screen resources</h2> <a href="http://aperiodic.net/screen/quick_reference">Screen Quick Reference</a><br /> <a href="http://www.ibm.com/developerworks/aix/library/au-gnu_screen/index.html?ca=dgr-lnxw07GNU-Screen&S_TACT=105AGX59&S_CMP=grsitelnxw07">Stayin' Alive with Screen</a><br /> <a href="http://www.linuxjournal.com/article/6340">Power Sessions with Screen</a><br /> <a href="http://quadpoint.org/articles/irssi">Guide to Using Irssi with Screen</a><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-3111640889030134069?l=denverdroid.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/29/up-home-setting-up-lending-library-with/">Setting Up a Web Enabled Lending Library</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-29T00:00:00-04:00" pubdate data-updated="true">Jul 29<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="content"><div id="outline-container-1" class="outline-2">
+<h3 id="sec-1">Setting Up a Web Enabled Lending Library </h3>
+
+
+
+
+
+<div id="outline-container-1.1"
+     class="outline-3"><div class="outline-text-3" id="text-1.1">
+
+
+<p>
+I started cataloging books for a small community center&#8217;s lending library at librarything.com.  Librarything.com is a
+  great web site
+
+that I highly recommend.  If most of your books have ISBNs and you can
+borrow someone&#8217;s barcode scanner, cataloging books at Librarything is
+a snap: on the &#8220;add books page&#8221; you scan a books ISBN and all of its
+information (Title, Author, book cover) will be added by Librarything
+for you.  Of course if you don&#8217;t have a bar code scanner or there is
+no ISBN, you simply type in part of the title or author and select the
+book from a list of possible matches, this is a bit slower, but
+perfectly adequate if you are inputting a smaller library.  
+</p><p>Once all of the books are added, the social networking goodness
+begins!  You&#8217;re library has its own mini-site at Librarything, with a
+publicly available catalog: <a href="http://librarything.com/catalog/buildupbooks">Build Up Books catalog</a> and profile:
+<a href="http://librarything.com/profile/buildupbooks">Build Up Books profile</a>. So for a community center, you can send out the URL, and anyone can search the catalog for books they find of interest.  
+</p><p>The one problem with this system, is there isn&#8217;t a robust system for
+checking out books.  Some libraries have adapted an informal system of
+tagging books as &#8220;checked out&#8221; and in the private comments (only
+visible to the administrator) added the borrowers contact
+information.  This is somewhat acceptable, but first: you would have
+to give any volunteers access to all of your Librarything account&#8217;s
+permissions (you get all or nothing as far admin rights goes on
+Librarything).  Second there is no way to tell when the book was
+checked out, when it is due back, and also no way to sort by which
+books are currently overdue.  So I thought I would look into importing
+the library, once cataloged, into a drupal web site.  
+</p></div>
+</div>
+<div id="outline-container-1.2" class="outline-3"><h3 id="sec-1.2">Exporting Library from Librarything </h3><div class="outline-text-3" id="text-1.2">
+
+<p>Librarything has excellent importing and exporting facilities.  To
+export, sign in to your account and then go to
+<a href="http://librarything.com/more/import">http://librarything.com/more/import</a>.  On that page there are links for
+downloading your catalog as either a comma separated csv file or a tab
+delimited text file. 
+</p></div>
+</div>
+<div id="outline-container-1.3" class="outline-3"><h3 id="sec-1.3">Downloading User Uploaded Book Covers </h3><div class="outline-text-3" id="text-1.3">
+
+<p>Librarything has over 1,000,000 user uploaded book covers, and it
+makes them available for free.  You need to a developer&#8217;s key to
+access them and there are some restrictions: you can only download
+1000 per day and one per second. So with these understandable
+restrictions, I decided it would be best to download the book covers
+and store them locally.  So yesterday I wrote a python script to
+download all of the book covers for our library.
+</p></div>
+</div>
+<div id="outline-container-1.4" class="outline-3"><h3 id="sec-1.4">The Python Script </h3><div class="outline-text-3" id="text-1.4">
+
+<p>I will add a link at the bottom to the script on my
+<a href="http://github.com/underhilllabs">Github Repository</a>.  So the script I wrote searches through a
+librarything csv file, finds all of the ISBNs and downloads the book
+covers from <a href="http://librarything.com">Librarything</a>.  
+</p>
+
+
+<div>
+  <pre><code class='python'>import re, urllib, csv,time
+
+CSV_FILE ='~/Downloads/LibraryThing_export.csv'
+IMG_DIR ='~/img/'
+DEV_KEY = 'YOUR_LIBRARYTHING_DEV_KEY'
+IMG_URL = &quot;http://covers.librarything.com/devkey/&quot; + DEV_KEY + &quot;/large/isbn/&quot;</code></pre>
+</div>
+
+
+
+<p>I use 4 python libraries.  
+</p><ul>
+  <li><b>Re</b>: for regular expressions to search for isbns.</li>
+  <li><b>urllib</b>: for downloading the Book Cover from Librarything</li>
+  <li><b>csv</b>: for creating a map data structure from a parsed csv file.</li>
+  <li><b>time</b>: for limiting the downloads to one per second.</li>
+</ul>
+<p>Also I add a couple of variables.  The important one to change is
+DEV_KEY which contains your librarything developers key.  Also make
+sure the CSV_FILE points at your downloaded CSV_FILE and the IMG_DIR
+exists.  Finally IMG_URL points to the web service on librarything
+where you can download user submitted book covers, all you need to do
+is slap an ISBN on the end of that URL and the URL will return either
+a book cover, or a clear 1x1 gif if they do not have that cover.  
+</p>
+
+
+<div>
+  <pre><code class='python'># read in the Librarything Export File
+lt_dict = csv.DictReader(open(CSV_FILE))
+#loop through the rows of the dictionary
+for row in lt_dict:
+    # grab the ISBN dictionary field
+    mystr = row[&quot;'ISBN'&quot;]
+    # search for a matching ISBN
+    mymatch = re.match(r&quot;\[(\d+)\]&quot;,mystr)
+    # if no match, print the title to STDOUT
+    if mymatch is None:
+        print &quot;blank isbn for: %s&quot; % row[&quot;'TITLE'&quot;]
+    else:
+        # grab the matching string, this is our ISBN!
+        isbn = mymatch.group(1)
+        # build the web service request URL
+        myurl = IMG_URL + isbn
+        # where we will store the downloaded Book cover image
+        myfile = &quot;%slarge_%s&quot; % (IMG_DIR,isbn)
+        # urlretrieve downloads the image and stores it locally
+        urllib.urlretrieve(myurl,myfile)
+        print &quot;myurl: %s, myfile: %s&quot; % (myurl,myfile)
+        # sleep for 2 seconds
+        time.sleep(2)</code></pre>
+</div>
+
+
+
+
+<p>The hard work is done by <a href="http://docs.python.org/library/csv.html#csv.DictReader">csv.DictReader</a> and <a href="http://docs.python.org/release/2.5.2/lib/module-urllib.html">urllib.urlretrieve</a>.
+DictReader takes a csv file, parses the first line of the file for
+field names and creates a dictionary data type, so you can loop
+through the rows and have access to the fields by name.  Urlretrieve,
+takes a URL and an optional file name and it grabs the file at the URL
+and stores it locally as the filename you provided.  
+</p><p>In a later blog post I will describe the Drupal end of this project:
+creating a book CCK content type, importing data into Drupal custom
+content types, and setting up the check out process.
+</p></div></div></div></div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-2092323799751063501?l=denverdroid.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/09/cool-things-to-do-emacs-dired/">Cool Things to Do in Emacs Dired Mode</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-09T00:00:00-04:00" pubdate data-updated="true">Jul 9<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2 id="sec-1_1_1">Delete some files in the <i>Downloads</i> folder </h2>
+
+<p>My Downloads folder is always out of control. There are always a
+ton of pdf files that I opened once in a browser but don&#8217;t need to
+save. It&#8217;s a pain to open a GUI file navigator, like Nautilus, and
+double click on each pdf file to view it and see if it should be
+tossed. However with Emacs, trimming my Downloads directory of old
+files is quick and easy.  </p> 
+<h2 id="sec-1_1_2">Viewing Pdfs in Emacs </h2>
+
+<p>If you see a pdf with an uninformative name like 2010-09.pdf just
+hit <<b>enter</b>&gt; when the cursor is on the file name, (when
+the file name is at point). Emacs will open the pdf in a new
+buffer. Once you have viewed the pdf and have decided its face you can
+quickly kill the pdf buffer with &#8217;<b>k</b>&#8217; and you&#8217;ll be returned to
+the directory. Now, if the pdf is unimportant, queue it to be deleted
+with &#8217;<b>d</b>&#8217;. If you want to keep the file, but give it a better
+name, type &#8216;R&#8217; to rename it. 
+
+To unqueue a file for deletion, use &#8217;<b>u</b>&#8217;. And finally to
+delete all the files currently queued for deletion, type &#8216;x&#8217;.  </p> 
+<p />
+<a href="http://www.flickr.com/photos/redbike/5919681539/" title="Dired mode emacs by denverfiddler, on Flickr"><img src="http://farm7.static.flickr.com/6144/5919681539_d0ff5a1193.jpg" width="500" height="313" alt="Dired mode emacs"></a>
+<p />
+
+
+<h2 id="sec-1_1_3">Delete old Emacs backup files </h2>
+
+<p>If you have a lot of backup files that emacs created with ~ appended to
+the file name, you can quickly queue them all for deletion by typing &#8217;<b>~</b>&#8217;.
+</p>
+
+<h2>Here&#8217;s the List of Directory Organizing Commands</h2>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">key combo</th><th scope="col" class="left">command</th></tr>
+</thead>
+<tbody>
+<tr><td class="left"><enter&gt;</td><td class="left">open file at point</td></tr>
+
+<tr><td class="left">d</td><td class="left">Queue File For Deletion</td></tr>
+<tr><td class="left">u</td><td class="left">Unqueue File</td></tr>
+<tr><td class="left">~</td><td class="left">Queue Backup Files for Del</td></tr>
+<tr><td class="left">x</td><td class="left">eXecute Queued Delete Jobs</td></tr>
+<tr><td class="left">R</td><td class="left">Rename File</td></tr>
+<tr><td class="left">k</td><td class="left">Kill PDF Buffer</td></tr>
+<tr><td class="left">C-x C-q</td><td class="left">Edit Directory as a File</td></tr>
+
+</tbody>
+</table>
+
+
+
+
+<p />
+<h2 id="sec-1_3">Edit Zip&#8217;d or Tar-gz&#8217;d archives in place </h2>
+
+<p>If you need to edit a file inside a zip or tar archive, simply open
+the archive by hitting <enter&gt; on the name in Dired mode, then
+click on the file. Edit the file and save it with '<b>C-x C-s</b>&#8217;,
+and then do another <b>C-x C-s</b> inside the zip buffer to save the
+archive with the file changes. The archive will be compressed again
+with your changes.  </p> 
+
+<p />
+<h2 id="sec-1_4">OMG!: Change File Owner, Group, Mode </h2>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">key combo</th><th scope="col" class="left">command</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">O</td><td class="left">change owner</td></tr>
+<tr><td class="left">M</td><td class="left">change mode</td></tr>
+<tr><td class="left">G</td><td class="left">change group</td></tr>
+<tr><td class="left">Z</td><td class="left">compress file</td></tr>
+</tbody>
+</table>
+
+
+
+<p />
+<p />
+<h1 id="sec-1_5">Encrypt, Decrypt Files </h1>
+
+<p>Use &#8217;<b>:e</b>&#8217; to encrypt the file at point. Emacs will ask who you want to
+encrypt the file for (ie whose public key to use to encrypt the file.)
+You can also encrypt the file symmetrically with a password. Once the
+file is encrypted, there will be two files in the directory: the
+original file and the encrypted file with &#8216;.gpg&#8217; added to the file
+name. 
+</p>
+
+<p />
+<h2 id="sec-1_5_1">Decrypt </h2>
+
+<p>To open the symmetrically encrypted file, click on its name and you
+will be prompted for a password. You can also type &#8217;<b>:d</b>&#8217; when
+the filename is at point.
+</p>
+
+
+<h2 id="sec-1_5_2">EasyPG Assistant Docs </h2>
+
+<p>The program that is used to encrypt the file&#8217;s is EasyPG Assistant.
+<a href="http://www.gnu.org/software/emacs/manual/html_mono/epa.html">EasyPG Assistant Manual</a>
+</p>
+
+<p />
+<h2 id="sec-1_7">Get More Help </h2>
+
+<p>Type &#8216;C-hm&#8217; (describe mode) while in dired-mode, to pop open a help
+buffer, with a description of dired mode and a list of commands.
+</p>
+
+<p />
+<h2 id="sec-1_8">All Key Combinations named in post </h2>
+
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">key combo</th><th scope="col" class="left">command</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">d</td><td class="left">mark file for deletion</td></tr>
+<tr><td class="left">u</td><td class="left">unmark file</td></tr>
+<tr><td class="left">x</td><td class="left">eXecute queued deletions</td></tr>
+<tr><td class="left">R</td><td class="left">rename/move file</td></tr>
+<tr><td class="left">O</td><td class="left">change owner</td></tr>
+<tr><td class="left">M</td><td class="left">change mode</td></tr>
+<tr><td class="left">G</td><td class="left">change group</td></tr>
+<tr><td class="left">Z</td><td class="left">compress file</td></tr>
+<tr><td class="left">y</td><td class="left">show only certain file type</td></tr>
+<tr><td class="left">w</td><td class="left">copy file name</td></tr>
+<tr><td class="left">RET</td><td class="left">open file at point</td></tr>
+<tr><td class="left">k</td><td class="left">if in pdf buffer, kill</td></tr>
+<tr><td class="left">C-x C-s</td><td class="left">Save file or  archive</td></tr>
+<tr><td class="left">i</td><td class="left">insert sub-directory</td></tr>
+<tr><td class="left">~</td><td class="left">mark all backup files for deletion</td></tr>
+<tr><td class="left">C-x C-q</td><td class="left">edit directory listing as a file</td></tr>
+
+</tbody>
+</table>
+<a href=http://denverdroid.blogspot.com/2011/07/cool-things-to-do-in-emacs-dired-mode.html>Cool Things to do in Emacs&#8217; Dired Mode</a>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/13/emulator/">Nook 1.2 Emulator</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-13T00:00:00-04:00" pubdate data-updated="true">May 13<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><a href="http://www.flickr.com/photos/redbike/4604957189/" title="Nook 1.2 loaded up as an emulator by denverfiddler, on Flickr"><img src="http://farm4.static.flickr.com/3355/4604957189_017973962a.jpg" width="298" height="500" alt="Nook 1.2 loaded up as an emulator" /></a>
+
+I was able to build an emulator for Nook version 1.2.  See my <a href=http://denverdroid.blogspot.com/2010/05/how-to-build-nook-emulator.html>previous post</a> for the prerequisites.  Basically you need some utilities installed: smali, baksmali, unyaffs, and mkyaffs2image.  You also need the Android SDK installed on your computer.
+
+
+Here are the steps:
+1: download the <a href=http://www.multiupload.com/U0Y5IVLL7D>nook 1.2 soft-root image</a> from <a href=http://nookdevs.com>nookdevs</a>.  For the rest of this post I assume you have copied it into the directory ~/nook_dev/ and we will be working on it from there. 
+
+<span style="font-weight:bold;">2. extract the bravo_update.dat</span>, cd into it and extract root.tgz
+<div>
+  <pre><code class='bash'>mv bravo_update.dat bravo_update-1.2.tar.gz
+tar xvzf bravo_update-1.2.tar.gz</code></pre>
+</div>
+
+
+<span style="font-weight:bold;">3. extract root.tgz</span>
+<div>
+  <pre><code class='bash'>cd Firmware_Update
+tar xvzf root.tgz
+cd root</code></pre>
+</div>
+
+
+<span style="font-weight:bold;">4. cd into system/framework and unjar services.jar </span>
+<div>
+  <pre><code class='bash'>cd system/framework/
+jar xvf services.jar</code></pre>
+</div>
+
+
+5. disassemble the classes.dex file inside services.jar
+<div>
+  <pre><code class='bash'>baksmali classes.dex</code></pre>
+</div>
+
+
+6. vi out/com/android/server/ServerThread.smali
+search for a line that contains 
+<div>
+  <pre><code class='bash'>if-lt v0, v1, :cond_309</code></pre>
+</div>
+
+delete that line.
+
+
+7. reassemble out/ directory
+<div>
+  <pre><code class='bash'>smali out/</code></pre>
+</div>
+
+
+
+8. copy the new out.dex over the old classes.dex and re-jar services.jar
+<div>
+  <pre><code class='bash'>mv out.dex classes.dex
+jar cvf services.jar classes.dex</code></pre>
+</div>
+
+
+<h4>Now we are going to build an android AVD, so we can extract a single file to use back in this system.</h4>
+<span style="font-weight:bold;">9. if your android SDK tools are in your path Run</span>,
+<div>
+  <pre><code class='bash'>android</code></pre>
+</div>
+
+else find the android command and run it, or run it from eclipse.
+
+This starts the Android SDK and AVD Manager.  To create a new AVD, click New&#8230;
+Name: nook
+Target: Android 1.5
+Size: <leave empty>
+Skin: click Resolution, and fill in 488 x 944
+click &#8220;Create AVD&#8221;.
+Then click &#8220;Details&#8221; to see where it was created.  It should be at ~/.android/avd/nook.avd
+
+<span style="font-weight:bold;">10. unyaffs the system.img and grab a file</span>
+<div>
+  <pre><code class='bash'>cd ~/nook_dev/
+mkdir sys_img
+cd sys_img
+cp ~/android-sdk-linux_86/platforms/android-3/images/system.img .
+unyaffs system.img
+cp lib/libaudioflinger.so ~/nook_dev/Firmware_Update/Firmware_Update/system/lib/libaudioflinger.so</code></pre>
+</div>
+
+
+<span style="font-weight:bold;">11. re-create the system.img with the new audio file.</span>
+<div>
+  <pre><code class='bash'>cd ~/nook_dev/Firmware_Update/Firmware_Update/
+mkyaffs2image ./system/ system.img</code></pre>
+</div>
+ this creates a new system.img
+
+<span style="font-weight:bold;">12. Sketchy step where you overwrite the good Android 1.5 platform system.img in your Android SDK with this new one.</span>
+<div>
+  <pre><code class='bash'>mv ~/android-sdk-linux_86/platforms/android-3/images/system.img ~/android-sdk-linux_86/platforms/android-3/images/good.img 
+cp ~/nook_dev/Firmware_Update/Firmware_Update/system.img ~/android-sdk-linux_86/platforms/android-3/images/system.img</code></pre>
+</div>
+
+<span style="font-weight:bold;">Remember to change this back later if you want to do non-nook related Android Development.</span>
+
+<span style="font-weight:bold;">13. run the emulator!</span>
+<div>
+  <pre><code class='bash'>emulator @nook -shell -show-kernel -verbose</code></pre>
+</div>
+<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-5212169985789570108?l=denverdroid.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/08/how-to-build-nook-emulator/">How to Build a Nook Emulator</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-08T00:00:00-04:00" pubdate data-updated="true">May 8<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">This post will walk you through building an Android Emulator for the Nook step-by-step in Eclipse and via the command-line.   These instructions are based on the <a href=http://nookdevs.com/Emulator>original instructions</a> located at the <a href=http://nookdevs.com/>nookdevs website</a>.
+
+<h3>Pre-requisites:  </h3>
+1. You need to have Eclipse running with the Android SDK.  More information on that can be <a href=http://developer.android.com/sdk/installing.html>found here</a>.
+2. I&#8217;m assuming you are developing in a Linux-ish environment. I&#8217;m using the amazing <a href=http://ubuntu.com>Ubuntu Lucid Lynx</a>.
+3. download and set up the following tools: <a href=http://code.google.com/p/smali/downloads/list>smali</a>, <a href=http://code.google.com/p/smali/downloads/list>baksmali</a>, <a href=http://code.google.com/p/unyaffs/downloads/list>unyaffs</a>, <a href=http://code.google.com/p/fatplus/downloads/list>yaffs2image</a>.
+
+<h3>How I Set Up the command-line tools:</h3>
+<b>smali and baksmali</b>. Description from the developer&#8217;s site: 
+&#8220;smali/baksmali is an assembler/disassembler for the dex format used by dalvik, Android&#8217;s Java VM implementation&#8221;. 
+1.  Download them into your ~/bin/ directory.  
+2. &#8220;chmod +x&#8221; the wrapper scripts (smali and baksmali) 
+3. rename the jar files: smali.jar and baksmali.jar.
+<div id="code-div"><div>
+  <pre><code class='bash'>cd ~/bin/
+wget http://smali.googlecode.com/files/smali-1.2.2.jar
+wget http://smali.googlecode.com/files/baksmali-1.2.2.jar
+wget http://smali.googlecode.com/files/baksmali
+wget http://smali.googlecode.com/files/smali
+mv baksmali-1.2.2.jar baksmali.jar
+mv smali-1.2.2.jar smali.jar
+chmod +x smali
+chmod +x baksmali</code></pre>
+</div>
+</div>
+
+<b>unyaffs</b> description: Unyaffs is a program to extract files from a yaffs file system image.    
+1. download <a href=http://code.google.com/p/unyaffs/downloads/list>unyaffs</a> into your
+~/bin; chmod +x unyaffs;   
+
+<b>mkyaffs2image</b>: 
+1. download <a href=http://code.google.com/p/fatplus/downloads/list>mkyaffs2image</a>.  I downloaded the yaffs2-binary.tar, untarred it and copied yaffs2/utils/mkyaffs2image to my ~/bin/ and chmod +x it.
+
+<h3>Okay we have the tools and our environment is ready!</h3>
+
+<span style="font-weight:bold;">1.</span> I&#8217;m assuming you already have Eclipse set up and running with the Android Development Kit.  Nook runs on the cupcake 1.5 platform of Android.  So first we have to make sure that the Android 1.5 Platform is installed.  Assuming you downloaded the Android SDK into your home directory, run:
+<div>
+  <pre><code class='bash'>$ ~/android-sdk-linux_86/tools/android</code></pre>
+</div>
+
+This will start the Android SDK and AVD Manager.  Click on Installed Packages and look for SDK Platform 1.5.  If you do not see it, click on Available Packages and download and install it.
+
+<span style="font-weight:bold;">2. Grab the original 1.0.0 image from</span> bn.com (mirrored here: <a href=http://www.multiupload.com/YWHOXQKYVS>multiupload</a>).
+
+<span style="font-weight:bold;">3.Run</span> <div>
+  <pre><code class='bash'>$ dd if=signed_bravo_update.1.0.0.dat of=signed-bravo-update.1.0.0.tar.gz bs=1 skip=152</code></pre>
+</div>
+
+This takes a while.  You now have signed-bravo-update.1.0.0.tar.gz
+
+<span style="font-weight:bold;">4.Uncompress the new file: signed-bravo-update.1.0.0.tar.gz   </span>
+<div id="code-div"><div>
+  <pre><code class='bash'>$ tar xzvf signed-bravo-update.1.0.0.tar.gz</code></pre>
+</div>
+</div>
+Now you have the uncompressed folder Firmware_Update, 
+<div id="code-div"><div>
+  <pre><code class='bash'>$ cd Firmware_Update</code></pre>
+</div>
+</div>
+
+<span style="font-weight:bold;">5. Rename bravo_update.dat to bravo_update.tar.gz and extract it. </span>
+<div id="code-div"><div>
+  <pre><code class='bash'>$ mv bravo_update.dat bravo_update.tar.gz
+$ tar xvzf bravo_update.tar.gz</code></pre>
+</div>
+</div>
+This uncompresses another Firmware_Update folder, cd in to it.
+<div id="code-div"><div>
+  <pre><code class='bash'>$ cd Firmware_Update</code></pre>
+</div>
+</div>
+if you pwd, you&#8217;ll be in Firmware_Update/Firmware_Update
+
+<span style="font-weight:bold;">6. Extract root.tgz</span>
+<div id="code-div"><div>
+  <pre><code class='bash'>$ tar xvzf root.tgz</code></pre>
+</div>
+</div>
+this uncompresses a lot of stuff. All of the Android system image actually.  Later we will re-compress the system folder to create the system.img
+
+<span style="font-weight:bold;">7. Extract system/framework/services.jar </span>with your favorite unzip utility. 
+I did this from the GUI, right click on file and select &#8220;Extract here&#8221;. 
+$ cd services
+
+<span style="font-weight:bold;">8. disassemble the file classes.dex with baksmai</span>
+<div id="code-div"><div>
+  <pre><code class='bash'>$ baksmali classes.dex</code></pre>
+</div>
+</div>This create out/
+
+<span style="font-weight:bold;">9. vi out/com/android/server/ServerThread.smali</span>
+delete the line 
+<div id="code-div"><div>
+  <pre><code class='bash'>if-lt v0, v1, :cond_483</code></pre>
+</div>
+</div>
+(for the vi-newbies, you can search in vi by typing a forward slash and typing in a phrase like &#8220;if&#45;lt&#8221;, then type dd, to delete the line, and &#8220;:wq&#8221; to write the file and quit)
+
+<span style="font-weight:bold;">10. reassemble the file with 
+</span>
+<div id="code-div"><div>
+  <pre><code class='bash'>$ smali out</code></pre>
+</div>
+</div>
+
+<span style="font-weight:bold;">11. Replace the old classes.dex with this re-assembled file:</span>
+<div id="code-div"><div>
+  <pre><code class='bash'>mv out.dex classes.dex</code></pre>
+</div>
+</div>
+
+<span style="font-weight:bold;">12. delete the old out/ directory and re-jar the contents of the services folder</span>, but the not the services folder itself.
+(I moved the META-INF folder and classes.dex out of the services directory and into the parent framework directory. Removed the empty services directory. Right clicked the classes.dex and selected &#8220;compress&#8221;, and selected as name &#8220;services&#8221; and type as &#8220;jar&#8221; file, then I dragged the META-INF file onto the new services.jar. Yes, I know there is a better way, but I&#8217;m kind of new to jar files&#8230;)
+
+
+<h4>Now we are going to build an android AVD, so we can extract a single file to use back in this system.</h4>
+<span style="font-weight:bold;">13. if your android SDK tools are in your path Run</span>,
+<div>
+  <pre><code class='bash'>android</code></pre>
+</div>
+
+else find the android command and run it, or run it from eclipse.
+
+This starts the Android SDK and AVD Manager.  To create a new AVD, click New&#8230;
+Name: nook
+Target: Android 1.5
+Size: <leave empty>
+Skin: click Resolution, and fill in 488 x 944
+click &#8220;Create AVD&#8221;.
+Then click &#8220;Details&#8221; to see where it was created.  It should be at ~/.android/avd/nook.avd
+
+<span style="font-weight:bold;">14. unyaffs the system.img and grab a file</span>
+<div id="code-div"><div>
+  <pre><code class='bash'>cd ~/nook_dev/
+mkdir sys_img
+cd sys_img
+cp ~/android-sdk-linux_86/platforms/android-3/images/system.img .
+unyaffs system.img
+cp lib/libaudioflinger.so ~/nook_dev/Firmware_Update/Firmware_Update/system/lib/libaudioflinger.so</code></pre>
+</div>
+</div>
+
+<span style="font-weight:bold;">15. re-create the system.img with the new audio file.</span>
+<div id="code-div"><div>
+  <pre><code class='bash'>cd ~/nook_dev/Firmware_Update/Firmware_Update/
+mkyaffs2image ./system/ system.img</code></pre>
+</div>
+</div>this creates a new system.img
+
+<span style="font-weight:bold;">16. Sketchy step where you overwrite the good Android 1.5 platform system.img in your Android SDK with this new one.</span>
+<div id="code-div"><div>
+  <pre><code class='bash'>mv ~/android-sdk-linux_86/platforms/android-3/images/system.img ~/android-sdk-linux_86/platforms/android-3/images/good.img 
+cp ~/nook_dev/Firmware_Update/Firmware_Update/system.img ~/android-sdk-linux_86/platforms/android-3/images/system.img</code></pre>
+</div>
+</div>
+<span style="font-weight:bold;">Remember to change this back later if you want to do non-nook related Android Development.</span>
+
+<span style="font-weight:bold;">17. run the emulator!</span>
+<div id="code-div"><div>
+  <pre><code class='bash'>emulator @nook -shell -show-kernel -verbose</code></pre>
+</div>
+</div>
+
+<a href="http://www.flickr.com/photos/redbike/4604815190/" title="Nook Emulator screenshot by denverfiddler, on Flickr"><img src="http://farm5.static.flickr.com/4049/4604815190_698482e4b6.jpg" width="500" height="380" alt="Nook Emulator screenshot" /></a><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-4470985898072103988?l=denverdroid.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/04/moving-with-eclipse-to-new-workstation/">Moving With Eclipse to a New Workstation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-04T00:00:00-04:00" pubdate data-updated="true">May 4<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">The hard drive on my laptop started clicking quite ominously, so I figured it was time to order a new hard drive.  I backed up my photos to the cloud (Flickr and Picasa) and backed up all my music and docs to Dropbox and Google Docs and waited for the new hard drive to arrive.  Files are files: you just need to keep a regular backup; and email already lives in the cloud.  That leaves my development environment.  <br /><br />Here are the steps I&#8217;ve followed to move my development set up to a new computer.<br /><br />1. open up Synaptic and download Eclipse.  There are several Eclipse packages available.  I selected the big Eclipse package which includes the JDT (Java Developer Tools) and PDE (plug-in development tools).  I&#8217;ve had trouble before when I selected one of the smaller eclipse packages and tried to add the plug-ins I needed separately.<br /><br />2. Download or copy over the <a href=http://developer.android.com/sdk/index.html>Android SDK</a>.  <br /><br />3. Put the Android SDK tools directory in my PATH in .bashrc<br />  b. then type &#8216;bash&#8217;, so the new .bashrc takes effect.<br />  c. type &#8216;adb&#8217;, to make sure the android SDK tools are in my PATH.<br /><br />4. open up Eclipse and go to Help->Install New Software&#8230; click &#8220;add&#8221; to add a new tools depository, and add the android  developer tools repository: https://dl-ssl.google.com/android/eclipse/.  <br />  b. once the new depository is loaded, select the Android Developer Tools and Android DDMS and wait for Eclipse to download and install them.<br /><br />5. moved my private signing key over.<br /><br />6. moved over my projects and imported them through File->Import&#8230; ->Existing Projects into Workspace.<br />  b. if you get any errors, try right clicking on the project and select Android Tools->Fix Project Properties<br /><br />7. Export an app and sign it with the key you moved over.  (this is the scary part, if you lose the signing key you used to originally sign your app, you will not be able to provide any more updates to your app in the Android Market!)<br />  a. File->Export &#8230; Android->Export Android Application &#8211;> select the project you want to Export &#8211;> Use existing keystore, (click location to locate it.) type in your password&#8230;.<br /><br />8. Plug your dev phone into your workstation and install the app.<br />  a. adb install -r /path/to/YourApp.apk<br /><br />Whoo Hoo!  The development environment (for android at least) is all moved over.<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-665138841129548859?l=denverdroid.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/29/phone-update-update-wow-that-was-fast/">Phone Update Update: Wow, That Was Fast</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-29T00:00:00-04:00" pubdate data-updated="true">Apr 29<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">I just updated my G1/dream to CyanogenMod-4.2.15.1 with danger spl.  The actual flashing of the 3 different roms (danger-spl, defanged base, cm-4.2.15.1) part only took about 20 minutes.  This was after I had already downloaded all of the necessary files, copied them to the SD card and verified my radio version (Settings->About phone->Baseband version).<br /><br />The first time you root your phone it will take a bit longer than this.  One of the reasons it is much faster after the first time, is because during the initial rooting process, you load a &#8220;recovery utility&#8221; that you will use later.  <br /><br />Now to wait for CyanogenMod-5.0.7 to drop.<br /><br /><span style="font-weight:bold;"><br />So how do I know if the Danger SPL is loaded?  (<a href=http://forum.cyanogenmod.com/index.php?/topic/2614-all-discussion-of-upcoming-cm-507-ds/page__view__findpost__p__25763>via this  cyanogenmod forum post</a>)</span><br />1. Turn off phone.<br />2. Hold the camera button on the side and press the red power button.  If you are using Danger SPL, you&#8217;ll see a white screen with 3 androids riding skateboards. At the top of the screen you&#8217;ll see the text:<br />HBOOT-1.33.2005<br /><br />like this:<br /><a href="http://www.flickr.com/photos/redbike/4563683265/" title="G1/dream android phone: danger spl screen by denverfiddler, on Flickr"><img src="http://farm5.static.flickr.com/4040/4563683265_a40e478173.jpg" width="375" height="500" alt="G1/dream android phone: danger spl screen" /></a><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-4136596181908659026?l=denverdroid.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/29/phone-to/">Updating My Android G1 Phone to Cyanogen 4.2.15.1 With Danger SPL</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-29T00:00:00-04:00" pubdate data-updated="true">Apr 29<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">Tonight <a href=http://twitter.com/cyanogen>cyanogen</a> is releasing 5.0.7 of the cyanogenmod.  This is a modified ROM for android phones, that will finally allow g1 phone users like myself to run most of the latest android apps on our phones.  It will add most of the Android Eclair functionality to older android phones, except for Live Wallpapers, but I didn&#8217;t really see myself using any live wallpapers anyway.<br /><br />The one catch is that the new ROM is too big to fit inside the G1&#8217;s tiny internal memory.  The G1 has 64 MB of room for ROMs, and according to Cyanogen no matter how he tried to squeeze the ROM 64 MB was still 4 MB too small.  So in order to load the new ROM with the eclair goodies, you need to use an SPL (second program loader), to load the ROM.   <a href=http://forum.cyanogenmod.com/index.php?/topic/2646-how-to-danger-spl/>More info on the Danger SPL</a>. <br /><br />So in anticipation of tonight&#8217;s release, I am installing the Danger SPL on my phone.   The <a href=http://forum.cyanogenmod.com/index.php?/topic/2646-how-to-danger-spl/>danger spl how to at cyanogenmod.com</a> says that the pre-requisites are a rooted G1/Dream phone (check) and a compatible radio, with links to the radio images.  So I downloaded the radios, but nowhere in the rest of the article did it mention what to do with the radio images.  I was worried, but then I realized you just need to have one of the radios currently on your phone or you need to install one of the images I downloaded.  After searching the interweb for how to check which radio is installed on your phone, I found <a href=http://androidandme.com/2009/05/beginners/guides/beginners-guide-for-rooting-your-android-g1-to-install-cupcake/>this article</a>, which says look in your phone under: Settings->About Phone->Baseband version, the last part of the number is your radio version.  In my case its 2.22.19.26I, which is compatible!<br /><br />So on to updating the ROM!<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-2782852645779220755?l=denverdroid.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/26/what-you-need-to-know/">Drupal 7: What You Need to Know</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-26T00:00:00-04:00" pubdate data-updated="true">Apr 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">This is the video that inspired me to download and test Drupal 7.  Good, informative video!<br /><br /><embed type="application/x-shockwave-flash" width="640"  height="504"  allowfullscreen="true"  allowscriptaccess="always"  src="http://www.archive.org/flow/flowplayer.commercial-3.0.5.swf"  w3c="true"  flashvars='config={"key":"#$b6eb72a0f2f1e29f3d4","playlist":[{"url":"http://www.archive.org/download/Drupal7WhatYouNeedToKnow/format=Thumbnail?.jpg","autoPlay":true,"scaling":"fit"},{"url":"http://www.archive.org/download/Drupal7WhatYouNeedToKnow/mon_1500_308_1_512kb.mp4","autoPlay":false,"accelerated":true,"scaling":"fit","provider":"h264streaming"}],"clip":{"autoPlay":false,"accelerated":true,"scaling":"fit","provider":"h264streaming"},"canvas":{"backgroundColor":"0x000000","backgroundGradient":"none"},"plugins":{"audio":{"url":"http://www.archive.org/flow/flowplayer.audio-3.0.3-dev.swf"},"controls":{"playlist":false,"fullscreen":true,"gloss":"high","backgroundColor":"0x000000","backgroundGradient":"medium","sliderColor":"0x777777","progressColor":"0x777777","timeColor":"0xeeeeee","durationColor":"0x01DAFF","buttonColor":"0x333333","buttonOverColor":"0x505050"},"h264streaming":{"url":"http://www.archive.org/flow/flowplayer.h264streaming-3.0.5.swf"}},"contextMenu":[{"View+Drupal7WhatYouNeedToKnow+at+archive.org":"function()"},"-","Flowplayer 3.0.5"]}'> </embed><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-7336282106313341755?l=denverdroid.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/26/test-several-websites-on-your-computer/">Test Several Websites on Your Computer at Once</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-26T00:00:00-04:00" pubdate data-updated="true">Apr 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">After watching several videos from last week&#8217;s DrupalCon I had an itch to try out Drupal 7 for myself.  The problem was I already had a site I was testing on my laptop.  I could&#8217;ve downloaded it to my test server, but I&#8217;ve been testing alot lately at coffee shops with spotty wifi, so I decided I&#8217;d add some entries to my hosts file instead and write up a quick How-to.  
+
+(pre-requisites: You must have apache, php and mysql already running on your workstation.  On ubuntu this is as simple as opening synaptic and searching for each of these packages and installing them: apache2, php5, mysql.)
+
+<h3>Multiple development websites in 3 steps.</h3>  
+
+<span style="font-weight:bold;">1. Edit your hosts file.</span>  
+
+On Linux this is located at /etc/hosts.  On Windows machines (XP, Vista, Windows 7) it is located at %SystemRoot%\system32\drivers\etc\hosts.  On Mac OS X, its located in: /private/etc/hosts
+
+add a new entry for each website you want to test (don&#8217;t worry you can add more later):
+127.0.0.1    d7
+127.0.0.1    d6
+
+in this case I added two entries: one to test drupal 6, and a second to test drupal 7.
+
+To check that everything is working, open up a teriminal and ping d7 you should see something like this:
+<blockquote>
+<div>
+  <pre><code class='bash'>$ ping d7
+PING d7 (127.0.0.1) 56(84) bytes of data.
+64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.044 ms
+64 bytes from localhost (127.0.0.1): icmp_seq=2 ttl=64 time=0.047 ms
+64 bytes from localhost (127.0.0.1): icmp_seq=3 ttl=64 time=0.051 ms
+64 bytes from localhost (127.0.0.1): icmp_seq=4 ttl=64 time=0.055 ms</code></pre>
+</div>
+
+</blockquote>
+
+<span style="font-weight:bold;">2. Edit your Apache config file</span>
+
+Add a <VirtualHost&gt; entry for each of the test sites:
+<blockquote>
+<div>
+  <pre><code class='bash'>&lt;VirtualHost *:80&amp;gt;
+    ServerName d7
+    DocumentRoot /home/bart/Public/drupal-7.x-dev
+&lt;/VirtualHost&amp;gt;
+&lt;VirtualHost *:80&amp;gt;
+    ServerName d6
+    DocumentRoot /home/bart/Public/drupal-6.16
+&lt;/VirtualHost&amp;gt;</code></pre>
+</div>
+
+</blockquote>
+
+<span style="font-weight:bold;">3. restart apache</span>
+
+<blockquote>
+$sudo apache2ctl restart
+</blockquote>
+
+Now you&#8217;re ready to test the websites by opening up the URLs: 
+http://d7 and http://d6 in a browser.
+
+
+As a bonus: go check out the <a href=http://www.archive.org/search.php?query=drupalcon2010>DrupalCon2010 screencasts at archive.org</a>.<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-6316728779454722136?l=denverdroid.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/5/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/3/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+<h1>About</h1>
+<p>Major Ursa is a development blog written by Bart Lantz.</p>
+
+<p>It focuses on Drupal, Ruby, Javascript, Vim, Git and Math, here and there.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xquery-notes/">XQuery Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xpath-notes/">XPath Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/fun-with-grep-and/">Fun with Grep and Bash Aliases</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/29/using-jquery-in-drupal/">Using jQuery in Drupal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/22/drush-delete-comment/">Using Drush and SQL to Delete Spam Comments</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/underhilllabs">@underhilllabs</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'underhilllabs',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll&#8230;</ul>
+  <p><a href="http://pinboard.in/u:seamusmcgraw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "seamusmcgraw"; //id target for pinboard list
+  var pinboard_count = 7; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/115249870106368908575?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bart Lantz -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

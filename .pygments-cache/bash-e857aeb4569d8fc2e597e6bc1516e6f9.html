@@ -1,0 +1,23 @@
+<div class="highlight"><pre><span class="nv">$ </span>drush sql-cli
+....
+mysql&gt; desc comment;
++----------+---------------------+------+-----+---------+----------------+
+| Field    | Type                | Null | Key | Default | Extra          |
++----------+---------------------+------+-----+---------+----------------+
+| cid      | int<span class="o">(</span>11<span class="o">)</span>             | NO   | PRI | NULL    | auto_increment |
+| pid      | int<span class="o">(</span>11<span class="o">)</span>             | NO   | MUL | 0       |                |
+| nid      | int<span class="o">(</span>11<span class="o">)</span>             | NO   | MUL | 0       |                |
+| uid      | int<span class="o">(</span>11<span class="o">)</span>             | NO   | MUL | 0       |                |
+| subject  | varchar<span class="o">(</span>64<span class="o">)</span>         | NO   |     |         |                |
+| hostname | varchar<span class="o">(</span>128<span class="o">)</span>        | NO   |     |         |                |
+| created  | int<span class="o">(</span>11<span class="o">)</span>             | NO   | MUL | 0       |                |
+| changed  | int<span class="o">(</span>11<span class="o">)</span>             | NO   |     | 0       |                |
+| status   | tinyint<span class="o">(</span>3<span class="o">)</span> unsigned | NO   |     | 1       |                |
+| thread   | varchar<span class="o">(</span>255<span class="o">)</span>        | NO   |     | NULL    |                |
+| name     | varchar<span class="o">(</span>60<span class="o">)</span>         | YES  |     | NULL    |                |
+| mail     | varchar<span class="o">(</span>64<span class="o">)</span>         | YES  |     | NULL    |                |
+| homepage | varchar<span class="o">(</span>255<span class="o">)</span>        | YES  |     | NULL    |                |
+| language | varchar<span class="o">(</span>12<span class="o">)</span>         | NO   |     |         |                |
++----------+---------------------+------+-----+---------+----------------+
+14 rows in <span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</pre></div>

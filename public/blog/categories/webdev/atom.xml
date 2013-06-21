@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Webdev | Bart Lantz]]></title>
+  <link href="http://bartlantz.com/blog/categories/webdev/atom.xml" rel="self"/>
+  <link href="http://bartlantz.com/"/>
+  <updated>2013-06-21T18:19:33-04:00</updated>
+  <id>http://bartlantz.com/</id>
+  <author>
+    <name><![CDATA[Bart Lantz]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using jQuery in Drupal]]></title>
+    <link href="http://bartlantz.com/blog/2012/06/29/using-jquery-in-drupal/"/>
+    <updated>2012-06-29T18:52:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/06/29/using-jquery-in-drupal</id>
+    <content type="html"><![CDATA[<p>Drupal 7 includes jQuery 1.4.4 by default.  So getting started using jQuery in your module or theme is really simple.  The easiest way to include a javascript file is to include it in a .info file with a line like "scripts[]= myfile.js".</p>
+
+<h2>How to include your js file in a module or theme</h2>
+
+<h3>Add this to the .info file</h3>
+
+<p><code>yaml
+scripts[] = js/myjavascript.js
+</code></p>
+
+<p>this will include the javascript file on every page that includes your module or theme.</p>
+
+<h3>Include it in your Theme's template.php</h3>
+
+<p>Themes have more granular control of where javascript file is included in template.php</p>
+
+<p><code>php
+drupal_add_js(drupal_get_path('theme','kepler6_omega') . 'js/myjavascript.js');
+</code></p>
+
+<h3>Use drupal_add_js in your module</h3>
+
+<p>Include js in yarr.module
+<code>php
+function yarr_form_alter(&amp;amp;$form, &amp;amp;$form_state, $form_id) {
+  drupal_add_js(drupal_get_path('module,'yarr') . 'js/myjavascript.js');
+  ...
+}
+</code></p>
+
+<h3>Use drupal_add_library to add libraries included in Drupal</h3>
+
+<p>example add jQueryUI Accordion library
+<code>php
+drupal_add_library('system','ui.accordion');
+</code></p>
+
+<p>While jQuery core is included by default, jQuery UI is not, so you need to include that with drupal_add_library if you need it, as above.)</p>
+
+<h2>Drupal Behaviors</h2>
+
+<h3>Drupal behaviors are used instead of $(document).ready();</h3>
+
+<p>$(document).ready() is used to wait until the entire DOM is loaded before adding
+your javascript functionality to the DOM.</p>
+
+<p>Drupal adds its own way to add your javascript to the DOM</p>
+
+<h3>Drupal attach behaviors</h3>
+
+<p>attach your functionality to the Drupal objects behavior array</p>
+
+<p>```javascript
+(function($) {</p>
+
+<p>Drupal.behaviors.yarr = {
+  attach: function(context, settings) {</p>
+
+<pre><code>$('h1 &amp;gt; a').each(function(i) {
+  var h1text = $(this).text();
+  $(this).text("Yarrr, matey! " + h1text);
+});
+$('h1:not(:has(a))').each(function(i) {
+  var h1text = $(this).text();
+  $(this).text("Yarr, " + h1text);
+});
+</code></pre>
+
+<p>  }
+};</p>
+
+<p>})(jQuery)
+```</p>
+
+<h2>Notes on the code example</h2>
+
+<ul>
+<li>The outside wrapper is required if you wish to use the short jquery "$" syntax.</li>
+<li>$('h1 &gt; a') selects all of the H1 headers (and the inner anchor) that have immediate anchor children</li>
+<li>$('h1:not(:has(a))') selects all H1 headers that do not have anchors embedded
+in them.</li>
+<li>.each, iterates over each element in the selector.</li>
+</ul>
+
+
+<p>Inside the function the "this" object refers to the current DOM element. If you want
+the jQuery object use the $(this) syntax.</p>
+
+<h2>Further Reading</h2>
+
+<p> <a href="http://drupal.org/node/171213">Drupal Documentation on Javascript and jQuery</a></p>
+
+<p> <a href="http://jquery.org">jQuery Documentation</a></p>
+
+<p> <a href="http://api.jquery.org">jQuery API Documentation</a></p>
+]]></content>
+  </entry>
+  
+</feed>

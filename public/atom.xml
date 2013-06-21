@@ -1,0 +1,2580 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Bart Lantz]]></title>
+  <link href="http://bartlantz.com/atom.xml" rel="self"/>
+  <link href="http://bartlantz.com/"/>
+  <updated>2013-06-21T18:19:33-04:00</updated>
+  <id>http://bartlantz.com/</id>
+  <author>
+    <name><![CDATA[Bart Lantz]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[XQuery Notes]]></title>
+    <link href="http://bartlantz.com/blog/2013/05/05/xquery-notes/"/>
+    <updated>2013-05-05T21:44:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2013/05/05/xquery-notes</id>
+    <content type="html"><![CDATA[<p>This post continues my notes from <a href="https://class2go.stanford.edu/db/Winter2013">Introduction to Databases</a>, a MOOC taught by Stanford&#8217;s Jennifer Widom. The topic of this post is XQuery.</p>
+
+<h2>XQuery Defition</h2>
+
+<blockquote><p>XQuery is a query and functional programming language that is designed to query collections of XML data.</p><footer><strong>wikipedia</strong> <cite><a href='http://en.wikipedia.org/wiki/XQuery'>From Wikipedia</a></cite></footer></blockquote>
+
+
+<h2>XQuery Syntax: FLWOR</h2>
+
+<figure class='code'><figcaption><span>FLWOR Syntax</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xquery'><span class='line'><span class="k">for</span> <span class="nv">$var</span> <span class="ow">in</span> <span class="nt">expr</span>
+</span><span class='line'><span class="k">let</span> <span class="nv">$var</span> <span class="o">:=</span> <span class="nt">expr</span>
+</span><span class='line'><span class="k">where</span> <span class="nt">expr</span>
+</span><span class='line'><span class="k">order by</span> <span class="nt">expr</span>
+</span><span class='line'><span class="k">return</span> <span class="nt">expr</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[XPath Notes]]></title>
+    <link href="http://bartlantz.com/blog/2013/05/05/xpath-notes/"/>
+    <updated>2013-05-05T19:21:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2013/05/05/xpath-notes</id>
+    <content type="html"><![CDATA[<p>This spring I took <a href="https://class2go.stanford.edu/db/Winter2013">Introduction to Databases</a> a MOOC (Massive Open Online Class) from Stanford&#8217;s Jennifer Widom. It was very interesting, I learned a great deal from it. And one of the sections of the class that I really enjoyed, even though it sounded like it was going to be pretty dry, was the section on XML. I took quite a few pages of notes on the different XMl tools, so I figured I might as well post them to my blog.</p>
+
+<h2>XPath Definition</h2>
+
+<blockquote><p>XPath is a query language for selecting nodes from an XML document.</p></blockquote>
+
+<p><a href="http://en.wikipedia.org/wiki/XPath">from Wikipedia</a></p>
+
+<h3>XML for the Examples</h3>
+
+<figure class='code'><figcaption><span>countries.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;countries&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;country</span> <span class="na">name=</span><span class="s">&quot;Afghanistan&quot;</span> <span class="na">population=</span><span class="s">&quot;22664136&quot;</span> <span class="na">area=</span><span class="s">&quot;647500&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;language</span> <span class="na">percentage=</span><span class="s">&quot;11&quot;</span><span class="nt">&gt;</span>Turkic<span class="nt">&lt;/language&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;language</span> <span class="na">percentage=</span><span class="s">&quot;35&quot;</span><span class="nt">&gt;</span>Pashtu<span class="nt">&lt;/language&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;language</span> <span class="na">percentage=</span><span class="s">&quot;50&quot;</span><span class="nt">&gt;</span>Afghan Persian<span class="nt">&lt;/language&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/country&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;country</span> <span class="na">name=</span><span class="s">&quot;Albania&quot;</span> <span class="na">population=</span><span class="s">&quot;3249136&quot;</span> <span class="na">area=</span><span class="s">&quot;28750&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;country</span> <span class="na">name=</span><span class="s">&quot;Algeria&quot;</span> <span class="na">population=</span><span class="s">&quot;29183032&quot;</span> <span class="na">area=</span><span class="s">&quot;2381740&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;city&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;name&gt;</span>Algiers<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;population&gt;</span>1507241<span class="nt">&lt;/population&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/city&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/country&gt;</span>
+</span><span class='line'><span class="nt">&lt;/countries&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Basic Path</h3>
+
+<p>Selects all of countries from the country root node.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xquery'><span class='line'><span class="nf">doc</span><span class="p">(</span><span class="s1">&#39;countries.xml&#39;</span><span class="p">)/</span><span class="nt">countries</span><span class="p">/</span><span class="nt">country</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Path with Alternation</h3>
+
+<p>This will select countries with populations that speak Pashtu or Swedish.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xquery'><span class='line'><span class="nf">doc</span><span class="p">(</span><span class="s1">&#39;countries.xml&#39;</span><span class="p">)/</span><span class="nt">countries</span><span class="p">/</span><span class="nt">country</span><span class="p">[</span><span class="nf">language</span><span class="p">(</span><span class="nt">Pashtu</span><span class="o">|</span><span class="nt">Swedish</span><span class="p">)]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Attributes are prepended with &#8220;@&#8221;</h3>
+
+<p>This will select the names of all countries</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xquery'><span class='line'><span class="nf">doc</span><span class="p">(</span><span class="s1">&#39;countries.xml&#39;</span><span class="p">)/</span><span class="nt">countries</span><span class="p">/</span><span class="nt">country</span><span class="p">/</span><span class="na">@name</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Path with Conditional</h3>
+
+<p>Select the names of all countries that have a population of less than 1,000,000.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xquery'><span class='line'><span class="nf">doc</span><span class="p">(</span><span class="s1">&#39;countries.xml&#39;</span><span class="p">)/</span><span class="nt">countries</span><span class="p">/</span><span class="nt">country</span><span class="p">[</span><span class="na">@population</span> <span class="nt">&lt;</span> <span class="err">1000000]/@</span><span class="nt">name</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Complex Conditional</h3>
+
+<p>Select all countries that have a population of less than 1,000,000.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xquery'><span class='line'><span class="nf">doc</span><span class="p">(</span><span class="s1">&#39;countries.xml&#39;</span><span class="p">)/</span><span class="nt">countries</span><span class="p">/</span><span class="nt">country</span><span class="p">[</span><span class="na">@population</span> <span class="nt">&lt;</span> <span class="err">1000000</span> <span class="nt">and</span> <span class="nt">city</span><span class="err">/</span><span class="nt">population</span> <span class="nt">&gt;</span><span class="l"> 50000]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>data() prints out just the text value.</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xquery'><span class='line'><span class="nf">doc</span><span class="p">(</span><span class="s1">&#39;countries.xml&#39;</span><span class="p">)/</span><span class="nt">countries</span><span class="p">/</span><span class="nt">country</span><span class="p">[</span><span class="na">@population</span> <span class="nt">&lt;</span> <span class="err">1000000]/</span><span class="nt">data</span><span class="err">(@</span><span class="nt">name</span><span class="err">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Fun with Grep and Bash Aliases]]></title>
+    <link href="http://bartlantz.com/blog/2012/09/11/fun-with-grep-and/"/>
+    <updated>2012-09-11T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/09/11/fun-with-grep-and</id>
+    <content type="html"><![CDATA[<p>Just a quick post to write up an bash alias I just created to list the sites enabled on a server and each sites location.</p>
+
+<p>I often need to look up the list of sites enabled on a web server and also the document roots of each of these sites. In the past this meant loading the Apache configuration file into emacs or vim and searching for the site I was looking for.  Today I decided to create an alias for this task.  Here is the original combination of grep commands.</p>
+
+<h2>Grep Command</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>grep <span class="s1">&#39;&#39;</span>^ServerName<span class="s2">&quot; -A 3 /etc/apache2/sites-available/default | \</span>
+</span><span class='line'><span class="s2">   grep &quot;</span>^ServerName<span class="se">\|</span>^DocumentRoot<span class="se">\|</span>^--<span class="err">&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<ol>
+<li>^ServerName:
+  <ul><li>Searches the file for all lines that begin with ServerName at the beginning of the line.</li></ul>
+</li>
+<li>-A 3
+  <ul><li>Prints the 3 lines after the match.</li></ul>
+</li>
+<li>3. grep &#8220;^ServerName\|^DocumentRoot\|^&#8211;&#8221;&#8217; 
+  <ul><li>Prints only the lines that we are interested (ie lines that begin with ServerName or DocumentRoot or &#8211;)</li>
+  <li>The &#8220;\|&#8221; in the second grep command separates the regex with an &#8220;or&#8221; statement.  </li>
+</li>
+</ol>
+
+
+<h2>Alias Command</h2>
+
+<ol>
+<li>Choose a name for the command, in my case, show-sites</li>
+<li>Add the alias to the .bashrc or .bash_alias file in your home directory</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">alias </span>show-sites<span class="o">=</span><span class="s1">&#39;grep &quot;^ServerName&quot; -A 3 /etc/apache2/sites-available/default | \</span>
+</span><span class='line'><span class="s1"> grep &quot;^ServerName\|^DocumentRoot\|^--&quot;&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Reload Your Bash Configuration</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>. ~/.bashrc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Show All Current Aliases</h2>
+
+<p>Type alias at the command line to view all of the currently defined aliases.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">alias</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bash prints out all of your aliases, like so:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">alias </span><span class="nv">ducks</span><span class="o">=</span><span class="s1">&#39;du -cks * |sort -rn |head -11&#39;</span>
+</span><span class='line'><span class="nb">alias </span><span class="nv">gb</span><span class="o">=</span><span class="s1">&#39;git branch&#39;</span>
+</span><span class='line'><span class="nb">alias </span><span class="nv">gba</span><span class="o">=</span><span class="s1">&#39;git branch -a&#39;</span>
+</span><span class='line'><span class="nb">alias </span><span class="nv">gc</span><span class="o">=</span><span class="s1">&#39;git commit -v&#39;</span>
+</span><span class='line'><span class="nb">alias </span><span class="nv">gca</span><span class="o">=</span><span class="s1">&#39;git commit -v -a&#39;</span>
+</span><span class='line'><span class="nb">alias </span><span class="nv">gd</span><span class="o">=</span><span class="s1">&#39;git diff | vim -&#39;</span>
+</span><span class='line'><span class="nb">alias </span><span class="nv">gl</span><span class="o">=</span><span class="s1">&#39;git log --stat&#39;</span>
+</span><span class='line'><span class="nb">alias </span><span class="nv">gp</span><span class="o">=</span><span class="s1">&#39;git push&#39;</span>
+</span><span class='line'><span class="nb">alias </span><span class="nv">graceful</span><span class="o">=</span><span class="s1">&#39;sudo apache2ctl graceful&#39;</span>
+</span><span class='line'><span class="nb">alias </span><span class="nv">gst</span><span class="o">=</span><span class="s1">&#39;git status&#39;</span>
+</span><span class='line'><span class="nb">alias </span><span class="nv">ls</span><span class="o">=</span><span class="s1">&#39;ls --color=auto&#39;</span>
+</span><span class='line'><span class="nb">alias </span>show-sites<span class="o">=</span><span class="s1">&#39;grep &#39;</span><span class="se">\&#39;</span><span class="s1">&#39;^ServerName&#39;</span><span class="se">\&#39;</span><span class="s1">&#39; -A 3 /etc/apache2/sites-available/default \</span>
+</span><span class='line'><span class="s1">  | grep &#39;</span><span class="se">\&#39;</span><span class="s1">&#39;^ServerName\|^DocumentRoot\|^--&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using jQuery in Drupal]]></title>
+    <link href="http://bartlantz.com/blog/2012/06/29/using-jquery-in-drupal/"/>
+    <updated>2012-06-29T18:52:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/06/29/using-jquery-in-drupal</id>
+    <content type="html"><![CDATA[<p>Drupal 7 includes jQuery 1.4.4 by default.  So getting started using jQuery in your module or theme is really simple.  The easiest way to include a javascript file is to include it in a .info file with a line like &#8220;scripts[]= myfile.js&#8221;.</p>
+
+<h2>How to include your js file in a module or theme</h2>
+
+<h3>Add this to the .info file</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">scripts[] = js/myjavascript.js</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>this will include the javascript file on every page that includes your module or theme.</p>
+
+<h3>Include it in your Theme&#8217;s template.php</h3>
+
+<p>Themes have more granular control of where javascript file is included in template.php</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">drupal_add_js(drupal_get_path(&#39;theme&#39;,&#39;kepler6_omega&#39;) . &#39;js/myjavascript.js&#39;);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Use drupal_add_js in your module</h3>
+
+<p>Include js in yarr.module</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">function yarr_form_alter(&amp;amp;$form, &amp;amp;$form_state, $form_id) {</span>
+</span><span class='line'><span class="x">  drupal_add_js(drupal_get_path(&#39;module,&#39;yarr&#39;) . &#39;js/myjavascript.js&#39;);</span>
+</span><span class='line'><span class="x">  ...</span>
+</span><span class='line'><span class="x">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Use drupal_add_library to add libraries included in Drupal</h3>
+
+<p>example add jQueryUI Accordion library</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">drupal_add_library(&#39;system&#39;,&#39;ui.accordion&#39;);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>While jQuery core is included by default, jQuery UI is not, so you need to include that with drupal_add_library if you need it, as above.)</p>
+
+<h2>Drupal Behaviors</h2>
+
+<h3>Drupal behaviors are used instead of $(document).ready();</h3>
+
+<p>$(document).ready() is used to wait until the entire DOM is loaded before adding
+your javascript functionality to the DOM.</p>
+
+<p>Drupal adds its own way to add your javascript to the DOM</p>
+
+<h3>Drupal attach behaviors</h3>
+
+<p>attach your functionality to the Drupal objects behavior array</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">Drupal</span><span class="p">.</span><span class="nx">behaviors</span><span class="p">.</span><span class="nx">yarr</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">attach</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">settings</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;h1 &amp;gt; a&#39;</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">h1text</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">text</span><span class="p">();</span>
+</span><span class='line'>      <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;Yarrr, matey! &quot;</span> <span class="o">+</span> <span class="nx">h1text</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;h1:not(:has(a))&#39;</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">h1text</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">text</span><span class="p">();</span>
+</span><span class='line'>      <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;Yarr, &quot;</span> <span class="o">+</span> <span class="nx">h1text</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">})(</span><span class="nx">jQuery</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Notes on the code example</h2>
+
+<ul>
+<li>The outside wrapper is required if you wish to use the short jquery &#8220;$&#8221; syntax.</li>
+<li>$(&#8216;h1 &gt; a&#8217;) selects all of the H1 headers (and the inner anchor) that have immediate anchor children</li>
+<li>$(&#8216;h1:not(:has(a))&#8217;) selects all H1 headers that do not have anchors embedded
+in them.</li>
+<li>.each, iterates over each element in the selector.</li>
+</ul>
+
+
+<p>Inside the function the &#8220;this&#8221; object refers to the current DOM element. If you want
+the jQuery object use the $(this) syntax.</p>
+
+<h2>Further Reading</h2>
+
+<p> <a href="http://drupal.org/node/171213">Drupal Documentation on Javascript and jQuery</a></p>
+
+<p> <a href="http://jquery.org">jQuery Documentation</a></p>
+
+<p> <a href="http://api.jquery.org">jQuery API Documentation</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using Drush and SQL to Delete Spam Comments]]></title>
+    <link href="http://bartlantz.com/blog/2012/05/22/drush-delete-comment/"/>
+    <updated>2012-05-22T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/05/22/drush-delete-comment</id>
+    <content type="html"><![CDATA[<blockquote><p>spam filters fall apart; the centre cannot hold.</p></blockquote>
+
+<h3>Spam Gets By &#8230;</h3>
+
+<p>From time to time, despite precautions, spammers get by the Drupal filters and
+captchas.  Or perhaps, the problem gets put in your lap and you have
+the pleasure of deleting thousands of spam comments.</p>
+
+<p>The Drupal Administrative interface doesn&#8217;t provide many resources unless you enjoy clicking
+&#8220;select all&#8221; and &#8220;delete selected comments&#8221;, page after page, 50 comments at a time.</p>
+
+<h3>Drush to the Rescue</h3>
+
+<p>But, if you are comfortable with sql, one easy solution is to use <strong>drush sql-query</strong>  to delete the comments.</p>
+
+<h3>Before you start Deleting anything&#8230;</h3>
+
+<p>If you are unfamiliar at all with sql, first back up your drupal database.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>drush sql-dump --result-file<span class="o">=</span>/path/to/dump-file.sql
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You could also dump just the comment table. (The &#8216;~&#8217; says to save it
+in your home directory.)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>drush sql-dump --result-file<span class="o">=</span>~/comment-table.sql --tables-list<span class="o">=</span>comment
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Now let&#8217;s get busy!</h3>
+
+<h4>First take a look at the comment table:</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>drush sqlq <span class="s2">&quot;desc comment&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>( <strong>drush sqlq</strong> is the short form of <strong>drush sql-query</strong>)</p>
+
+<p>You could also use drush sql-cli to view the comment table:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>drush sql-cli
+</span><span class='line'>....
+</span><span class='line'>mysql&gt; desc comment;
+</span><span class='line'>+----------+---------------------+------+-----+---------+----------------+
+</span><span class='line'>| Field    | Type                | Null | Key | Default | Extra          |
+</span><span class='line'>+----------+---------------------+------+-----+---------+----------------+
+</span><span class='line'>| cid      | int<span class="o">(</span>11<span class="o">)</span>             | NO   | PRI | NULL    | auto_increment |
+</span><span class='line'>| pid      | int<span class="o">(</span>11<span class="o">)</span>             | NO   | MUL | 0       |                |
+</span><span class='line'>| nid      | int<span class="o">(</span>11<span class="o">)</span>             | NO   | MUL | 0       |                |
+</span><span class='line'>| uid      | int<span class="o">(</span>11<span class="o">)</span>             | NO   | MUL | 0       |                |
+</span><span class='line'>| subject  | varchar<span class="o">(</span>64<span class="o">)</span>         | NO   |     |         |                |
+</span><span class='line'>| hostname | varchar<span class="o">(</span>128<span class="o">)</span>        | NO   |     |         |                |
+</span><span class='line'>| created  | int<span class="o">(</span>11<span class="o">)</span>             | NO   | MUL | 0       |                |
+</span><span class='line'>| changed  | int<span class="o">(</span>11<span class="o">)</span>             | NO   |     | 0       |                |
+</span><span class='line'>| status   | tinyint<span class="o">(</span>3<span class="o">)</span> unsigned | NO   |     | 1       |                |
+</span><span class='line'>| thread   | varchar<span class="o">(</span>255<span class="o">)</span>        | NO   |     | NULL    |                |
+</span><span class='line'>| name     | varchar<span class="o">(</span>60<span class="o">)</span>         | YES  |     | NULL    |                |
+</span><span class='line'>| mail     | varchar<span class="o">(</span>64<span class="o">)</span>         | YES  |     | NULL    |                |
+</span><span class='line'>| homepage | varchar<span class="o">(</span>255<span class="o">)</span>        | YES  |     | NULL    |                |
+</span><span class='line'>| language | varchar<span class="o">(</span>12<span class="o">)</span>         | NO   |     |         |                |
+</span><span class='line'>+----------+---------------------+------+-----+---------+----------------+
+</span><span class='line'>14 rows in <span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Next take a look at the comments:</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>drush sqlq <span class="s2">&quot;select subject,cid from comment &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>You can show comments from the last 30 days with the following.</h4>
+
+<p>The created field is stored as a unix timestamp (seconds since the
+Unix Epoch), so to get last month timestamp:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Seconds to <span class="nv">subtract</span> <span class="o">=</span> <span class="o">(</span>seconds in an hour<span class="o">)</span>*<span class="o">(</span>24 hours in a day<span class="o">)</span>*<span class="o">(</span>30 days<span class="o">)</span> <span class="o">=</span> 3600*24*30
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>drush sqlq <span class="s2">&quot;select subject,cid from comment where created &gt; unix_timestamp(now())-3600*24*30&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Delete comments within a range of comment ids.</h3>
+
+<p>If you know the range of spam comment ids, you can give sql a range of comment ids:</p>
+
+<p>Show the range of comments:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>drush sqlq <span class="s2">&quot;select subject,cid from comment where cid &gt; 3013 and cid &lt; 3134 &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Delete the range of comments:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>drush sqlq <span class="s2">&quot;delete from comment where cid &gt; 3013 and cid &lt; 3134 &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Show comments, group by name of commenter</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>drush sqlq <span class="s2">&quot;select subject,name,cid from comment where cid &gt; 300 group by name&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>But, honestly, there&#8217;s probably a drush delete-comments module that needs to be written!</h3>
+
+<p>I&#8217;ll keep you posted of my progress on that. In the meantime, you can try using the previous commands.  Just remember to backup your database first, its only a single drush command after all!</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>drush dump --result-file<span class="o">=</span>~/drupal-backup.sql
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating a Better Print Screen, part I]]></title>
+    <link href="http://bartlantz.com/blog/2012/05/14/creating-a-better-print-screen/"/>
+    <updated>2012-05-14T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/05/14/creating-a-better-print-screen</id>
+    <content type="html"><![CDATA[<p>After reading Randall Degges excellent post <a href="http://rdegges.com/how-i-learned-to-program">How I learned to
+Program</a>, I decided to
+give creating a screenshot program a try. It&#8217;s always a bit of work to
+take a screenshot, upload it to the web and then grab its permanent
+link. So being a geek, I thought it high time this process was
+automated!</p>
+
+<p> I tried writing the program in python only, so that there were fewer
+dependencies, but using the commandline program
+<a href="https://en.wikipedia.org/wiki/Scrot">scrot</a> as the screenshot
+snapping program added a lot of flexibility to the options for the
+screenshot.</p>
+
+<p>Without further ado, here are the parts of the program.</p>
+
+<h2>Take Screenshot with scrot</h2>
+
+<p>I start with a bash script that calls <a href="https://github.com/dreamer/scrot">scrot</a>, and passes in my program
+as a parameter to scrot.</p>
+
+<p>screen-upload.bash</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/bash
+</span><span class='line'>/usr/local/bin/scrot '%m-%d-%Y-screenshot.png' -d 5 -u -e '/home/bart/projects/screen-upload/screen-upload.py $f' </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next, chmod +x the bash script:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>chmod +x screen-upload.bash</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Scrot Options explained</h3>
+
+<ul>
+<li><strong>-d 5</strong>: Delays the snap for 5 seconds.</li>
+<li><strong>-u</strong>: Use the currently focused window.</li>
+<li><strong>-e &#8216;script&#8217;</strong>: Execute the following script after the screenshot
+is snapped.</li>
+<li><strong>$f</strong>: passes in filename to script.</li>
+</ul>
+
+
+<h2>On to the Python Picture Uploading Program</h2>
+
+<p>Scrot takes a screenshot after a delay of 5 seconds of the currently
+active window, it names the file with the current
+date-screenshot.png, it then passes the filename into my program,
+&#8220;screen-upload.py&#8221;.</p>
+
+<h2>Upload Image to Picasaweb</h2>
+
+<p>For uploading the image to Picasaweb, I used the <a href="https://code.google.com/p/gdata-python-client/downloads/list">gdata
+module</a>. Installing
+it involved the standard: Download the module, extract it and cd into the
+directory and  run &#8220;sudo python setup.py install&#8221;.</p>
+
+<p>In version 2 of screen-upload, I will rewrite the authentication to use Oauth2, so that
+the authentication is more secure, for the alpha version, I am just
+passing in the users email and password into the <strong>gd_client</strong> object.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">gdata.photos.service</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">gdata.media</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">gdata.geo</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">filename</span> <span class="o">=</span> <span class="n">fname</span>
+</span><span class='line'><span class="n">gd_client</span> <span class="o">=</span> <span class="n">gdata</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">PhotosService</span><span class="p">()</span>
+</span><span class='line'><span class="n">gd_client</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">username</span>
+</span><span class='line'><span class="n">gd_client</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">passwd</span>
+</span><span class='line'><span class="n">gd_client</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s">&#39;screen-upload-1&#39;</span>
+</span><span class='line'><span class="n">gd_client</span><span class="o">.</span><span class="n">ProgrammaticLogin</span><span class="p">()</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&#39;uploading&#39;</span><span class="p">,</span>  <span class="n">filename</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">album_url</span> <span class="o">=</span> <span class="s">&#39;/data/feed/api/user/</span><span class="si">%s</span><span class="s">/albumid/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">album_id</span><span class="p">)</span>
+</span><span class='line'><span class="n">photo</span> <span class="o">=</span> <span class="n">gd_client</span><span class="o">.</span><span class="n">InsertPhotoSimple</span><span class="p">(</span><span class="n">album_url</span><span class="p">,</span> <span class="s">&#39;New Photo&#39;</span><span class="p">,</span>
+</span><span class='line'>               <span class="s">&#39;Uploaded using the API&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&#39;image/png&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<h2>Copy URL into the Clipboard</h2>
+
+<p>Copying the URL to the clipboard is easy as long as you are not too
+concerned with cross-platform compatibility. I used the gtk module to
+gain access to the clipboard on Linux systems.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">gtk</span> <span class="kn">import</span> <span class="n">Clipboard</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">clip_store</span><span class="p">(</span><span class="n">pic_url</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">cb</span> <span class="o">=</span> <span class="n">Clipboard</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">cb</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="n">pic_url</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">cb</span><span class="o">.</span><span class="n">store</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This can be made more cross-platform with a series of try statements
+that load platform specific libraries.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">try</span><span class="p">:</span>
+</span><span class='line'>  <span class="kn">import</span> <span class="nn">win32</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="k">try</span><span class="p">:</span>
+</span><span class='line'>  <span class="kn">from</span> <span class="nn">gtk</span> <span class="kn">import</span> <span class="n">Clipboard</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Setting up the Keyboard Shortcut in Gnome 3.</h2>
+
+<p>I had a bit of a bother creating a keyboard shortcut in Gnome.  I
+created a new shortcut in the keyboard settings configuration, but
+nothing happened.</p>
+
+<p>Long story short: I created a shortcut under &#8220;Custom Shortcuts&#8221;.  I
+called it &#8220;Take Screenshot&#8221; and I named the script &#8220;screen-upload&#8221;.
+Then I created a symbolic link to the script in /usr/local/bin.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ln -s ~/projects/screen-upload/screen-upload.bash /usr/local/bin/screen-upload.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This did the trick, now when I press the PrtSc button, a screenshot is
+taken of the current window, and its uploaded to Picasa and the URL of
+the image is copied in to my clipboard!</p>
+
+<p><img src="https://lh4.googleusercontent.com/-UNPsuNmMnTI/T7RlkQmmoyI/AAAAAAAACo8/O-vIjTeCtCE/s800/New%252520Photo.png" alt="&quot;Screenshot of screen-upload.py in Emacs&quot;" /></p>
+
+<h2>References</h2>
+
+<ul>
+<li><a href="https://developers.google.com/picasa-web/docs/1.0/developers_guide_python">Picasa-web Python Developer&#8217;s Guide for API v1</a></li>
+<li><a href="https://developers.google.com/gdata/docs/auth/overview">Google Data API Authentication Guide</a></li>
+<li><a href="http://stackoverflow.com/questions/69645/take-a-screenshot-via-a-python-script-linux">Stackoverflow Answer for Taking Screenshot with python only</a></li>
+<li><a href="http://rdegges.com/how-i-learned-to-program">Randall Degges: How I Learned to Program</a></li>
+<li><a href="https://github.com/dreamer/scrot">Scrot&#8217;s Github Repository</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using Jekyll on NearlyFreeSpeech.net]]></title>
+    <link href="http://bartlantz.com/blog/2012/05/11/jekyll-on-nfsn/"/>
+    <updated>2012-05-11T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/05/11/jekyll-on-nfsn</id>
+    <content type="html"><![CDATA[<p>NearlyFreeSpeech.net is a good simple, bare-bones fit for a Jekyll
+site once everything is set up. The price can&#8217;t be beat, you can put
+down a $10 payment and just try it out. With a Jekyll site, that $10
+investment should last a while!</p>
+
+<h2>Set Up SSH Alias</h2>
+
+<p>The first thing to do is set up an ssh alias in your .bashrc file.
+The hostname and username that are assigned at nfsn are generally
+pretty easy to forget, so I always create an alias for them, like:</p>
+
+<div>
+  <pre><code class='bash'>alias sshnfsn='username_sitename@ssh.yourhostname.nearlyfreespeech.net';</code></pre>
+</div>
+
+
+<p>Once you save the .bashrc file, you can source it with:</p>
+
+<div>
+  <pre><code class='bash'>. ~/.bashrc</code></pre>
+</div>
+
+
+<p>and then test that it works with by running it.</p>
+
+<div>
+  <pre><code class='bash'>sshnfsn</code></pre>
+</div>
+
+
+<h2>Aside: Public, Private, Protected Directories</h2>
+
+<p>On a nfsn site, there are 3 directories in your /home folder.</p>
+
+<ul>
+<li><p>The <strong>/home/public</strong> folder is your public facing directory. This is
+your website&#8217;s public Document Root.</p></li>
+<li><p>The <strong>/home/private</strong> folder is your private folder where you can store
+git repos, your ruby gems, anything private you need to use or back
+up.</p></li>
+<li><p>The <strong>/home/protected</strong>: let me know if find a use for this.</p></li>
+</ul>
+
+
+<h2>Set Up Git on NFSN</h2>
+
+<p>Once you are ssh&#8217;d into nfsn, cd into /home/private and create a
+directory for your git repositories and create a bare git repository
+for your site.</p>
+
+<div>
+  <pre><code class='bash'>cd /home/private
+mkdir git
+cd git
+mkdir mysite.git
+cd mysite.git
+git init --bare</code></pre>
+</div>
+
+
+<p>Now you have a bare git repository for your jekyll site. The following
+script will create a git post-receive hook, that will run every time
+you push to your git repository.</p>
+
+<div>
+  <pre><code class='bash'>#!/bin/sh
+
+REPONAME=mysite.git
+GIT_REPO=$HOME/git/$REPONAME
+TMP_GIT_CLONE=$HOME/git/tmp_deploy/$REPONAME
+PUBLIC_WWW=/home/public
+
+# clone the git repo into the tmp_deploy directory.
+git clone $GIT_REPO $TMP_GIT_CLONE
+# jekyll-ify the site and place html files in /home/public
+jekyll --no-auto $TMP_GIT_CLONE $PUBLIC_WWW
+
+rm -Rf $HOME/git/tmp_deploy/$REPONAME/.git/objects
+rm -Rf $HOME/git/tmp_deploy/$REPONAME/.git
+rm -Rf $HOME/git/tmp_deploy/$REPONAME
+
+exit</code></pre>
+</div>
+
+
+<p>Be sure to chmod +x the file:</p>
+
+<div>
+  <pre><code class='bash'>chmod ug+x /home/private/git/mysite.git/post-receive</code></pre>
+</div>
+
+
+<p>Now, every time you &#8220;git push&#8221; into nfsn this post-receive hook will
+auto-regenerate your jekyll site.</p>
+
+<h2>Set Up a Git Remote to NFSN</h2>
+
+<p>Back on your home computer or wherever you are building your jekyll
+site, you need to create a git remote for your nsfn git
+repository.</p>
+
+<div>
+  <pre><code class='bash'>cd ~/projects/mysite.git
+# substitute in your username, sitename and nfsn hostname
+git remote add nfsn ssh://&amp;lt;nsfnusername&amp;gt;-&amp;lt;sitename&amp;gt;@ssh.&amp;lt;hostname&amp;gt;.nearlyfreespeech.net/home/private/git/mysite.git</code></pre>
+</div>
+
+
+<p>Now that you have a git remote set up for your jekyll site, you can
+Create a page in your jekyll &#8220;_post&#8221; directory. <br/>
+Run &#8220;jekyll &#8211;server&#8221; to test it locally at http://localhost:4000.</p>
+
+<div>
+  <pre><code class='bash'>jekyll --server</code></pre>
+</div>
+
+
+<p>If it looks good, add it to your git repository.</p>
+
+<div>
+  <pre><code class='bash'>git commit -am &quot;new brilliant post!&quot;</code></pre>
+</div>
+
+
+<p>Next, push it to your website on nfsn.</p>
+
+<div>
+  <pre><code class='bash'>git push nfsn master</code></pre>
+</div>
+
+
+<p>The post-receive script you created earlier will generate your new public jekyll website automatically.</p>
+
+<p>Test it and enjoy!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SAS to R Notes]]></title>
+    <link href="http://bartlantz.com/blog/2012/04/14/sas-to-r/"/>
+    <updated>2012-04-14T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/04/14/sas-to-r</id>
+    <content type="html"><![CDATA[<h2 id="sec-1">How I did part of a SAS assignment in R</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+I was working on a SAS assignment for my Regression Analysis class.
+The residual plot in SAS was corrupted, luckily I was able to recreate
+it in R. (And actually it looks better in R too.)
+</p>
+
+
+
+<div>
+  <pre><code class='r'># read in data from file 
+gpa.data &lt;- read.table(&quot;GPA.txt&quot;);
+# create multiple linear regression model
+gpa.fit &lt;- lm(V4 ~ V1 + V2 + V3 + V5 + V6 + V7 + V8, data=gpa.data)
+
+# save residuals to a variable
+gpa.resid &lt;- residuals(gpa.fit)
+# save Predicted values to a variable
+gpa.yhat &lt;- fitted.values(gpa.fit)
+
+# create png file, that plot will be saved to.
+#png(&quot;resid.png&quot;)
+# create a plot of residuals vs predicted values
+plot(gpa.yhat,gpa.resid, ylab=&quot;Residuals&quot;, xlab=&quot;Predicted Values of Cum GPA&quot;, main=&quot;Plot of Residuals*Predicted Values&quot;)
+# create a line#
+abline(0,0)
+# write plot to file
+#dev.off()</code></pre>
+</div>
+
+
+
+
+
+
+<p>  
+<img src="http://bartlantz.com/assets/files/resid.png"  alt="resid.png" />
+</p>
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">ANOVA table of the Multiple Regression Model</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+
+Here is R&#8217;s ANOVA command. Run it on the regression model gpa.fit.
+
+<div>
+  <pre><code class='r'>anova(gpa.fit)</code></pre>
+</div>
+
+
+
+Here is the output of the ANOVA command.
+
+<div>
+  <pre><code class='r'>Analysis of Variance Table
+
+Response: V4
+           Df  Sum Sq Mean Sq F value    Pr(&gt; F)    
+V1          1   0.567  0.5669  1.8709  0.172001    
+V2          1  26.488 26.4877 87.4135 &lt; 2.2e-16 ***
+V3          1   9.096  9.0964 30.0194 6.839e-08 ***
+V5          1   2.446  2.4459  8.0717  0.004683 ** 
+V6          1   1.032  1.0324  3.4069  0.065524 .  
+V7          1   0.020  0.0199  0.0655  0.798068    
+V8          1   0.278  0.2784  0.9187  0.338288    
+Residuals 492 149.084  0.3030                      
+---
+codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</code></pre>
+</div>
+
+
+
+
+</div>
+The stars in R&#8217;s output are the signoificance code.  In the above
+summary output, V2, V3, V5 are very significant. V1, V7, and V8 are
+not very significant; the regression model should be tested without them.
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Summary of Linear Regression Model</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+
+
+<div>
+  <pre><code class='r'>summary(gpa.fit)</code></pre>
+</div>
+
+
+
+
+
+<div>
+  <pre><code class='r'>Call:
+lm(formula = V4 ~ V1 + V2 + V3 + V5 + V6 + V7 + V8, data = gpa.data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.3345 -0.3387 -0.0059  0.3429  1.9661 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt; |t|)    
+(Intercept)  1.7792451  0.5165056   3.445  0.00062 ***
+V1          -0.0383924  0.0527532  -0.728  0.46710    
+V2           0.2716557  0.0417213   6.511 1.84e-10 ***
+V3           0.0010404  0.0003173   3.279  0.00111 ** 
+V5           0.0010332  0.0003425   3.016  0.00269 ** 
+V6          -0.0391177  0.0239319  -1.635  0.10279    
+V7          -0.0006554  0.0028471  -0.230  0.81805    
+V8          -0.0054118  0.0056462  -0.958  0.33829    
+---
+codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+Residual standard error: 0.5505 on 492 degrees of freedom
+Multiple R-squared: 0.2112, Adjusted R-squared:   0.2 
+F-statistic: 18.82 on 7 and 492 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Vim Emacs Regex Smackdown]]></title>
+    <link href="http://bartlantz.com/blog/2012/04/12/vim-emacs-regex/"/>
+    <updated>2012-04-12T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/04/12/vim-emacs-regex</id>
+    <content type="html"><![CDATA[So, I was trying to convert an orgmode file to html. There is an orgmode-export-as-html function, but it was choking on something, so I needed to do the conversion by hand. I tried many, many times to convert the file with emacs regular expressions, but was unsuccessful.  The difficulty was the orgmode headlines, which look like this:
+
+<div>
+  <pre><code class='bash'>*** Use the sort function</code></pre>
+</div>
+
+
+I wanted to simply transform this into 
+<div>
+  <pre><code class='bash'>&lt;h3&amp;gt;Use the sort function&lt;/h3&amp;gt;</code></pre>
+</div>
+
+
+<h2>Vim Regexp</h2>
+I was finally able to match the headline in vim with the following regular expression: 
+<div>
+  <pre><code class='bash'>\*\*\* \(\(w*\).*\)</code></pre>
+</div>
+
+
+<li> The literal asterisks had to be matched with \*.  
+<li> Next, to match to the end of the line I used: \(\(w*\).*\) 
+<li> \( \) creates a matching group, which can be used later in the replacement string with \1 or \2 etc.
+<li> Also \(w*\).* matches 1 or more words
+
+<h2>Vim Substitution Expression</h2>
+
+<div>
+  <pre><code class='bash'>%s/\*\*\* \(\(w*\).*\)/&lt;h3&amp;gt;\1&lt;\/h3&amp;gt;/</code></pre>
+</div>
+
+<li> The % matches the entire file
+<li>The \1 matches the first matching group in the search string
+That is, \1 will match everything on the line after the 3 literal asterisks.
+
+<h2>Testing Matching String</h2>
+Its easy to test a regular expression in vim.  While in command mode (hit Esc if you are in input mode), type a / and then type your regular expression and then press &#8220;return&#8221;, like so:
+<div>
+  <pre><code class='bash'>/\*\*\* [RETURN]</code></pre>
+</div>
+
+
+Your matches will be highlighted.  Click &#8216;n&#8217; to jump to the next match.
+
+<h2>Getting back to previous substitution</h2>
+Vim has a cool, intuitive way to explore your command history. In command mode, type &#8220;:&#8221; as for typing an ex command, and then press the up arrow to scroll up to through your command history. This is really handy for using previous, complex regular expressions.
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Notes on SAS]]></title>
+    <link href="http://bartlantz.com/blog/2012/04/02/sas-notes/"/>
+    <updated>2012-04-02T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/04/02/sas-notes</id>
+    <content type="html"><![CDATA[<h2>The Data Step</h2>
+<h3>Subsetting IF</h3>
+In a Data Step you can exclude some observations from the dataset with an if statement.
+<div>
+  <pre><code class='s'>data tornados_1980s;
+  infile FileName;
+  input year city damages;
+  * this limits input data to 1980s data;
+  if 1980 &lt;= year &lt;= 1989;
+run;</code></pre>
+</div>
+
+
+<li> IF .. IN statement
+<div>
+  <pre><code class='s'>if year in (1980, 1981, 1982);</code></pre>
+</div>
+
+
+<li> AND, OR 
+<div>
+  <pre><code class='s'>if year = '1980' and city = 'Baltimore';</code></pre>
+</div>
+ 
+
+
+<h3>infile &#8216;filename&#8217;</h3>
+In the data step, import data from a file with the infile command.
+<div>
+  <pre><code class='s'>data tornados;
+  infile 'tornados.dat';
+  input year city cost;
+run;</code></pre>
+</div>
+
+
+<h3>Set </h3>
+<li> Use the set command to create a new data set from an already created
+  set.
+The following creates a dataset of 1980s tornado data from the larger
+set of tornado data.
+<div>
+  <pre><code class='s'>data tornados_1980s;
+  set tornados;
+  if 1980 &lt;= year &lt;= 1989;
+run;</code></pre>
+</div>
+
+
+<h2>The PROC Step</h2>
+<h3>PROC SORT</h3>
+<li> The sort procedure, sorts data. You can sort by multiple fields.
+<li> Also you can print by a field.
+<div>
+  <pre><code class='s'>proc sort data=tornados;
+  by year city;
+proc print data=tornados;
+  by year;
+run;</code></pre>
+</div>
+
+
+<h3>PROC Univariate</h3>
+PROC Univariate generates descriptive statistics
+<div>
+  <pre><code class='s'>proc univariate data=tornados;
+  histogram year;
+run;</code></pre>
+</div>
+
+
+<h3>PROC means</h3>
+Use proc means when you are only interested in basic descriptive statistics.
+<h3>PROC freq</h3>
+<li> generates tables for data in categories.
+<h3>PROC gplot</h3>
+<div>
+  <pre><code class='s'>proc gplot data=tornados;
+  plot year*cost;
+  title 'Year by Cost tornados';
+run;</code></pre>
+</div>
+
+
+<h3>PROC corr</h3>
+<h4>compute the correlation</h4>
+<div>
+  <pre><code class='s'>proc corr data=grades;
+  var exam1 exam2 hwscore;
+run;</code></pre>
+</div>
+
+
+<h3>PROC reg</h3>
+<li> p: prints obs, predicted, residuals
+<li> r: same as p, plus more
+<li> clm: 95% conf interval for mean of each obs
+<li> cli: 95% prediction intervals.
+<div>
+  <pre><code class='s'>proc reg data=grades;
+  model final=exam1 hwscore / p r cli clm;
+  plot final*hwscore;
+run;</code></pre>
+</div>
+
+
+<h2>Multiple Regression Analysis</h2>
+<h3>Variable Selection</h3>
+SAS has several methods for selecting variables
+
+<div>
+  <pre><code class='s'>proc reg data=cdi;
+  model y = x1-x8 /selection=rsquare best=1;
+  model y = x1-x8 /selection=adjrsq best=5;
+  model y = x1-x8 /selection=cp best=10;
+  model y = x1-x8 /selection=forward slentry=0.10;
+  model y = x1-x8 /selection=stepwise slentry=0.10 slstay=0.10;
+  model y = x1-x8 /selection=backward slstay=0.10;
+run;</code></pre>
+</div>
+
+
+additional pages to try:
+<a href=http://www.ats.ucla.edu/stat/sas/modules/graph.htm>more sas</a>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Notes on Drupal Features]]></title>
+    <link href="http://bartlantz.com/blog/2012/03/18/notes-on-drupal-features/"/>
+    <updated>2012-03-18T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2012/03/18/notes-on-drupal-features</id>
+    <content type="html"><![CDATA[One of the difficulties of keeping a Drupal website completely in version control, is that a lot of the configuration is stored in the database. Each change you make to a site via clicking and saving on a site administration page is saved in the database. It is difficult to keep a history of these changes without writing the entire database to a file and then checking that into version control. But you don&#8217;t want to commit an entire database into git. This is where the Features module comes into play. It helps separate the site&#8217;s configuration in the database from the site&#8217;s content.
+
+The Features module allows you to export configuration options from the database into a new module.  Then you can check this new module into version control and keep track of the history of changes, and keep backups of a site&#8217;s configuration that is separated from the site&#8217;s content and database.
+
+<h1>Features Concepts</h1>
+<h2>Exporting Features</h2>
+Exporting a feature is the processing of exporting a configuration option (or a series of options) from the database and saving them as a features module. Let&#8217;s say you are using Bartik (or another theme that utilizes the color module to allow you to customize a site&#8217;s colorscheme.)  and you change the background color of the site. When you make this change via the web interface, the configuration change is saved in the database. To export this change as a feature, you click on admin/structure/features/create.  
+
+Create a name and description for your new feature, such as &#8220;Major Ursa Bartik Colors&#8221; and &#8220;Color scheme for Bartik theme used on Major Ursa&#8221;. Next under <b>Edit Components</b>, select <em>Strongarm: variable</em>.  Then select &#8220;color_bartik_palette&#8221; and perhaps &#8220;color_bartik_stylesheets&#8221;.  Then click on the <b>Download Feature</b> button.
+
+This will download a new module to your desktop with the configuration options saved as a features module.  This is only step one.  Next you will need to upload this new module back up to your website and enable. Once the module is enabled, the configuration is being run from code from the module, not from a configuration option in the database.  This is known, confusingly enough, as <b>reverting a feature</b>.
+
+<h2>Revert a Feature</h2>
+To revert a feature is to take the configuration options that are written in a custom feature module and override the database configuration.
+
+Revert a feature with drush
+
+<div>
+  <pre><code class='bash'>drush features-revert  mu_bartik_theme</code></pre>
+</div>
+
+
+The above code would read the configuration options from the code in the mu_bartik_theme and overwrite the current configuration in the database.
+
+<h2>Override a Feature</h2>
+To override a feature, means to take the configuration that is currently in the database and use those options to override the previous custom feature module you created. This basically updates the old feature module with what is currently live on the site and in the database. Then you will be able to download an updated feature module and can commit this new change to your git repository so you have a history of site changes, upload the changed feature module <b>mu_bartik_theme</b> to your site and (ahem revert the change again).
+
+Here&#8217;s the drush command to override a feature
+
+<div>
+  <pre><code class='bash'>drush features-override mu_bartik_theme</code></pre>
+</div>
+
+
+
+
+<h2>Drush Commands</h2>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Vim Notes]]></title>
+    <link href="http://bartlantz.com/blog/2012/02/23/vim-notes/"/>
+    <updated>2012-02-23T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/02/23/vim-notes</id>
+    <content type="html"><![CDATA[<p><img src="http://majorursa.net/sites/default/files/hide_vi.jpg"  alt="http://majorursa.net/hide_vi.jpg" width="80%" />
+</p>
+
+
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Vi Commands</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">vi key combo</th><th scope="col" class="left">command</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">:q!</td><td class="left">quit without saving</td></tr>
+<tr><td class="left">:wq</td><td class="left">write and quit</td></tr>
+<tr><td class="left">:q</td><td class="left">quit</td></tr>
+<tr><td class="left">:%s/oldword/newword/g</td><td class="left">substitute all oldword occurences with newword in entire file</td></tr>
+<tr><td class="left">:ls</td><td class="left">list buffers</td></tr>
+<tr><td class="left">:b1</td><td class="left">switch to buffer 1</td></tr>
+<tr><td class="left">:bn</td><td class="left">switch to buffer n</td></tr>
+<tr><td class="left">:vs</td><td class="left">vertically split window (create side by side windows)</td></tr>
+</tbody>
+<tbody>
+<tr><td class="left">dw</td><td class="left">delete word</td></tr>
+<tr><td class="left">d$</td><td class="left">delete to end of line</td></tr>
+<tr><td class="left">dd</td><td class="left">delete current line</td></tr>
+<tr><td class="left">.</td><td class="left">repeat last change</td></tr>
+<tr><td class="left">yy</td><td class="left">copy, yank line into buffer</td></tr>
+<tr><td class="left">p</td><td class="left">paste the line in buffer after cursor position</td></tr>
+<tr><td class="left">cw</td><td class="left">change word</td></tr>
+<tr><td class="left">u</td><td class="left">undo!</td></tr>
+<tr><td class="left">i</td><td class="left">insert mode</td></tr>
+<tr><td class="left"><Esc&gt;</td><td class="left">escape, exit insert mode</td></tr>
+<tr><td class="left">/VirtualHost</td><td class="left">search file for phrase &#8220;VirtualHost&#8221;</td></tr>
+<tr><td class="left">n</td><td class="left">move to next occurence of search phrase</td></tr>
+<tr><td class="left">100G</td><td class="left">move to 100th line</td></tr>
+<tr><td class="left">1G</td><td class="left">move to first line</td></tr>
+<tr><td class="left">G</td><td class="left">move to last line</td></tr>
+</tbody>
+</table>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">more vi cheatsheets</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p>
+<a href="http://www.washington.edu/computing/unix/viqr.html">http://www.washington.edu/computing/unix/viqr.html</a>
+</p>
+<p>
+<a href="http://www.lagmonster.org/docs/vi.html">http://www.lagmonster.org/docs/vi.html</a>
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">add to .screenrc to get Color Schemes working</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+
+
+<div>
+  <pre><code class='bash'>attrcolor b &quot;.I&quot;
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+defbce &quot;on&quot;
+term screen-256color-bce</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">.vimrc</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+
+
+<div>
+  <pre><code class='bash'>&quot; Colors!!
+set t_Co=256
+
+&quot; color theme
+&quot; colors zenburn
+colors calmar256-dark
+
+set showmode &quot;show current mode down the bottom
+
+&quot;Setting the status line...
+
+set statusline=%f       &quot;tail of the filename
+
+&quot;display a warning if the file format isn't Unix
+set statusline+=%#warningmsg#
+set statusline+=%{&amp;amp;ff!='unix'?'['.&amp;amp;ff.']':''}
+set statusline+=%*
+
+&quot;display a warning if file encoding isn't UTf-8
+set statusline+=%#warningmsg#
+set statusline+=%{(&amp;amp;fenc!='utf-8'&amp;amp;&amp;amp;&amp;amp;fenc!='')?'['.&amp;amp;fenc.']':''}
+set statusline+=%*
+
+set statusline+=%h      &quot;help file flag
+set statusline+=%y      &quot;filetype
+set statusline+=%r      &quot;read only flag
+set statusline+=%m      &quot;modified flag
+syntax on</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">Window Commands</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<tbody>
+<tr><td class="left">C-w s</td><td class="left">Split window horizontally</td></tr>
+<tr><td class="left">C-w v</td><td class="left">Split window vertically</td></tr>
+<tr><td class="left">C-w x</td><td class="left">Exchange windows</td></tr>
+<tr><td class="left">C-w w</td><td class="left">jump to next window</td></tr>
+<tr><td class="left">:only</td><td class="left">kill all windows but current</td></tr>
+<tr><td class="left">C-w =</td><td class="left">equalize all window sizes</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6">Edit Keys: used with argument</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+</div>
+
+<div id="outline-container-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1">c change</h4>
+<div class="outline-text-4" id="text-1-6-1">
+
+<ul>
+<li>cw = change word
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-6-2" class="outline-4">
+<h4 id="sec-1-6-2">d delete</h4>
+<div class="outline-text-4" id="text-1-6-2">
+
+<ul>
+<li>d$ delete til end of line
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-6-3" class="outline-4">
+<h4 id="sec-1-6-3">r replace</h4>
+<div class="outline-text-4" id="text-1-6-3">
+
+<ul>
+<li>r5 replace 5 chars
+</li>
+</ul>
+
+
+<div id="outline-container-1-6-4" class="outline-4">
+<h4 id="sec-1-6-4">y yank</h4>
+<div class="outline-text-4" id="text-1-6-4">
+
+<ul>
+<li>yy yank entire line
+</li>
+</ul>
+
+</div>
+
+</div>
+
+
+
+</div>
+
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Working on an Issue from the Drupal Issue Queue]]></title>
+    <link href="http://bartlantz.com/blog/2012/02/03/work-on-issue-drupal-issue-queue/"/>
+    <updated>2012-02-03T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/02/03/work-on-issue-drupal-issue-queue</id>
+    <content type="html"><![CDATA[These are the steps, using git mostly, needed to work on an issue from the drupal issue queue.
+
+<h2>First Time: Clone Drupal Core</h2>
+
+cd into your development folder and git clone drupal core, (in this case, I&#8217;m working on a drupal 8 issue).
+<div>
+  <pre><code class='bash'>cd ~/projects/
+git clone --branch 8.x http://git.drupal.org/project/drupal.git drupal-8.x
+cd drupal-8.x</code></pre>
+</div>
+
+
+<h2>Later, Refresh Repository with Git Pull</h2>
+After you&#8217;ve already cloned a copy of drupal for testing and development, all you have to do is run &#8220;git refresh&#8221; to update your copy.
+
+<div>
+  <pre><code class='bash'>cd ~/projects/drupal-8.x/
+git checkout 8.x
+git pull</code></pre>
+</div>
+
+
+This will download the most recent commits to drupal-core from the central git repository and apply them to your 8.x branch.
+
+<h2>Create a topic branch for your issue</h2>
+
+Its a good idea to do development work in a separate development branch.  The following creates a new branch and checks the new branch out, so any subsequent changes will be made to that branch.
+<div>
+  <pre><code class='bash'>git branch fix-typo
+git checkout fix-typo</code></pre>
+</div>
+
+
+To list all of the branches, run:
+<div>
+  <pre><code class='bash'>git branch</code></pre>
+</div>
+
+
+git will show all of your branches, and it will star the current branch
+<div>
+  <pre><code class='bash'>8.x
+  * fix-typo
+    profile-docs</code></pre>
+</div>
+
+
+    Next work in your topic branch, make some changes.  
+
+    <h2>Work without fear</h2>
+
+    With git, you can work without fear! if you foul things up, getting back to a previous state is easy with <em>git reset</em>. 
+
+    The following command will return the state of your code to that of the last commit.
+    <div>
+  <pre><code class='bash'>git reset HEAD --hard</code></pre>
+</div>
+
+
+    Also, if the last good state was a few commits ago, you can reset the current state to a previous commit with
+    <div>
+  <pre><code class='bash'>git reset  00581a73afab6 --hard</code></pre>
+</div>
+
+    where 00581a73afab6 is the SHA1 of the commit you want you working directory reset to.
+
+    to find previous commits and their SHA1&#8217;s, run git log:
+    <div>
+  <pre><code class='bash'>git log</code></pre>
+</div>
+
+    This will give a listing of the entire commit history.  You can travel back in time!  
+
+    To see what files have changed since the last commit, run:
+    <div>
+  <pre><code class='bash'>git status</code></pre>
+</div>
+
+    This will show which files have been modified. 
+
+    To see what the actual changes are, run:
+    <div>
+  <pre><code class='bash'>git diff HEAD</code></pre>
+</div>
+
+
+    <h2>Stage and Commit Changes</h2>
+    Once you have some changes that you&#8217;d like to preserve, you first stage them to the index:
+    <div>
+  <pre><code class='bash'>git add thefile.ext</code></pre>
+</div>
+
+
+    Now when you run git status, you will see that the file is now under the header &#8220;Changes to be commited.&#8221;  This intermediary step may seem strange if you are new to git, but it is very handy. It allows you to break up changes into separate logical commits. You can stage and commit one logical set of changes, and then stage and commit another set of changes.  Although, it may be better to separate different issues into different topic branches.
+
+    <h2>Commit changes</h2> 
+    Now that your changes are staged, it is time to commit them:
+    <div>
+  <pre><code class='bash'>git commit</code></pre>
+</div>
+
+    This will open your default editor, so you can write a descriptive commit message.
+
+    <h2>Create a Patch</h2>
+    Now that your changes have been made and committed, its time to create a patch that you attach to the drupal issue queue.
+
+    First switch back to the 8.x branch:
+    <div>
+  <pre><code class='bash'>git checkout 8.x</code></pre>
+</div>
+
+
+    Next, create a patch with git diff. Drupal has a specific naming convention for patches ([module_name]-[short-description]-[issue-number]-[comment-number].patch).  In the case of a patch for drupal core, this can be shortened to [short-description]-[issue-number]-[comment-number].patch
+
+    The following git diff command will print out all of the difference between the current branch (8.x) and the listed branch (fix-typo):
+    <div>
+  <pre><code class='bash'>git diff fix-typo &gt; fix_typo_in_bartik_css-902839-1.patch</code></pre>
+</div>
+
+
+    <h2>Use git format-patch to include committer information</h2>
+    Alternatively, you can use the git format-patch command to include the committer information in the patch:
+    <div>
+  <pre><code class='bash'>git format-patch origin/master fix-typo &gt; fix_typo_in_bartik_css-902839-1.patch</code></pre>
+</div>
+
+
+    Next go to drupal queue, write up a description, attach the patch, and change the status to &#8220;needs review&#8221;.
+
+
+
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[New Scuttle Developments]]></title>
+    <link href="http://bartlantz.com/blog/2012/01/29/new-scuttle-developments/"/>
+    <updated>2012-01-29T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/01/29/new-scuttle-developments</id>
+    <content type="html"><![CDATA[<img src=http://www.majorursa.net/sites/default/files/styles/large/public/field/image/scuttle-screenshot.png
+     align=left style="padding-right:15px;">
+I am a big fan, user, and tinkerer of <a href=http://sourceforge.net/projects/scuttle/>Scuttle</a>: the Open Source <a href=http://en.wikipedia.org/wiki/Social_bookmarking>Social Bookmarking</a> System. In case you have never heard of it, Scuttle is similar to other social bookmarking web applications like Delicious and <a href="http://pinboard.in">Pinboard</a>. It allows you to save website bookmarks on a public site, so that other people can follow your bookmarks and you can follow other people with similar interests. Although unlike delicious and pinboard, most scuttle instances are decentralized with only a few users. So there is less of the social aspect. (That is until someone figures out how to federate all of the decentrailized installations.)
+
+You can see some of my work on different Scuttle projects on <a href=https://github.com/underhilllabs>my github profile</a>.  And here&#8217;s my <a href=http://bookmarks.denvertech.org>bookmark site</a> which shows scuttle in use.
+
+<h2>Scuttle Web App Additions</h2>
+I have a <a href=https://github.com/underhilllabs/scuttle>fork of the original scuttle web app</a>. I have add a couple of features recently. I was getting frustrated because I would bookmark a website, and scuttle would tell me that that page was already bookmarked a year ago and so would keep the bookmark in the stream a year ago, even if I updated the bookmark. The problem with that approach is that when something is bookmarked a while ago and I&#8217;m researching the topic again, I want the updated bookmark to show up with the most recent bookmarks. So I altered the code to do this.  When I resave a bookmark or update it, Scuttle now saves my updated bookmark in the stream with recent bookmarks.  It shows both the original date and the modified date.  
+
+<h2>Firefox Scuttle Plug-in Keyboard Shortcut</h2>
+There is also a firefox plugin for scuttle to update your scuttle site.  I added a keyboard shortcut to the <a href=https://github.com/underhilllabs/Scuttle-Plugin-Firefox-4>plugin on my fork of it at github</a>, My addition adds a keyboard shortcut at &#8220;Shift-Ctrl-B&#8221;, so if you&#8217;re reading a good article, you can just type &#8220;Shift-Ctrl-B&#8221; and the &#8220;scuttle save bookmark&#8221; window will pop up. If you are interested, you can download the <a href=https://github.com/underhilllabs/Scuttle-Plugin-Firefox-4/downloads>firefox plugin here</a>.
+
+
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Tools for Working With Data]]></title>
+    <link href="http://bartlantz.com/blog/2012/01/28/tools-for-working-with-data/"/>
+    <updated>2012-01-28T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/01/28/tools-for-working-with-data</id>
+    <content type="html"><![CDATA[<div id="content">
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Web Scraping</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>Web scraping is a technique of extracting information from websites.
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Scraperwiki</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p><a href="http://scraperwiki.com">http://scraperwiki.com</a>
+</p>
+<p>
+Scraperwiki has tutorials on scraping webpages for data, written for
+Python and Ruby.
+</p><ul>
+<li><a href="http://blog.scraperwiki.com/2011/08/15/scraperwiki-tutorial-screencast-for-non-programmers/">ScraperWiki screencast on scraping for non-programmers.</a>
+</li>
+</ul>
+
+
+
+</div>
+
+</div>
+
+<h3>Scraper: a Plug-in for Chrome</h3>
+<a href=http://mnmldave.github.com/scraper/>Scraper</a> is a cool, chrome plug-in I&#8217;ve just discovered that makes scraping web pages easy.  Just 
+<ol>
+<li>Highlight part of a table, at least a row, that you want to scrape.
+<li>Right-click on the selection.  Select &#8220;scrape similar&#8221; from the pop-up menu, and some reasonable scraping defaults will appear. 
+<li>Press the &#8220;Export to Google Docs..&#8221; button to save the scraped data to a google docs spreadsheet.
+</ol>
+
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Google Refine</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p><a href="http://code.google.com/p/google-refine/">http://code.google.com/p/google-refine/</a>
+</p>
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1">Use to clean up messy and inconsistent data</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">Chrome Developer Tools</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">use to see the DOM underlying web pages</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<p>If there is a table of data on a web page that you want to scrape,
+select it with your mouse, right click on the selection and choose
+inspect element in the pop up menu.  This should work in Safari,
+Chrome or Firefox with the Firebug plug-in.
+</p>
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">Data Analysis</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">R</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p><a href="http://www.r-project.org/">http://www.r-project.org/</a>
+</p>
+<ul>
+<li>
+</li>
+</ul>
+
+
+
+
+<hr/>
+</div>
+</div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Notes on R]]></title>
+    <link href="http://bartlantz.com/blog/2012/01/28/r-stuff/"/>
+    <updated>2012-01-28T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/01/28/r-stuff</id>
+    <content type="html"><![CDATA[<div id="content">
+<h1 class="title">R Notes</h1>
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Common R Stuff</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Download and Install R Package</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<div>
+  <pre><code class='r'>install.packages(&quot;XML&quot;, dependencies = TRUE)</code></pre>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Load a Module</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<div>
+  <pre><code class='r'>library(XML)</code></pre>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">Scrape an HTML Table</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+<div>
+  <pre><code class='r'>library(XML)
+u = &quot;http://en.wikipedia.org/wiki/World_population&quot;
+# function from XML library, downloads and parses URL for data in HTMLtables
+tables = readHtmlTable(u)
+names(tables)
+tables[[2]]</code></pre>
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">R Tutorial</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">Basic R</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+<div>
+  <pre><code class='r'># x is a vector with values 1 2 3 4 5
+x &lt;- 1:5
+
+# create a function
+square &lt;- function(x) {
+  x^2
+}
+  
+# call fuction with vector x
+square(x)</code></pre>
+</div>
+
+
+
+<div>
+  <pre><code class='r'>: [1]  1  4  9 16 25</code></pre>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2">R help</h3>
+<div class="outline-text-3" id="text-2-2">
+
+
+</div>
+
+<div id="outline-container-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1">getting help with ?<command-name&gt;</h4>
+<div class="outline-text-4" id="text-2-2-1">
+
+<ul>
+<li>type a ?rnorm, to pop open a manual Page on the R command rnorm
+</li>
+<li>or try ?boxplot to get a help page on the R boxplot function
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3">Using Famous Datasets</h3>
+<div class="outline-text-3" id="text-2-3">
+
+
+<div>
+  <pre><code class='r'>library(datasets)
+data(faithful)
+hist(faithful$waiting,breaks=25)</code></pre>
+</div>
+
+
+<p>
+<img src="http://bartlantz.com/assets/files/faithful.png"  alt="faithful.png" />
+</p>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-4" class="outline-3">
+<h3 id="sec-2-4">Reading Data into R from Files</h3>
+<div class="outline-text-3" id="text-2-4">
+
+
+<div>
+  <pre><code class='r'>dat &lt;- read.table(&quot;thedata.txt&quot;, sep=&quot;:&quot;)
+# space delimited, also first line is a header
+dat2 &lt;- read.table(&quot;thedata.txt&quot;, header=TRUE)
+# csv
+dat &lt;- read.csv(&quot;thedata.csv&quot;)
+print(dat)</code></pre>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-5" class="outline-3">
+<h3 id="sec-2-5">Reading Data from STDIN</h3>
+<div class="outline-text-3" id="text-2-5">
+
+<ul>
+<li>To read data from STDIN, call the scan function with the file
+  parameter left blank
+</li>
+<li>Enter a blank line or Ctrl D to end data input
+</li>
+</ul>
+
+
+<div>
+  <pre><code class='r'>&gt; nums &lt;- scan()
+1: 75  48  61  48 150  49  57  39  27  51  46  50  62  51
+15: 
+Read 14 items</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-6" class="outline-3">
+<h3 id="sec-2-6">Reading a Line of Space Separated Data into a vector</h3>
+<div class="outline-text-3" id="text-2-6">
+
+
+<div>
+  <pre><code class='r'>nums &lt;- scan(textConnection(&quot;75 48 61 48 150 49 57 39 27 51 46 50 62 51 50 58 38 34 59 44 24 39 40 33 49 33 34 32 35 30 23 39 36 25 20 32 43 52 42 44 46 51 47 51 44 33 38&quot;), sep=&quot; &quot;)
+  median(nums)
+  mean(nums)
+  deaths &lt;- nums[-5]
+  mean(deaths)
+  median(deaths)
+  sd(deaths)</code></pre>
+</div>
+
+
+<div>
+  <pre><code class='r'>: [1] 44
+: [1] 44.93617
+: [1] 42.65217
+: [1] 43.5
+: [1] 11.48761</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-7" class="outline-3">
+<h3 id="sec-2-7">Generating a Histogram</h3>
+<div class="outline-text-3" id="text-2-7">
+
+
+<div>
+  <pre><code class='r'># Data pasted from another document can be placed in a vector
+  #   via the following composition of functions
+  # textConnection can also be used to read data from stdin
+  nums &lt;- scan(textConnection(&quot;75 48 61 48 150 49 57 39 27 51 46 50 62 51 50 58 38 34 59 44 24 39 40 33 49 33 34 32 35 30 23 39 36 25 20 32 43 52 42 44 46 51 47 51 44 33 38&quot;), sep=&quot; &quot;)
+  hist(nums, main=&quot;US Lightning Death's 1959-2005&quot;)</code></pre>
+</div>
+
+
+<p>
+<img src="http://bartlantz.com/assets/files/lightning.png"  alt="lightning.png" />
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-8" class="outline-3">
+<h3 id="sec-2-8">Trimmed Mean to the Rescue</h3>
+<div class="outline-text-3" id="text-2-8">
+
+
+<div>
+  <pre><code class='r'>library(datasets)
+data(airmiles)
+median(airmiles)
+# holy right skewed!
+mean(airmiles)
+# same as median
+mean(airmiles,trim=10)
+# so its, the top 4% distorting the mean
+mean(airmiles,trim=0.4)
+#same as median
+mean(airmiles,trim=0.5)</code></pre>
+</div>
+
+
+<div>
+  <pre><code class='r'>: [1] 6431
+: [1] 10527.83
+: [1] 6431
+: [1] 7226.667
+: [1] 6431</code></pre>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-9" class="outline-3">
+<h3 id="sec-2-9">Drawing a Scatterplot with a Linear Regression line</h3>
+<div class="outline-text-3" id="text-2-9">
+
+
+<div>
+  <pre><code class='r'>library(Devore7)
+plot(ex12.59)
+my.reg &lt;- lm (ex12.59$y ~ ex12.59$x)
+abline(my.reg)</code></pre>
+</div>
+
+
+<p>
+<img src="http://bartlantz.com/assets/files/regression.png"  alt="regression.png" />
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-10" class="outline-3">
+<h3 id="sec-2-10">Putting 2 plots on 1 image</h3>
+<div class="outline-text-3" id="text-2-10">
+
+
+<div>
+  <pre><code class='r'>&gt; par(mfrow=c(2,2))
+&gt; boxplot(my.p)
+&gt; boxplot(my.h)</code></pre>
+</div>
+
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-11" class="outline-3">
+<h3 id="sec-2-11">Using Reduce and Map</h3>
+<div class="outline-text-3" id="text-2-11">
+
+
+</div>
+
+<div id="outline-container-2-11-1" class="outline-4">
+<h4 id="sec-2-11-1">Reduce(f=function,x=vector)</h4>
+<div class="outline-text-4" id="text-2-11-1">
+
+<p>Reduce takes a vector of values, and a binary function and accumulates
+the values returned over the entire vector of values.
+</p></div>
+
+</div>
+
+<div id="outline-container-2-11-2" class="outline-4">
+<h4 id="sec-2-11-2">Map(f=function(x){..},x=vector)</h4>
+<div class="outline-text-4" id="text-2-11-2">
+
+<p>Map takes a vector of values and a unary function, runs the function
+on each value and returns the vector of return values.
+</p></div>
+
+</div>
+
+<div id="outline-container-2-11-3" class="outline-4">
+<h4 id="sec-2-11-3">here&#8217;s how to combine them</h4>
+<div class="outline-text-4" id="text-2-11-3">
+
+<p>This function returns the cumulative distribution function of
+P(x<4) of X~poisson(5).   
+<div>
+  <pre><code class='r'>Reduce(&quot;+&quot;,Map(function(u){exp(-5)*5^u/factorial(u)},0:3))</code></pre>
+</div>
+
+
+
+<div>
+  <pre><code class='r'>: [1] 0.2650259</code></pre>
+</div>
+
+
+
+
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-2-12" class="outline-3">
+<h3 id="sec-2-12">ANOVA</h3>
+<div class="outline-text-3" id="text-2-12">
+
+
+</div>
+
+<div id="outline-container-2-12-1" class="outline-4">
+<h4 id="sec-2-12-1">SSTr - Sum of Square between Treatments</h4>
+<div class="outline-text-4" id="text-2-12-1">
+
+
+
+
+<div>
+  <pre><code class='r'>### my.100,m.125,m.150,m.175 are vectors we are analysing
+length(m.100)*sum((m.100-mean(m.100))^2)+length(m.125)*sum((m.125-mean(m.125))^2) + length(m.150)*sum((m.150-mean(m.150))^2) + length(m.175)*sum((m.175-mean(m.175))^2)</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-12-2" class="outline-4">
+<h4 id="sec-2-12-2">SSE - Sum of Squares within Treatments</h4>
+<div class="outline-text-4" id="text-2-12-2">
+
+
+
+
+<div>
+  <pre><code class='r'>### b.1,b.2, b.3, b.4 are rows of values
+### \Sigma (X_{ij} - X_{bar_dot})^2
+m.SSE &lt;- sum((b.1-mean(b.1))^2) + sum((b.2-mean(b.2))^2) + sum((b.3-mean(b.3))^2) + sum((b.4-mean(b.4))^2)</code></pre>
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2-13" class="outline-3">
+<h3 id="sec-2-13">Further Reading</h3>
+<div class="outline-text-3" id="text-2-13">
+
+<p><a href="http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-R.html">Org-babel R page</a> 
+</p>
+
+<hr/>
+
+
+
+</div>
+</div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[R, Emacs, and Orgmode]]></title>
+    <link href="http://bartlantz.com/blog/2012/01/28/r-emacs-orgmode/"/>
+    <updated>2012-01-28T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/01/28/r-emacs-orgmode</id>
+    <content type="html"><![CDATA[<div id="content">
+
+
+<div id="outline-container-1" class="outline-3">
+<h3 id="sec-1">Using R with Org-babel</h3>
+<div class="outline-text-3" id="text-1">
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-4">
+<h4 id="sec-1-1">to export a graph created by R, use the following line to start the R code:</h4>
+<div class="outline-text-4" id="text-1-1">
+
+
+
+
+<div>
+  <pre><code class='bash'>&amp;#35;+begin_src R :results graphics :file lightning.png :exports both</code></pre>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-4">
+<h4 id="sec-1-2">Parameters explained:</h4>
+<div class="outline-text-4" id="text-1-2">
+
+<ul>
+<li><b>:results graphics</b> exports the results as a graphics file.
+</li>
+<li><b>:file</b> lightning.png exports the graph to a file named lightning.png
+</li>
+<li><b>:exports both</b> exports both the code and the results
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-4">
+<h4 id="sec-1-3">to end the R code use the following line</h4>
+<div class="outline-text-4" id="text-1-3">
+
+
+
+<div>
+  <pre><code class='bash'>&amp;#35;+end_src</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-3">
+<h3 id="sec-2">R Emacs Tips</h3>
+<div class="outline-text-3" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-4">
+<h4 id="sec-2-1">M-x R</h4>
+<div class="outline-text-4" id="text-2-1">
+
+<p>type M-x R to start the inferior R process in an emacs buffer
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-4">
+<h4 id="sec-2-2">History</h4>
+<div class="outline-text-4" id="text-2-2">
+
+<p>if you start R-mode in the same directory each time and save the
+session at the end of your session, then your history and session
+variables will be preserved between sessions.
+</p></div>
+</div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[More Git Goodness]]></title>
+    <link href="http://bartlantz.com/blog/2012/01/28/more-git-goodness/"/>
+    <updated>2012-01-28T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/01/28/more-git-goodness</id>
+    <content type="html"><![CDATA[<h2>Git Show</h2>
+
+<h3>Show a particular commit with git show</h3>
+
+<p>This will show the commit as a diff.</p>
+
+<div>
+  <pre><code class='bash'>git show HEAD^^^</code></pre>
+</div>
+
+
+<p>Also you can use the commit&#8217;s sha1 as an argument</p>
+
+<div>
+  <pre><code class='bash'>git show 62114826e3f</code></pre>
+</div>
+
+
+<h2>Set git to output color</h2>
+
+<div>
+  <pre><code class='bash'>git config --local color.ui auto</code></pre>
+</div>
+
+
+<p>This command adds the following to your .gitconfig file:</p>
+
+<div>
+  <pre><code class='yaml'>[color]
+       ui = auto</code></pre>
+</div>
+
+
+<h2>Git Bisect</h2>
+
+<p>Try to find where in the version history a bug first appeared.</p>
+
+<div>
+  <pre><code class='bash'># start bisect
+git bisect start
+# set good point: there was no bug here, this can be a tag, SHA1, or HEAD~18 ...
+git good v1.2.6
+# set bad endpoint: we know it had shown up by here
+git bad master
+
+# bisect will select a commit half way between good and bad
+# test ... then tell git if its good or bad
+git bisect good
+# it will split the other half in half
+git bisect bad
+# when you've found the bad commit, reset the branch with
+git biset reset</code></pre>
+</div>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git Log to the Rescue]]></title>
+    <link href="http://bartlantz.com/blog/2012/01/28/git-log-to-the-rescue/"/>
+    <updated>2012-01-28T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/01/28/git-log-to-the-rescue</id>
+    <content type="html"><![CDATA[<h2>Using Git Log</h2>
+<h3>git log &#8212;stat</h3>
+
+<p>If you&#8217;d like to see the number of changes in each file, add the &#8212;stat option.</p>
+<p><img src="https://lh6.googleusercontent.com/-jaNagkLs3rU/Tu-DuIZKN1I/AAAAAAAACaE/xdNCDuVv6Vw/s800/git-log--stat.jpg" alt="" /></p>
+<h3>git log &#8212;since=&#8220;3 weeks ago&#8221; &#8212;until=&#8220;yesterday&#8221;</h3>
+<p>Git log also provides an intuitive way to provide a date range, with &#8212;since and &#8212;until options.</p>
+<h3>git log -p</h3>
+
+<p>With the -p option, git log will show patches of each of the commits.</p>
+<p><img src="https://lh5.googleusercontent.com/-iULY5TLtYaw/Tu-D5rVPdGI/AAAAAAAACZw/U1Cr0Vh09Ao/s800/git-log-p.jpg" alt="" /></p>
+<h3>git log &#8212;graph</h3>
+<p>Git log with the &#8212;graph option prints a graph along the left edge to show branches of the repository.</p>
+<p><img src="https://lh4.googleusercontent.com/-y3F733L3w9w/Tu-KMcMnp7I/AAAAAAAACac/YtfG0oN5kaU/s640/git-log-stat-graph-pretty-short.jpg" title="The stars in the graph show which branch the commits are on." alt="The stars in the graph show which branch the commits are on." /></p>
+<p>The full command for the graph screenshot above is:</p>
+<div>
+  <pre><code class='bash'>git log --graph --stat --pretty=short</code></pre>
+</div>
+
+<p>The repository used in the graph example is the git repository itself.  You can clone it here:</p>
+<div>
+  <pre><code class='bash'>git clone git://github.com/gitster/git.git</code></pre>
+</div>
+
+
+<p>The repository used for the first two examples are from Drupal.  You can also clone drupal:</p>
+<div>
+  <pre><code class='bash'>git clone --branch 7.x http://git.drupal.org/project/drupal.git</code></pre>
+</div>
+
+			
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Getting Started with Git]]></title>
+    <link href="http://bartlantz.com/blog/2012/01/28/getting-started-with-git/"/>
+    <updated>2012-01-28T00:00:00-05:00</updated>
+    <id>http://bartlantz.com/blog/2012/01/28/getting-started-with-git</id>
+    <content type="html"><![CDATA[<div id="content">
+<div id="outline-container-1" class="outline-2">
+<div id="outline-container-1-1" class="outline-3">
+
+<h4 id="sec-1-1">Start Using Git on a Project</h4>
+<div class="outline-text-3" id="text-1-1">
+
+
+
+
+<div>
+  <pre><code class='bash'># cd into project your working on
+cd &lt;project&gt;
+# initialize a git repository
+git init  
+# add all of the files to the repository
+git add .
+# now commit the files to repository
+git commit -m &quot;My first commit message&quot;</code></pre>
+</div>
+
+
+
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+
+<h4 id="sec-1-1-1">Later, check which files have changed and are out of sync</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+
+
+
+
+<div>
+  <pre><code class='bash'># this will list changed files and new files
+git status
+# this will add the newly updated updated_file.php to the commit
+# staging area
+git add updated_file.php
+# commit changes with a good change message
+git commit -m &quot;Fixed missing name bug in updated_file.php&quot;</code></pre>
+</div>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">Create a remote repository</h4>
+
+<div class="outline-text-4" id="text-1-1-2">
+
+
+
+
+<div>
+  <pre><code class='bash'># ssh into server and create repository directory
+ssh boris@vladivostok.net
+mkdir myproject
+cd myproject
+# --bare option means this repository will be pushed to and pulled
+# from but never worked in directly (ie it will be a repository without working
+# files).  This caused me no small amount of confusion when I first
+# started using git.  
+git init --bare
+# exit out of distant vladivostok server
+exit
+# cd into local project
+cd &amp;lt;project&amp;gt;
+# add the remote repository
+git remote add vladivostok ssh:boris@vladivostok.net:myproject
+# now you can push a branch of the repository to the remote
+# repository, &quot;master&quot; is the default main branch in git
+git push vladivostok master</code></pre>
+</div>
+
+
+<p>
+Sweet! Now your code is backed up on a remote server.  In fact your
+code&#8217;s entire history is on the remote server.  Everytime you make a
+commit on the local server, you can push that change to the remote
+server as well.
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">Good Git Introductions</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1"><a href="http://www.alistapart.com/articles/get-started-with-git/">Getting Started With Git</a></h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2"><a href="http://schacon.github.com/git/everyday.html">Everyday Git with 20 commands or so</a></h4>
+<div class="outline-text-4" id="text-1-2-2">
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">Git Next Level</h3>
+<div class="outline-text-3" id="text-1-3">
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1"><a href="http://think-like-a-git.net/epic.html">Think like a Git</a></h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2"><a href="http://www.linuxjournal.com/content/git-revision-control-perfected">Git: Revision Control Perfected</a></h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-3" class="outline-4">
+<h4 id="sec-1-3-3"><a href="http://cmurphycode.posterous.com/git-201-slightly-more-advanced">Git 201: Slightly More Advanced</a></h4>
+<div class="outline-text-4" id="text-1-3-3">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-4" class="outline-4">
+<h4 id="sec-1-3-4"><a href="http://danielmiessler.com/study/git/">A Git Primer</a></h4>
+<div class="outline-text-4" id="text-1-3-4">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-5" class="outline-4">
+<h4 id="sec-1-3-5"><a href="http://eagain.net/articles/git-for-computer-scientists/">Git for Computer Scientists</a></h4>
+<div class="outline-text-4" id="text-1-3-5">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-6" class="outline-4">
+<h4 id="sec-1-3-6"><a href="http://tomayko.com/writings/the-thing-about-git">The Thing About Git</a></h4>
+
+<div class="outline-text-4" id="text-1-3-6">
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">Git Workflow</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+
+<h4 id="sec-1-4-1"><a href="http://scottchacon.com/2011/08/31/github-flow.html">Github&#8217;s Git Workflow</a></h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2"><a href="http://nvie.com/posts/a-successful-git-branching-model/">Git-flow a more complex workflow</a></h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">Github Stuff</h3>
+<div class="outline-text-3" id="text-1-5">
+
+
+</div>
+
+<div id="outline-container-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1"><a href="http://net.tutsplus.com/tutorials/other/getting-the-hang-of-github/">Getting the Hang of Github</a></h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>

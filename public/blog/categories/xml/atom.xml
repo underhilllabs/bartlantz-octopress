@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: XML | Bart Lantz]]></title>
+  <link href="http://bartlantz.com/blog/categories/xml/atom.xml" rel="self"/>
+  <link href="http://bartlantz.com/"/>
+  <updated>2013-06-21T18:19:33-04:00</updated>
+  <id>http://bartlantz.com/</id>
+  <author>
+    <name><![CDATA[Bart Lantz]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[XQuery Notes]]></title>
+    <link href="http://bartlantz.com/blog/2013/05/05/xquery-notes/"/>
+    <updated>2013-05-05T21:44:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2013/05/05/xquery-notes</id>
+    <content type="html"><![CDATA[<p>This post continues my notes from <a href="https://class2go.stanford.edu/db/Winter2013">Introduction to Databases</a>, a MOOC taught by Stanford's Jennifer Widom. The topic of this post is XQuery.</p>
+
+<h2>XQuery Defition</h2>
+
+<p><blockquote><p>XQuery is a query and functional programming language that is designed to query collections of XML data.</p><footer><strong>wikipedia</strong> <cite><a href='http://en.wikipedia.org/wiki/XQuery'>From Wikipedia</a></cite></footer></blockquote></p>
+
+<h2>XQuery Syntax: FLWOR</h2>
+
+<p><code>xquery FLWOR Syntax
+for $var in expr
+let $var := expr
+where expr
+order by expr
+return expr
+</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[XPath Notes]]></title>
+    <link href="http://bartlantz.com/blog/2013/05/05/xpath-notes/"/>
+    <updated>2013-05-05T19:21:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2013/05/05/xpath-notes</id>
+    <content type="html"><![CDATA[<p>This spring I took <a href="https://class2go.stanford.edu/db/Winter2013">Introduction to Databases</a> a MOOC (Massive Open Online Class) from Stanford's Jennifer Widom. It was very interesting, I learned a great deal from it. And one of the sections of the class that I really enjoyed, even though it sounded like it was going to be pretty dry, was the section on XML. I took quite a few pages of notes on the different XMl tools, so I figured I might as well post them to my blog.</p>
+
+<h2>XPath Definition</h2>
+
+<blockquote><p>XPath is a query language for selecting nodes from an XML document.</p></blockquote>
+
+<p><a href="http://en.wikipedia.org/wiki/XPath">from Wikipedia</a></p>
+
+<h3>XML for the Examples</h3>
+
+<p>``` xml countries.xml
+<countries>
+  <country name="Afghanistan" population="22664136" area="647500"></p>
+
+<pre><code>&lt;language percentage="11"&gt;Turkic&lt;/language&gt;
+&lt;language percentage="35"&gt;Pashtu&lt;/language&gt;
+&lt;language percentage="50"&gt;Afghan Persian&lt;/language&gt;
+</code></pre>
+
+<p>  </country>
+  <country name="Albania" population="3249136" area="28750"/>
+  <country name="Algeria" population="29183032" area="2381740"></p>
+
+<pre><code>&lt;city&gt;
+  &lt;name&gt;Algiers&lt;/name&gt;
+  &lt;population&gt;1507241&lt;/population&gt;
+&lt;/city&gt;
+</code></pre>
+
+<p>  </country>
+</countries>
+```</p>
+
+<h3>Basic Path</h3>
+
+<p>Selects all of countries from the country root node.
+<code>xquery
+doc('countries.xml')/countries/country
+</code></p>
+
+<h3>Path with Alternation</h3>
+
+<p>This will select countries with populations that speak Pashtu or Swedish.
+<code>xquery
+doc('countries.xml')/countries/country[language(Pashtu|Swedish)]
+</code></p>
+
+<h3>Attributes are prepended with "@"</h3>
+
+<p>This will select the names of all countries
+<code>xquery
+doc('countries.xml')/countries/country/@name
+</code></p>
+
+<h3>Path with Conditional</h3>
+
+<p>Select the names of all countries that have a population of less than 1,000,000.
+<code>xquery
+doc('countries.xml')/countries/country[@population &lt; 1000000]/@name
+</code></p>
+
+<h3>Complex Conditional</h3>
+
+<p>Select all countries that have a population of less than 1,000,000.
+<code>xquery
+doc('countries.xml')/countries/country[@population &lt; 1000000 and city/population &gt; 50000]
+</code></p>
+
+<h3>data() prints out just the text value.</h3>
+
+<p><code>
+doc('countries.xml')/countries/country[@population &lt; 1000000]/data(@name)
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

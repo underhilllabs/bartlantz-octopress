@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Android | Bart Lantz]]></title>
+  <link href="http://bartlantz.com/blog/categories/android/atom.xml" rel="self"/>
+  <link href="http://bartlantz.com/"/>
+  <updated>2013-06-21T18:19:33-04:00</updated>
+  <id>http://bartlantz.com/</id>
+  <author>
+    <name><![CDATA[Bart Lantz]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Nook 1.2 emulator]]></title>
+    <link href="http://bartlantz.com/blog/2010/05/13/emulator/"/>
+    <updated>2010-05-13T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2010/05/13/emulator</id>
+    <content type="html"><![CDATA[<p><a href="http://www.flickr.com/photos/redbike/4604957189/" title="Nook 1.2 loaded up as an emulator by denverfiddler, on Flickr"><img src="http://farm4.static.flickr.com/3355/4604957189_017973962a.jpg" width="298" height="500" alt="Nook 1.2 loaded up as an emulator" /></a></p>
+
+<p>I was able to build an emulator for Nook version 1.2.  See my <a href=http://denverdroid.blogspot.com/2010/05/how-to-build-nook-emulator.html>previous post</a> for the prerequisites.  Basically you need some utilities installed: smali, baksmali, unyaffs, and mkyaffs2image.  You also need the Android SDK installed on your computer.</p>
+
+<p>Here are the steps:
+1: download the <a href=http://www.multiupload.com/U0Y5IVLL7D>nook 1.2 soft-root image</a> from <a href=http://nookdevs.com>nookdevs</a>.  For the rest of this post I assume you have copied it into the directory ~/nook_dev/ and we will be working on it from there.</p>
+
+<p><span style="font-weight:bold;">2. extract the bravo_update.dat</span>, cd into it and extract root.tgz
+<div>
+  <pre><code class='bash'>mv bravo_update.dat bravo_update-1.2.tar.gz
+tar xvzf bravo_update-1.2.tar.gz</code></pre>
+</div>
+</p>
+
+<p><span style="font-weight:bold;">3. extract root.tgz</span>
+<div>
+  <pre><code class='bash'>cd Firmware_Update
+tar xvzf root.tgz
+cd root</code></pre>
+</div>
+</p>
+
+<p><span style="font-weight:bold;">4. cd into system/framework and unjar services.jar </span>
+<div>
+  <pre><code class='bash'>cd system/framework/
+jar xvf services.jar</code></pre>
+</div>
+</p>
+
+<ol>
+<li><p>disassemble the classes.dex file inside services.jar
+<div>
+  <pre><code class='bash'>baksmali classes.dex</code></pre>
+</div>
+</p></li>
+<li><p>vi out/com/android/server/ServerThread.smali
+search for a line that contains
+<div>
+  <pre><code class='bash'>if-lt v0, v1, :cond_309</code></pre>
+</div>
+
+delete that line.</p></li>
+<li><p>reassemble out/ directory
+<div>
+  <pre><code class='bash'>smali out/</code></pre>
+</div>
+</p></li>
+<li><p>copy the new out.dex over the old classes.dex and re-jar services.jar
+<div>
+  <pre><code class='bash'>mv out.dex classes.dex
+jar cvf services.jar classes.dex</code></pre>
+</div>
+</p></li>
+</ol>
+
+
+<h4>Now we are going to build an android AVD, so we can extract a single file to use back in this system.</h4>
+
+
+<p><span style="font-weight:bold;">9. if your android SDK tools are in your path Run</span>,
+<div>
+  <pre><code class='bash'>android</code></pre>
+</div>
+
+else find the android command and run it, or run it from eclipse.</p>
+
+<p>This starts the Android SDK and AVD Manager.  To create a new AVD, click New...
+Name: nook
+Target: Android 1.5
+Size: <leave empty>
+Skin: click Resolution, and fill in 488 x 944
+click "Create AVD".
+Then click "Details" to see where it was created.  It should be at ~/.android/avd/nook.avd</p>
+
+<p><span style="font-weight:bold;">10. unyaffs the system.img and grab a file</span>
+<div>
+  <pre><code class='bash'>cd ~/nook_dev/
+mkdir sys_img
+cd sys_img
+cp ~/android-sdk-linux_86/platforms/android-3/images/system.img .
+unyaffs system.img
+cp lib/libaudioflinger.so ~/nook_dev/Firmware_Update/Firmware_Update/system/lib/libaudioflinger.so</code></pre>
+</div>
+</p>
+
+<p><span style="font-weight:bold;">11. re-create the system.img with the new audio file.</span>
+<div>
+  <pre><code class='bash'>cd ~/nook_dev/Firmware_Update/Firmware_Update/
+mkyaffs2image ./system/ system.img</code></pre>
+</div>
+ this creates a new system.img</p>
+
+<p><span style="font-weight:bold;">12. Sketchy step where you overwrite the good Android 1.5 platform system.img in your Android SDK with this new one.</span>
+<div>
+  <pre><code class='bash'>mv ~/android-sdk-linux_86/platforms/android-3/images/system.img ~/android-sdk-linux_86/platforms/android-3/images/good.img
+cp ~/nook_dev/Firmware_Update/Firmware_Update/system.img ~/android-sdk-linux_86/platforms/android-3/images/system.img</code></pre>
+</div>
+
+<span style="font-weight:bold;">Remember to change this back later if you want to do non-nook related Android Development.</span></p>
+
+<p><span style="font-weight:bold;">13. run the emulator!</span>
+<div>
+  <pre><code class='bash'>emulator @nook -shell -show-kernel -verbose</code></pre>
+</div>
+<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-5212169985789570108?l=denverdroid.blogspot.com' alt='' /></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How to Build a Nook emulator]]></title>
+    <link href="http://bartlantz.com/blog/2010/05/08/how-to-build-nook-emulator/"/>
+    <updated>2010-05-08T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2010/05/08/how-to-build-nook-emulator</id>
+    <content type="html"><![CDATA[<p>This post will walk you through building an Android Emulator for the Nook step-by-step in Eclipse and via the command-line.   These instructions are based on the <a href=http://nookdevs.com/Emulator>original instructions</a> located at the <a href=http://nookdevs.com/>nookdevs website</a>.</p>
+
+<h3>Pre-requisites:  </h3>
+
+
+<ol>
+<li>You need to have Eclipse running with the Android SDK.  More information on that can be <a href=http://developer.android.com/sdk/installing.html>found here</a>.</li>
+<li>I'm assuming you are developing in a Linux-ish environment. I'm using the amazing <a href=http://ubuntu.com>Ubuntu Lucid Lynx</a>.</li>
+<li>download and set up the following tools: <a href=http://code.google.com/p/smali/downloads/list>smali</a>, <a href=http://code.google.com/p/smali/downloads/list>baksmali</a>, <a href=http://code.google.com/p/unyaffs/downloads/list>unyaffs</a>, <a href=http://code.google.com/p/fatplus/downloads/list>yaffs2image</a>.</li>
+</ol>
+
+
+<h3>How I Set Up the command-line tools:</h3>
+
+
+<p><b>smali and baksmali</b>. Description from the developer's site:
+"smali/baksmali is an assembler/disassembler for the dex format used by dalvik, Android's Java VM implementation".
+1.  Download them into your ~/bin/ directory.<br/>
+2. "chmod +x" the wrapper scripts (smali and baksmali)
+3. rename the jar files: smali.jar and baksmali.jar.</p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>cd ~/bin/
+wget http://smali.googlecode.com/files/smali-1.2.2.jar
+wget http://smali.googlecode.com/files/baksmali-1.2.2.jar
+wget http://smali.googlecode.com/files/baksmali
+wget http://smali.googlecode.com/files/smali
+mv baksmali-1.2.2.jar baksmali.jar
+mv smali-1.2.2.jar smali.jar
+chmod +x smali
+chmod +x baksmali</code></pre>
+</div>
+</div>
+
+
+<p><b>unyaffs</b> description: Unyaffs is a program to extract files from a yaffs file system image.  <br/>
+1. download <a href=http://code.google.com/p/unyaffs/downloads/list>unyaffs</a> into your
+~/bin; chmod +x unyaffs;</p>
+
+<p><b>mkyaffs2image</b>:
+1. download <a href=http://code.google.com/p/fatplus/downloads/list>mkyaffs2image</a>.  I downloaded the yaffs2-binary.tar, untarred it and copied yaffs2/utils/mkyaffs2image to my ~/bin/ and chmod +x it.</p>
+
+<h3>Okay we have the tools and our environment is ready!</h3>
+
+
+<p><span style="font-weight:bold;">1.</span> I'm assuming you already have Eclipse set up and running with the Android Development Kit.  Nook runs on the cupcake 1.5 platform of Android.  So first we have to make sure that the Android 1.5 Platform is installed.  Assuming you downloaded the Android SDK into your home directory, run:
+<div>
+  <pre><code class='bash'>$ ~/android-sdk-linux_86/tools/android</code></pre>
+</div>
+
+This will start the Android SDK and AVD Manager.  Click on Installed Packages and look for SDK Platform 1.5.  If you do not see it, click on Available Packages and download and install it.</p>
+
+<p><span style="font-weight:bold;">2. Grab the original 1.0.0 image from</span> bn.com (mirrored here: <a href=http://www.multiupload.com/YWHOXQKYVS>multiupload</a>).</p>
+
+<p><span style="font-weight:bold;">3.Run</span> <div>
+  <pre><code class='bash'>$ dd if=signed_bravo_update.1.0.0.dat of=signed-bravo-update.1.0.0.tar.gz bs=1 skip=152</code></pre>
+</div>
+
+This takes a while.  You now have signed-bravo-update.1.0.0.tar.gz</p>
+
+<p><span style="font-weight:bold;">4.Uncompress the new file: signed-bravo-update.1.0.0.tar.gz   </span></p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>$ tar xzvf signed-bravo-update.1.0.0.tar.gz</code></pre>
+</div>
+</div>
+
+
+<p>Now you have the uncompressed folder Firmware_Update,</p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>$ cd Firmware_Update</code></pre>
+</div>
+</div>
+
+
+<p><span style="font-weight:bold;">5. Rename bravo_update.dat to bravo_update.tar.gz and extract it. </span></p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>$ mv bravo_update.dat bravo_update.tar.gz
+$ tar xvzf bravo_update.tar.gz</code></pre>
+</div>
+</div>
+
+
+<p>This uncompresses another Firmware_Update folder, cd in to it.</p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>$ cd Firmware_Update</code></pre>
+</div>
+</div>
+
+
+<p>if you pwd, you'll be in Firmware_Update/Firmware_Update</p>
+
+<p><span style="font-weight:bold;">6. Extract root.tgz</span></p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>$ tar xvzf root.tgz</code></pre>
+</div>
+</div>
+
+
+<p>this uncompresses a lot of stuff. All of the Android system image actually.  Later we will re-compress the system folder to create the system.img</p>
+
+<p><span style="font-weight:bold;">7. Extract system/framework/services.jar </span>with your favorite unzip utility.
+I did this from the GUI, right click on file and select "Extract here".
+$ cd services</p>
+
+<p><span style="font-weight:bold;">8. disassemble the file classes.dex with baksmai</span></p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>$ baksmali classes.dex</code></pre>
+</div>
+</div>
+
+
+<p>This create out/</p>
+
+<p><span style="font-weight:bold;">9. vi out/com/android/server/ServerThread.smali</span>
+delete the line</p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>if-lt v0, v1, :cond_483</code></pre>
+</div>
+</div>
+
+
+<p>(for the vi-newbies, you can search in vi by typing a forward slash and typing in a phrase like "if-lt", then type dd, to delete the line, and ":wq" to write the file and quit)</p>
+
+<p><span style="font-weight:bold;">10. reassemble the file with
+</span></p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>$ smali out</code></pre>
+</div>
+</div>
+
+
+<p><span style="font-weight:bold;">11. Replace the old classes.dex with this re-assembled file:</span></p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>mv out.dex classes.dex</code></pre>
+</div>
+</div>
+
+
+<p><span style="font-weight:bold;">12. delete the old out/ directory and re-jar the contents of the services folder</span>, but the not the services folder itself.
+(I moved the META-INF folder and classes.dex out of the services directory and into the parent framework directory. Removed the empty services directory. Right clicked the classes.dex and selected "compress", and selected as name "services" and type as "jar" file, then I dragged the META-INF file onto the new services.jar. Yes, I know there is a better way, but I'm kind of new to jar files...)</p>
+
+<h4>Now we are going to build an android AVD, so we can extract a single file to use back in this system.</h4>
+
+
+<p><span style="font-weight:bold;">13. if your android SDK tools are in your path Run</span>,
+<div>
+  <pre><code class='bash'>android</code></pre>
+</div>
+
+else find the android command and run it, or run it from eclipse.</p>
+
+<p>This starts the Android SDK and AVD Manager.  To create a new AVD, click New...
+Name: nook
+Target: Android 1.5
+Size: <leave empty>
+Skin: click Resolution, and fill in 488 x 944
+click "Create AVD".
+Then click "Details" to see where it was created.  It should be at ~/.android/avd/nook.avd</p>
+
+<p><span style="font-weight:bold;">14. unyaffs the system.img and grab a file</span></p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>cd ~/nook_dev/
+mkdir sys_img
+cd sys_img
+cp ~/android-sdk-linux_86/platforms/android-3/images/system.img .
+unyaffs system.img
+cp lib/libaudioflinger.so ~/nook_dev/Firmware_Update/Firmware_Update/system/lib/libaudioflinger.so</code></pre>
+</div>
+</div>
+
+
+<p><span style="font-weight:bold;">15. re-create the system.img with the new audio file.</span></p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>cd ~/nook_dev/Firmware_Update/Firmware_Update/
+mkyaffs2image ./system/ system.img</code></pre>
+</div>
+</div>
+
+
+<p>this creates a new system.img</p>
+
+<p><span style="font-weight:bold;">16. Sketchy step where you overwrite the good Android 1.5 platform system.img in your Android SDK with this new one.</span></p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>mv ~/android-sdk-linux_86/platforms/android-3/images/system.img ~/android-sdk-linux_86/platforms/android-3/images/good.img 
+cp ~/nook_dev/Firmware_Update/Firmware_Update/system.img ~/android-sdk-linux_86/platforms/android-3/images/system.img</code></pre>
+</div>
+</div>
+
+
+<p><span style="font-weight:bold;">Remember to change this back later if you want to do non-nook related Android Development.</span></p>
+
+<p><span style="font-weight:bold;">17. run the emulator!</span></p>
+
+<div id="code-div"><div>
+  <pre><code class='bash'>emulator @nook -shell -show-kernel -verbose</code></pre>
+</div>
+</div>
+
+
+<p><a href="http://www.flickr.com/photos/redbike/4604815190/" title="Nook Emulator screenshot by denverfiddler, on Flickr"><img src="http://farm5.static.flickr.com/4049/4604815190_698482e4b6.jpg" width="500" height="380" alt="Nook Emulator screenshot" /></a><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-4470985898072103988?l=denverdroid.blogspot.com' alt='' /></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Non-destructibly upgrade your android app's database]]></title>
+    <link href="http://bartlantz.com/blog/2010/04/21/how-to-non-destructibly-upgrade-your/"/>
+    <updated>2010-04-21T00:00:00-04:00</updated>
+    <id>http://bartlantz.com/blog/2010/04/21/how-to-non-destructibly-upgrade-your</id>
+    <content type="html"><![CDATA[<p>So your android app is out in the wild with thousands of Happy Users and the Happy Users are begging and pleading for a new feature that requires a new field in your database.   However, the aforementioned Happy Users, would quickly turn to Unhappy Users if your next upgrade wiped their data when it restructured the app's database.</p>
+
+<p>What to do?</p>
+
+<p>Here's how I upgraded my app's Database schema, while preserving all of the user's data.</p>
+
+<p>First of all, I use a DatabaseHelper class (that extends <a href="http://developer.android.com/intl/zh-TW/reference/android/database/sqlite/SQLiteOpenHelper.html">SQLiteOpenHelper</a>) that performs some of the basic database needs (create, upgrade).</p>
+
+<p>The function we will concentrate on in this post is onUpgrade().  This function is called when the database version, represent with the constant DATABASE_VERSION is changed.  Most barebones implementation of this function call will simply drop the app's tables  and recreate them with a call to onCreate():</p>
+
+<blockquote>
+<span style="font-weight: bold;">
+<div>
+  <pre><code class='bash'>public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    ...
+    db.execSQL(&quot;DROP TABLE IF EXISTS albums&quot;);
+    onCreate(db);
+}</code></pre>
+</div>
+
+</span>
+</blockquote>
+
+
+<p>However, this approach will destroy all of your user's data, (ie the entire 2500+ CD collection they painstakingly entered with the soft keybard--if this were the case perhaps you should add a barcode scanner intent, alas, back to the story.) Which results in a Very Unhappy User (hereafter VUU).</p>
+
+<p>The solution, is to check for the app's Database Version and make a call to our friend ALTER TABLE, like so.</p>
+
+<blockquote>
+<span style="font-weight: bold;">
+<div>
+  <pre><code class='bash'>public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+   if(oldVersion == 2) {
+          db.execSQL(&quot;ALTER TABLE albums ADD COLUMN hip_again integer&quot;);
+   } else {
+         ...
+        db.execSQL(&quot;DROP TABLE IF EXISTS albums&quot;);
+        onCreate(db);
+  }</code></pre>
+</div>
+
+</span><span style="font-weight: bold;">}</span>
+</blockquote>
+
+
+<p>There! Now your user's can flag their old CD's with the shifting tides of what's hip.  Also note that should add the column in the onCreate method.  So that Happy Users of the Future (hereafter HUF), will also have the field available to them:</p>
+
+<blockquote>
+<span style="font-weight: bold;">
+<div>
+  <pre><code class='bash'>private static final String DATABASE_CREATE =
+          &quot;create table albums (_id integer primary key autoincrement, &quot;
+          ...
+          + &quot;hip_again integer);&quot;;
+
+@Override
+public void onCreate(SQLiteDatabase db) {
+                 db.execSQL(DATABASE_CREATE);
+}</code></pre>
+</div>
+
+</span>
+</blockquote>
+
+
+<p>One final thing is to increment the constant DATABASE_VERSION, so that android will call onUpgrade() the next time the app is started:</p>
+
+<blockquote>
+<span style="font-weight: bold;">
+private static final int DATABASE_VERSION = 3;
+</span>
+</blockquote>
+
+
+<p>That's it.<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7035860407900002000-5494733453019207090?l=denverdroid.blogspot.com' alt='' /></div></p>
+]]></content>
+  </entry>
+  
+</feed>

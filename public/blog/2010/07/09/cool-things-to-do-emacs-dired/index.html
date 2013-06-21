@@ -1,0 +1,436 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cool Things to Do in Emacs Dired Mode - Bart Lantz</title>
+  <meta name="author" content="Bart Lantz">
+
+  
+  <meta name="description" content="Delete some files in the Downloads folder My Downloads folder is always out of control. There are always a
+ton of pdf files that I opened once in a &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://bartlantz.com/blog/2010/07/09/cool-things-to-do-emacs-dired">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Bart Lantz" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Bart Lantz</a></h1>
+  
+    <h2>Math, Code and Science Fiction</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:bartlantz.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Cool Things to Do in Emacs Dired Mode</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-09T00:00:00-04:00" pubdate data-updated="true">Jul 9<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2 id="sec-1_1_1">Delete some files in the <i>Downloads</i> folder </h2>
+
+<p>My Downloads folder is always out of control. There are always a
+ton of pdf files that I opened once in a browser but don&#8217;t need to
+save. It&#8217;s a pain to open a GUI file navigator, like Nautilus, and
+double click on each pdf file to view it and see if it should be
+tossed. However with Emacs, trimming my Downloads directory of old
+files is quick and easy.  </p> 
+<h2 id="sec-1_1_2">Viewing Pdfs in Emacs </h2>
+
+<p>If you see a pdf with an uninformative name like 2010-09.pdf just
+hit <<b>enter</b>&gt; when the cursor is on the file name, (when
+the file name is at point). Emacs will open the pdf in a new
+buffer. Once you have viewed the pdf and have decided its face you can
+quickly kill the pdf buffer with &#8217;<b>k</b>&#8217; and you&#8217;ll be returned to
+the directory. Now, if the pdf is unimportant, queue it to be deleted
+with &#8217;<b>d</b>&#8217;. If you want to keep the file, but give it a better
+name, type &#8216;R&#8217; to rename it. 
+
+To unqueue a file for deletion, use &#8217;<b>u</b>&#8217;. And finally to
+delete all the files currently queued for deletion, type &#8216;x&#8217;.  </p> 
+<p />
+<a href="http://www.flickr.com/photos/redbike/5919681539/" title="Dired mode emacs by denverfiddler, on Flickr"><img src="http://farm7.static.flickr.com/6144/5919681539_d0ff5a1193.jpg" width="500" height="313" alt="Dired mode emacs"></a>
+<p />
+
+
+<h2 id="sec-1_1_3">Delete old Emacs backup files </h2>
+
+<p>If you have a lot of backup files that emacs created with ~ appended to
+the file name, you can quickly queue them all for deletion by typing &#8217;<b>~</b>&#8217;.
+</p>
+
+<h2>Here&#8217;s the List of Directory Organizing Commands</h2>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">key combo</th><th scope="col" class="left">command</th></tr>
+</thead>
+<tbody>
+<tr><td class="left"><enter&gt;</td><td class="left">open file at point</td></tr>
+
+<tr><td class="left">d</td><td class="left">Queue File For Deletion</td></tr>
+<tr><td class="left">u</td><td class="left">Unqueue File</td></tr>
+<tr><td class="left">~</td><td class="left">Queue Backup Files for Del</td></tr>
+<tr><td class="left">x</td><td class="left">eXecute Queued Delete Jobs</td></tr>
+<tr><td class="left">R</td><td class="left">Rename File</td></tr>
+<tr><td class="left">k</td><td class="left">Kill PDF Buffer</td></tr>
+<tr><td class="left">C-x C-q</td><td class="left">Edit Directory as a File</td></tr>
+
+</tbody>
+</table>
+
+
+
+
+<p />
+<h2 id="sec-1_3">Edit Zip&#8217;d or Tar-gz&#8217;d archives in place </h2>
+
+<p>If you need to edit a file inside a zip or tar archive, simply open
+the archive by hitting <enter&gt; on the name in Dired mode, then
+click on the file. Edit the file and save it with '<b>C-x C-s</b>&#8217;,
+and then do another <b>C-x C-s</b> inside the zip buffer to save the
+archive with the file changes. The archive will be compressed again
+with your changes.  </p> 
+
+<p />
+<h2 id="sec-1_4">OMG!: Change File Owner, Group, Mode </h2>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">key combo</th><th scope="col" class="left">command</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">O</td><td class="left">change owner</td></tr>
+<tr><td class="left">M</td><td class="left">change mode</td></tr>
+<tr><td class="left">G</td><td class="left">change group</td></tr>
+<tr><td class="left">Z</td><td class="left">compress file</td></tr>
+</tbody>
+</table>
+
+
+
+<p />
+<p />
+<h1 id="sec-1_5">Encrypt, Decrypt Files </h1>
+
+<p>Use &#8217;<b>:e</b>&#8217; to encrypt the file at point. Emacs will ask who you want to
+encrypt the file for (ie whose public key to use to encrypt the file.)
+You can also encrypt the file symmetrically with a password. Once the
+file is encrypted, there will be two files in the directory: the
+original file and the encrypted file with &#8216;.gpg&#8217; added to the file
+name. 
+</p>
+
+<p />
+<h2 id="sec-1_5_1">Decrypt </h2>
+
+<p>To open the symmetrically encrypted file, click on its name and you
+will be prompted for a password. You can also type &#8217;<b>:d</b>&#8217; when
+the filename is at point.
+</p>
+
+
+<h2 id="sec-1_5_2">EasyPG Assistant Docs </h2>
+
+<p>The program that is used to encrypt the file&#8217;s is EasyPG Assistant.
+<a href="http://www.gnu.org/software/emacs/manual/html_mono/epa.html">EasyPG Assistant Manual</a>
+</p>
+
+<p />
+<h2 id="sec-1_7">Get More Help </h2>
+
+<p>Type &#8216;C-hm&#8217; (describe mode) while in dired-mode, to pop open a help
+buffer, with a description of dired mode and a list of commands.
+</p>
+
+<p />
+<h2 id="sec-1_8">All Key Combinations named in post </h2>
+
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">key combo</th><th scope="col" class="left">command</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">d</td><td class="left">mark file for deletion</td></tr>
+<tr><td class="left">u</td><td class="left">unmark file</td></tr>
+<tr><td class="left">x</td><td class="left">eXecute queued deletions</td></tr>
+<tr><td class="left">R</td><td class="left">rename/move file</td></tr>
+<tr><td class="left">O</td><td class="left">change owner</td></tr>
+<tr><td class="left">M</td><td class="left">change mode</td></tr>
+<tr><td class="left">G</td><td class="left">change group</td></tr>
+<tr><td class="left">Z</td><td class="left">compress file</td></tr>
+<tr><td class="left">y</td><td class="left">show only certain file type</td></tr>
+<tr><td class="left">w</td><td class="left">copy file name</td></tr>
+<tr><td class="left">RET</td><td class="left">open file at point</td></tr>
+<tr><td class="left">k</td><td class="left">if in pdf buffer, kill</td></tr>
+<tr><td class="left">C-x C-s</td><td class="left">Save file or  archive</td></tr>
+<tr><td class="left">i</td><td class="left">insert sub-directory</td></tr>
+<tr><td class="left">~</td><td class="left">mark all backup files for deletion</td></tr>
+<tr><td class="left">C-x C-q</td><td class="left">edit directory listing as a file</td></tr>
+
+</tbody>
+</table>
+<a href=http://denverdroid.blogspot.com/2011/07/cool-things-to-do-in-emacs-dired-mode.html>Cool Things to do in Emacs&#8217; Dired Mode</a>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Bart Lantz</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-09T00:00:00-04:00" pubdate data-updated="true">Jul 9<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/emacs/'>Emacs</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bartlantz.com/blog/2010/07/09/cool-things-to-do-emacs-dired/" data-via="bartofdenver" data-counturl="http://bartlantz.com/blog/2010/07/09/cool-things-to-do-emacs-dired/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/05/13/emulator/" title="Previous Post: Nook 1.2 emulator">&laquo; Nook 1.2 emulator</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/07/29/up-home-setting-up-lending-library-with/" title="Next Post: Setting Up a Web Enabled Lending Library">Setting Up a Web Enabled Lending Library &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>About</h1>
+<p>Major Ursa is a development blog written by Bart Lantz.</p>
+
+<p>It focuses on Drupal, Ruby, Javascript, Vim, Git and Math, here and there.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xquery-notes/">XQuery Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/05/xpath-notes/">XPath Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/fun-with-grep-and/">Fun with Grep and Bash Aliases</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/29/using-jquery-in-drupal/">Using jQuery in Drupal</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/05/22/drush-delete-comment/">Using Drush and SQL to Delete Spam Comments</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/underhilllabs">@underhilllabs</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'underhilllabs',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll...</ul>
+  <p><a href="http://pinboard.in/u:seamusmcgraw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "seamusmcgraw"; //id target for pinboard list
+  var pinboard_count = 7; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/115249870106368908575?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Bart Lantz -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">gdata.photos.service</span>
+<span class="kn">import</span> <span class="nn">gdata.media</span>
+<span class="kn">import</span> <span class="nn">gdata.geo</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="n">fname</span>
+<span class="n">gd_client</span> <span class="o">=</span> <span class="n">gdata</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">PhotosService</span><span class="p">()</span>
+<span class="n">gd_client</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">username</span>
+<span class="n">gd_client</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">passwd</span>
+<span class="n">gd_client</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s">&#39;screen-upload-1&#39;</span>
+<span class="n">gd_client</span><span class="o">.</span><span class="n">ProgrammaticLogin</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">&#39;uploading&#39;</span><span class="p">,</span>  <span class="n">filename</span>
+
+<span class="n">album_url</span> <span class="o">=</span> <span class="s">&#39;/data/feed/api/user/</span><span class="si">%s</span><span class="s">/albumid/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">album_id</span><span class="p">)</span>
+<span class="n">photo</span> <span class="o">=</span> <span class="n">gd_client</span><span class="o">.</span><span class="n">InsertPhotoSimple</span><span class="p">(</span><span class="n">album_url</span><span class="p">,</span> <span class="s">&#39;New Photo&#39;</span><span class="p">,</span> 
+               <span class="s">&#39;Uploaded using the API&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&#39;image/png&#39;</span><span class="p">)</span>
+</pre></div>
