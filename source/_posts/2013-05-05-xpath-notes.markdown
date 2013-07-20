@@ -37,6 +37,7 @@ Selects all of countries from the country root node.
 doc('countries.xml')/countries/country
 ```
 
+<!--more-->
 ### Path with Alternation
 This will select countries with populations that speak Pashtu or Swedish.
 ``` xquery
